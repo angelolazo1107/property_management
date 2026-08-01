@@ -23,6 +23,8 @@ fleet trip tracking, and financial verification control gates.
         'helpdesk',
         'hr',
         'fleet',
+        'website',
+        'website_crm',
         'mail',
     ],
     'data': [
