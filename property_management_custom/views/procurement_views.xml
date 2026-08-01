@@ -8,6 +8,7 @@
             <xpath expr="//header" position="inside">
                 <button name="action_dept_head_approve" string="Dept Head Approve" type="object" class="btn-primary" invisible="dept_head_approved"/>
                 <button name="action_gm_approve" string="GM Approve (>50k)" type="object" class="btn-warning" invisible="gm_approved"/>
+                <button name="action_verify_three_way_match" string="Verify 3-Way Match" type="object" class="btn-success" invisible="three_way_match_verified"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="pr_reference"/>
@@ -24,6 +25,12 @@
                         <group string="General Manager Approval">
                             <field name="gm_approved"/>
                             <field name="gm_approver_id"/>
+                        </group>
+                    </group>
+                    <group string="Financial Control &amp; 3-Way Match">
+                        <group>
+                            <field name="three_way_match_verified"/>
+                            <field name="payment_request_cleared"/>
                         </group>
                     </group>
                 </page>

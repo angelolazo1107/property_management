@@ -47,6 +47,11 @@
                             <field name="access_cards_returned"/>
                             <field name="unit_condition"/>
                         </group>
+                        <group string="Turnover &amp; Governance Checkpoints">
+                            <field name="info_desk_verified"/>
+                            <field name="security_coordination"/>
+                            <field name="wifi_parking_assigned"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Defect Findings">

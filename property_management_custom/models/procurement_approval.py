@@ -15,6 +15,9 @@ class PurchaseOrderInherit(models.Model):
     gm_approved = fields.Boolean(string='General Manager Approved', readonly=True, copy=False)
     gm_approver_id = fields.Many2one('res.users', string='GM Approver', readonly=True)
 
+    three_way_match_verified = fields.Boolean(string='3-Way Match Verified (PO + Goods Receipt + Vendor Bill)', copy=False)
+    payment_request_cleared = fields.Boolean(string='Accounting Payment Request Cleared', copy=False)
+
     def action_dept_head_approve(self):
         for rec in self:
             rec.dept_head_approved = True
@@ -24,6 +27,12 @@ class PurchaseOrderInherit(models.Model):
         for rec in self:
             rec.gm_approved = True
             rec.gm_approver_id = self.env.user
+
+    def action_verify_three_way_match(self):
+        for rec in self:
+            rec.three_way_match_verified = True
+            rec.payment_request_cleared = True
+
 
     def button_confirm(self):
         for rec in self:
