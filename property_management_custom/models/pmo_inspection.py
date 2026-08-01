@@ -35,6 +35,11 @@ class PMOInspection(models.Model):
     chargeable_findings = fields.Text(string='Chargeable Findings & Damage List')
     tenant_signature = fields.Binary(string='Tenant Acknowledgment Signature')
     
+    info_desk_verified = fields.Boolean(string='Info Desk Recording Verified')
+    security_coordination = fields.Boolean(string='Security Coordination Cleared')
+    wifi_parking_assigned = fields.Boolean(string='Parking / Access / Wi-Fi Assigned')
+
+    
     status = fields.Selection([
         ('draft', 'Inspection Draft'),
         ('submitted', 'Submitted to PMO'),
