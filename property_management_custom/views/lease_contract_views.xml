@@ -28,10 +28,10 @@
     </record>
 
     <record id="view_lease_contract_tree" model="ir.ui.view">
-        <field name="name">lease.contract.tree</field>
+        <field name="name">lease.contract.list</field>
         <field name="model">lease.contract</field>
         <field name="arch" type="xml">
-            <tree string="Lease Contracts">
+            <list string="Lease Contracts">
                 <field name="name"/>
                 <field name="tenant_id"/>
                 <field name="unit_id"/>
@@ -40,7 +40,7 @@
                 <field name="monthly_rent"/>
                 <field name="deposit_paid"/>
                 <field name="stage"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -94,6 +94,6 @@
     <record id="action_lease_contract" model="ir.actions.act_window">
         <field name="name">Lease Contracts</field>
         <field name="res_model">lease.contract</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
     </record>
 </odoo>

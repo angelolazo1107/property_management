@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_approval_matrix_tree" model="ir.ui.view">
-        <field name="name">approval.matrix.tree</field>
+        <field name="name">approval.matrix.list</field>
         <field name="model">approval.matrix</field>
         <field name="arch" type="xml">
-            <tree string="Approval Governance Matrix">
+            <list string="Approval Governance Matrix">
                 <field name="name"/>
                 <field name="module"/>
                 <field name="transaction_type"/>
@@ -12,7 +12,7 @@
                 <field name="max_amount"/>
                 <field name="required_approvers"/>
                 <field name="escalation_approver"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -57,6 +57,6 @@
     <record id="action_approval_matrix" model="ir.actions.act_window">
         <field name="name">Approval Governance Matrix</field>
         <field name="res_model">approval.matrix</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

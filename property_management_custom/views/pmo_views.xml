@@ -2,10 +2,10 @@
 <odoo>
     <!-- PMO Inspection Views -->
     <record id="view_pmo_inspection_tree" model="ir.ui.view">
-        <field name="name">pmo.inspection.tree</field>
+        <field name="name">pmo.inspection.list</field>
         <field name="model">pmo.inspection</field>
         <field name="arch" type="xml">
-            <tree string="PMO Inspections">
+            <list string="PMO Inspections">
                 <field name="name"/>
                 <field name="unit_id"/>
                 <field name="tenant_id"/>
@@ -14,7 +14,7 @@
                 <field name="unit_condition"/>
                 <field name="inspector_id"/>
                 <field name="status"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -63,10 +63,10 @@
 
     <!-- Utility Reading Views -->
     <record id="view_pmo_utility_reading_tree" model="ir.ui.view">
-        <field name="name">pmo.utility.reading.tree</field>
+        <field name="name">pmo.utility.reading.list</field>
         <field name="model">pmo.utility.reading</field>
         <field name="arch" type="xml">
-            <tree string="Utility Readings">
+            <list string="Utility Readings">
                 <field name="name"/>
                 <field name="unit_id"/>
                 <field name="tenant_id"/>
@@ -75,16 +75,16 @@
                 <field name="consumption"/>
                 <field name="total_amount"/>
                 <field name="status"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <!-- PMO Job Orders Views -->
     <record id="view_pmo_job_order_tree" model="ir.ui.view">
-        <field name="name">pmo.job.order.tree</field>
+        <field name="name">pmo.job.order.list</field>
         <field name="model">pmo.job.order</field>
         <field name="arch" type="xml">
-            <tree string="Job Orders">
+            <list string="Job Orders">
                 <field name="name"/>
                 <field name="unit_id"/>
                 <field name="tenant_id"/>
@@ -93,7 +93,7 @@
                 <field name="payment_verified"/>
                 <field name="assigned_technician_id"/>
                 <field name="stage"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -129,9 +129,6 @@
                         <page string="Description">
                             <field name="work_description" placeholder="Describe the issue..."/>
                         </page>
-                        <page string="Completion Evidence">
-                            <field name="completion_photos" widget="image"/>
-                        </page>
                     </notebook>
                 </sheet>
             </form>
@@ -142,18 +139,18 @@
     <record id="action_pmo_inspection" model="ir.actions.act_window">
         <field name="name">PMO Inspections</field>
         <field name="res_model">pmo.inspection</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_pmo_utility_reading" model="ir.actions.act_window">
         <field name="name">Utility Meter Readings</field>
         <field name="res_model">pmo.utility.reading</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_pmo_job_order" model="ir.actions.act_window">
         <field name="name">PMO Job Orders</field>
         <field name="res_model">pmo.job.order</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>
