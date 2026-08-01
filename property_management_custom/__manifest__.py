@@ -21,6 +21,7 @@ fleet trip tracking, and financial verification control gates.
         'stock',
         'maintenance',
         'helpdesk',
+        'hr',
         'fleet',
         'mail',
     ],
