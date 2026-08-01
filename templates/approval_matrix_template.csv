@@ -1,0 +1,6 @@
+"module","transaction_type","min_amount","max_amount","required_approvers","escalation_approver","notes"
+"Purchase","PR / Canvassing","0.00","50000.00","Department Head","General Manager","Standard operational PR"
+"Purchase","PR / Canvassing","50001.00","9999999.00","Department Head + General Manager","Board / VP","High-value capital procurement"
+"Leasing","Rent Discount / Waiver","0.00","10000.00","Leasing Manager","Finance Director","Requires financial clearance"
+"PMO","Job Order Schedule (Unpaid)","0.00","9999999.00","Finance / Accounting","General Manager","Emergency maintenance override"
+"Admin / Fleet","Vehicle Trip Waiver","0.00","9999999.00","Admin Manager","General Manager","Company trip fee waiver"

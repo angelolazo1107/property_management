@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_lease_contract_kanban" model="ir.ui.view">
+        <field name="name">lease.contract.kanban</field>
+        <field name="model">lease.contract</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="monthly_rent"/>
+                <field name="currency_id"/>
+                <field name="stage"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div><strong>Tenant: </strong><field name="tenant_id"/></div>
+                                <div><strong>Unit: </strong><field name="unit_id"/></div>
+                                <div><strong>Rent: </strong><field name="monthly_rent" widget="monetary"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_lease_contract_tree" model="ir.ui.view">
+        <field name="name">lease.contract.tree</field>
+        <field name="model">lease.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Lease Contracts">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="monthly_rent"/>
+                <field name="deposit_paid"/>
+                <field name="stage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_lease_contract_form" model="ir.ui.view">
+        <field name="name">lease.contract.form</field>
+        <field name="model">lease.contract</field>
+        <field name="arch" type="xml">
+            <form string="Lease Contract">
+                <header>
+                    <button name="action_verify_payment_clearance" string="Approve Payment Clearance &amp; Move-In" type="object" class="btn-primary" invisible="stage != 'payment_clearance'"/>
+                    <button name="action_trigger_move_out" string="Initiate Move-Out" type="object" class="btn-secondary" invisible="stage != 'active'"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="inquiry,quotation,bis_submitted,legal_review,payment_clearance,active,move_out,deposit_refund"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Contract Details">
+                            <field name="tenant_id"/>
+                            <field name="unit_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group string="Financial Controls &amp; Clearance">
+                            <field name="monthly_rent"/>
+                            <field name="security_deposit"/>
+                            <field name="deposit_refund_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="bis_submitted"/>
+                            <field name="legal_clearance"/>
+                            <field name="deposit_paid"/>
+                            <field name="move_in_checklist_done"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Terms &amp; Special Conditions">
+                            <field name="notes" placeholder="Enter special agreement terms..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_lease_contract" model="ir.actions.act_window">
+        <field name="name">Lease Contracts</field>
+        <field name="res_model">lease.contract</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+</odoo>

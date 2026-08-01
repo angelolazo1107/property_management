@@ -1,0 +1,4 @@
+"unit_name","building","floor","unit_type","area_sqm","monthly_rate","status","electricity_meter_no","water_meter_no","notes"
+"Unit 101","Tower A","Floor 1","Commercial","45.00","25000.00","Available","E-1001","W-1001","Corner commercial space"
+"Unit 102","Tower A","Floor 1","Residential","30.00","15000.00","Occupied","E-1002","W-1002","Studio apartment"
+"Unit 201","Tower A","Floor 2","Residential","60.00","32000.00","Maintenance","E-2001","W-2001","2 BR Suite - AC repair in progress"

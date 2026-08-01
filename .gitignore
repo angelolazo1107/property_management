@@ -1,0 +1,11 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Odoo / Environment files
+*.log
+*.sqlite
+.env
+.idea/
+.vscode/

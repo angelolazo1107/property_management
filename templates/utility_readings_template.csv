@@ -1,0 +1,4 @@
+"unit_name","tenant_name","reading_date","meter_type","previous_reading","current_reading","consumption","rate_per_unit","total_amount","status","inspector_name"
+"Unit 101","Acme Corporate Services Inc.","2026-07-31","Electricity","12450.00","12980.00","530.00","12.50","6625.00","Verified","Mark Security"
+"Unit 101","Acme Corporate Services Inc.","2026-07-31","Water","450.00","472.00","22.00","45.00","990.00","Verified","Mark Security"
+"Unit 102","John Doe","2026-07-31","Electricity","3200.00","3380.00","180.00","12.50","2250.00","Verified","Mark Security"

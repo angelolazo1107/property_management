@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pmo_inspection_tree" model="ir.ui.view">
+        <field name="name">pmo.inspection.tree</field>
+        <field name="model">pmo.inspection</field>
+        <field name="arch" type="xml">
+            <tree string="PMO Inspections">
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="tenant_id"/>
+                <field name="inspection_type"/>
+                <field name="inspection_date"/>
+                <field name="unit_condition"/>
+                <field name="inspector_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pmo_inspection_form" model="ir.ui.view">
+        <field name="name">pmo.inspection.form</field>
+        <field name="model">pmo.inspection</field>
+        <field name="arch" type="xml">
+            <form string="PMO Inspection">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Inspection Ref"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Inspection Overview">
+                            <field name="unit_id"/>
+                            <field name="tenant_id"/>
+                            <field name="inspection_type"/>
+                            <field name="inspection_date"/>
+                            <field name="inspector_id"/>
+                        </group>
+                        <group string="Utility Meters &amp; Rating">
+                            <field name="electric_reading"/>
+                            <field name="water_reading"/>
+                            <field name="unit_condition"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Defects &amp; Remarks">
+                            <field name="remarks" placeholder="Log any damage, missing keys, or maintenance needed..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pmo_inspection" model="ir.actions.act_window">
+        <field name="name">PMO Inspections</field>
+        <field name="res_model">pmo.inspection</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PMO Inspection Views -->
+    <record id="view_pmo_inspection_tree" model="ir.ui.view">
+        <field name="name">pmo.inspection.tree</field>
+        <field name="model">pmo.inspection</field>
+        <field name="arch" type="xml">
+            <tree string="PMO Inspections">
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="tenant_id"/>
+                <field name="inspection_type"/>
+                <field name="inspection_date"/>
+                <field name="unit_condition"/>
+                <field name="inspector_id"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pmo_inspection_form" model="ir.ui.view">
+        <field name="name">pmo.inspection.form</field>
+        <field name="model">pmo.inspection</field>
+        <field name="arch" type="xml">
+            <form string="PMO Inspection">
+                <header>
+                    <button name="action_verify_inspection" string="Verify Inspection &amp; Baseline" type="object" class="btn-primary" invisible="status != 'draft'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,submitted,verified"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Inspection Details">
+                            <field name="unit_id"/>
+                            <field name="tenant_id"/>
+                            <field name="lease_contract_id"/>
+                            <field name="inspection_type"/>
+                            <field name="inspection_date"/>
+                            <field name="inspector_id"/>
+                        </group>
+                        <group string="Meters &amp; Access Controls">
+                            <field name="electric_reading"/>
+                            <field name="water_reading"/>
+                            <field name="access_cards_issued"/>
+                            <field name="access_cards_returned"/>
+                            <field name="unit_condition"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Defect Findings">
+                            <field name="chargeable_findings" placeholder="List any damaged items, baseline observations..."/>
+                        </page>
+                        <page string="Tenant Signature">
+                            <field name="tenant_signature" widget="signature"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Utility Reading Views -->
+    <record id="view_pmo_utility_reading_tree" model="ir.ui.view">
+        <field name="name">pmo.utility.reading.tree</field>
+        <field name="model">pmo.utility.reading</field>
+        <field name="arch" type="xml">
+            <tree string="Utility Readings">
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="tenant_id"/>
+                <field name="meter_type"/>
+                <field name="reading_date"/>
+                <field name="consumption"/>
+                <field name="total_amount"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- PMO Job Orders Views -->
+    <record id="view_pmo_job_order_tree" model="ir.ui.view">
+        <field name="name">pmo.job.order.tree</field>
+        <field name="model">pmo.job.order</field>
+        <field name="arch" type="xml">
+            <tree string="Job Orders">
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="tenant_id"/>
+                <field name="category"/>
+                <field name="is_chargeable"/>
+                <field name="payment_verified"/>
+                <field name="assigned_technician_id"/>
+                <field name="stage"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pmo_job_order_form" model="ir.ui.view">
+        <field name="name">pmo.job.order.form</field>
+        <field name="model">pmo.job.order</field>
+        <field name="arch" type="xml">
+            <form string="PMO Job Order">
+                <header>
+                    <button name="action_schedule_mst" string="Schedule MST Technician" type="object" class="btn-primary"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="intake,admin_review,tenant_approval,scheduled,in_progress,completed,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Work Information">
+                            <field name="unit_id"/>
+                            <field name="tenant_id"/>
+                            <field name="category"/>
+                            <field name="scheduled_date"/>
+                            <field name="assigned_technician_id"/>
+                        </group>
+                        <group string="Billing &amp; Costing">
+                            <field name="is_chargeable"/>
+                            <field name="job_cost"/>
+                            <field name="payment_verified"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="work_description" placeholder="Describe the issue..."/>
+                        </page>
+                        <page string="Completion Evidence">
+                            <field name="completion_photos" widget="image"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_pmo_inspection" model="ir.actions.act_window">
+        <field name="name">PMO Inspections</field>
+        <field name="res_model">pmo.inspection</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_pmo_utility_reading" model="ir.actions.act_window">
+        <field name="name">Utility Meter Readings</field>
+        <field name="res_model">pmo.utility.reading</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_pmo_job_order" model="ir.actions.act_window">
+        <field name="name">PMO Job Orders</field>
+        <field name="res_model">pmo.job.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

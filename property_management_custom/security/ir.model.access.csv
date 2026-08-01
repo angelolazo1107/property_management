@@ -1,0 +1,10 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_property_building_user","property.building.user","model_property_building",,1,1,1,1
+"access_property_unit_user","property.unit.user","model_property_unit",,1,1,1,1
+"access_lease_contract_user","lease.contract.user","model_lease_contract",,1,1,1,1
+"access_pmo_inspection_user","pmo.inspection.user","model_pmo_inspection",,1,1,1,1
+"access_pmo_utility_reading_user","pmo.utility.reading.user","model_pmo_utility_reading",,1,1,1,1
+"access_pmo_job_order_user","pmo.job.order.user","model_pmo_job_order",,1,1,1,1
+"access_fleet_trip_request_user","fleet.trip.request.user","model_fleet_trip_request",,1,1,1,1
+"access_office_supply_request_user","office.supply.request.user","model_office_supply_request",,1,1,1,1
+"access_office_supply_request_line_user","office.supply.request.line.user","model_office_supply_request_line",,1,1,1,1

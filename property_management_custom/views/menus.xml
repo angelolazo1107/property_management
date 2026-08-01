@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Top-Level App Menu -->
+    <menuitem id="menu_property_management_root"
+              name="Property Platform"
+              sequence="10"
+              web_icon="property_management_custom,static/description/icon.png"/>
+
+    <!-- 1. Leasing Category -->
+    <menuitem id="menu_leasing_category"
+              name="Leasing &amp; Tenants"
+              parent="menu_property_management_root"
+              sequence="1"/>
+
+    <menuitem id="menu_property_buildings"
+              name="Buildings &amp; Towers"
+              parent="menu_leasing_category"
+              action="action_property_building"
+              sequence="1"/>
+
+    <menuitem id="menu_property_units"
+              name="Property Units"
+              parent="menu_leasing_category"
+              action="action_property_unit"
+              sequence="2"/>
+
+    <menuitem id="menu_lease_contracts"
+              name="Lease Contracts Pipeline"
+              parent="menu_leasing_category"
+              action="action_lease_contract"
+              sequence="3"/>
+
+    <!-- 2. PMO Category -->
+    <menuitem id="menu_pmo_category"
+              name="PMO Operations"
+              parent="menu_property_management_root"
+              sequence="2"/>
+
+    <menuitem id="menu_pmo_inspections"
+              name="Move-In / Out Inspections"
+              parent="menu_pmo_category"
+              action="action_pmo_inspection"
+              sequence="1"/>
+
+    <menuitem id="menu_pmo_utility_readings"
+              name="Electric &amp; Water Readings"
+              parent="menu_pmo_category"
+              action="action_pmo_utility_reading"
+              sequence="2"/>
+
+    <menuitem id="menu_pmo_job_orders"
+              name="Job Orders &amp; Maintenance"
+              parent="menu_pmo_category"
+              action="action_pmo_job_order"
+              sequence="3"/>
+
+    <!-- 3. Admin & Services Category -->
+    <menuitem id="menu_admin_category"
+              name="Admin &amp; Fleet Services"
+              parent="menu_property_management_root"
+              sequence="3"/>
+
+    <menuitem id="menu_office_supplies"
+              name="Office Supply Requisitions"
+              parent="menu_admin_category"
+              action="action_office_supply_request"
+              sequence="1"/>
+
+    <menuitem id="menu_fleet_trips"
+              name="Fleet Vehicle Trips"
+              parent="menu_admin_category"
+              action="action_fleet_trip_request"
+              sequence="2"/>
+</odoo>
