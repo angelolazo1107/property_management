@@ -2,16 +2,16 @@
 <odoo>
     <!-- Buildings Views -->
     <record id="view_property_building_tree" model="ir.ui.view">
-        <field name="name">property.building.tree</field>
+        <field name="name">property.building.list</field>
         <field name="model">property.building</field>
         <field name="arch" type="xml">
-            <tree string="Buildings &amp; Towers">
+            <list string="Buildings &amp; Towers">
                 <field name="name"/>
                 <field name="code"/>
                 <field name="total_floors"/>
                 <field name="total_units"/>
                 <field name="address"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -46,10 +46,10 @@
 
     <!-- Property Units Views -->
     <record id="view_property_unit_tree" model="ir.ui.view">
-        <field name="name">property.unit.tree</field>
+        <field name="name">property.unit.list</field>
         <field name="model">property.unit</field>
         <field name="arch" type="xml">
-            <tree string="Property Units">
+            <list string="Property Units">
                 <field name="name"/>
                 <field name="building_id"/>
                 <field name="floor"/>
@@ -58,7 +58,7 @@
                 <field name="monthly_rate"/>
                 <field name="status"/>
                 <field name="current_tenant_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -109,12 +109,12 @@
     <record id="action_property_building" model="ir.actions.act_window">
         <field name="name">Buildings &amp; Towers</field>
         <field name="res_model">property.building</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_property_unit" model="ir.actions.act_window">
         <field name="name">Property Units</field>
         <field name="res_model">property.unit</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>
