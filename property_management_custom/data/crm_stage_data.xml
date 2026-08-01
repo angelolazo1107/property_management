@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Stages for Property Management Lead-to-Lease Funnel -->
+        <record id="stage_new_inquiry" model="crm.stage">
+            <field name="name">New Inquiry</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="stage_ocular_visit" model="crm.stage">
+            <field name="name">Ocular Visit</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="stage_quotation_proposal" model="crm.stage">
+            <field name="name">Quotation / Proposal</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="stage_reservation_bis" model="crm.stage">
+            <field name="name">Reservation &amp; BIS</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="stage_legal_contract" model="crm.stage">
+            <field name="name">Legal &amp; Contract</field>
+            <field name="sequence">5</field>
+        </record>
+        <record id="stage_move_in_clearance" model="crm.stage">
+            <field name="name">Move-In Clearance</field>
+            <field name="sequence">6</field>
+        </record>
+    </data>
+</odoo>

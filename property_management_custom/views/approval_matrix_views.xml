@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_approval_matrix_tree" model="ir.ui.view">
+        <field name="name">approval.matrix.tree</field>
+        <field name="model">approval.matrix</field>
+        <field name="arch" type="xml">
+            <tree string="Approval Governance Matrix">
+                <field name="name"/>
+                <field name="module"/>
+                <field name="transaction_type"/>
+                <field name="min_amount"/>
+                <field name="max_amount"/>
+                <field name="required_approvers"/>
+                <field name="escalation_approver"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_approval_matrix_form" model="ir.ui.view">
+        <field name="name">approval.matrix.form</field>
+        <field name="model">approval.matrix</field>
+        <field name="arch" type="xml">
+            <form string="Approval Matrix Rule">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Rule Name (e.g. Standard Operational PR)"/></h1>
+                    </div>
+                    <group>
+                        <group string="Scope &amp; Transaction">
+                            <field name="module"/>
+                            <field name="transaction_type"/>
+                        </group>
+                        <group string="Financial Thresholds">
+                            <field name="min_amount"/>
+                            <field name="max_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Approval Hierarchy">
+                        <group>
+                            <field name="required_approvers"/>
+                        </group>
+                        <group>
+                            <field name="escalation_approver"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Policy Notes">
+                            <field name="notes" placeholder="Enter policy details, conditions, exceptions..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_approval_matrix" model="ir.actions.act_window">
+        <field name="name">Approval Governance Matrix</field>
+        <field name="res_model">approval.matrix</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

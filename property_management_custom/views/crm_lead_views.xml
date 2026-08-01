@@ -1,26 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- CRM Lead Form View Extension -->
     <record id="view_crm_lead_form_property_inherit" model="ir.ui.view">
         <field name="name">crm.lead.form.property.inherit</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//sheet/group" position="before">
-                <group string="Leasing &amp; Property Details" name="property_details">
+            <xpath expr="//header" position="inside">
+                <button name="action_schedule_ocular" string="Schedule Ocular" type="object" class="btn-primary" invisible="ocular_status in ('scheduled', 'completed')"/>
+                <button name="action_complete_ocular" string="Complete Ocular" type="object" class="btn-success" invisible="ocular_status != 'scheduled'"/>
+                <button name="action_verify_bis" string="Verify BIS" type="object" class="btn-secondary" invisible="bis_status == 'verified'"/>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="target_unit_id" options="{'no_create': True}"/>
+                <field name="ocular_status" widget="badge" decoration-info="ocular_status == 'scheduled'" decoration-success="ocular_status == 'completed'"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Leasing &amp; Property Details" name="leasing_details">
                     <group>
-                        <field name="target_unit_id"/>
-                        <field name="intended_move_in_date"/>
-                        <field name="ocular_visit_date"/>
-                        <field name="ocular_status"/>
+                        <group string="Unit &amp; Visit Schedule">
+                            <field name="target_unit_id"/>
+                            <field name="intended_move_in_date"/>
+                            <field name="ocular_visit_date"/>
+                            <field name="ocular_status" widget="radio"/>
+                        </group>
+                        <group string="BIS &amp; Reservation Verification">
+                            <field name="bis_status" widget="radio"/>
+                            <field name="legal_clearance"/>
+                            <field name="reservation_proof" filename="reservation_proof_name"/>
+                            <field name="reservation_proof_name" invisible="1"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="bis_status"/>
-                        <field name="legal_clearance"/>
-                        <field name="reservation_proof" filename="reservation_proof_name"/>
-                        <field name="reservation_proof_name" invisible="1"/>
-                    </group>
-                </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- CRM Opportunity Kanban View Extension -->
+    <record id="crm_case_kanban_view_leads_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.property.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="target_unit_id"/>
+                <field name="ocular_status"/>
             </xpath>
         </field>
     </record>
 </odoo>
+

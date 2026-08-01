@@ -12,6 +12,7 @@ class CrmLeadInherit(models.Model):
         ('pending', 'Pending Schedule'),
         ('scheduled', 'Scheduled'),
         ('completed', 'Visit Completed'),
+        ('rescheduled', 'Rescheduled'),
         ('cancelled', 'Cancelled'),
     ], string='Ocular Visit Status', default='pending', tracking=True)
 
@@ -30,6 +31,11 @@ class CrmLeadInherit(models.Model):
         for rec in self:
             rec.ocular_status = 'scheduled'
 
+    def action_complete_ocular(self):
+        for rec in self:
+            rec.ocular_status = 'completed'
+
     def action_verify_bis(self):
         for rec in self:
             rec.bis_status = 'verified'
+

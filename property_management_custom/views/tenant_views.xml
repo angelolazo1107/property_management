@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Window Action for Tenants -->
+    <record id="action_property_tenant" model="ir.actions.act_window">
+        <field name="name">Tenants</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'res_partner_search_mode': 'customer', 'default_is_company': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create or import your first Tenant!
+            </p>
+        </field>
+    </record>
+
+    <!-- Window Action for Vendors & Contractors -->
+    <record id="action_property_vendor" model="ir.actions.act_window">
+        <field name="name">Vendors &amp; Contractors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{'res_partner_search_mode': 'supplier'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create or import your first Vendor / Contractor!
+            </p>
+        </field>
+    </record>
+</odoo>

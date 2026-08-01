@@ -8,3 +8,5 @@ from . import pmo_job_order
 from . import procurement_approval
 from . import fleet_trip
 from . import office_supply_request
+from . import res_partner_inherit
+from . import approval_matrix

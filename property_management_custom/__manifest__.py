@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Property Management Enterprise Core',
-    'version': '19.4.1.0.0',
+    'version': '17.0.1.0.0',
     'category': 'Real Estate / Property Management',
     'summary': 'Centralized Leasing, PMO Operations, Utility Readings, Job Orders, Fleet & Financial Approvals',
     'description': """
@@ -20,12 +20,12 @@ fleet trip tracking, and financial verification control gates.
         'purchase',
         'stock',
         'maintenance',
-        'helpdesk',
         'fleet',
         'mail',
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/crm_stage_data.xml',
         'views/property_unit_views.xml',
         'views/crm_lead_views.xml',
         'views/lease_contract_views.xml',
@@ -33,6 +33,8 @@ fleet trip tracking, and financial verification control gates.
         'views/procurement_views.xml',
         'views/fleet_views.xml',
         'views/office_supply_views.xml',
+        'views/tenant_views.xml',
+        'views/approval_matrix_views.xml',
         'views/menus.xml',
     ],
     'installable': True,

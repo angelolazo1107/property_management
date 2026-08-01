@@ -1,3 +1,3 @@
-"vendor_name","vendor_type","category","email","phone","payment_terms","bank_name","account_number","tin_number"
-"BuildRight Supplies Corp.","Supplier","Building Supplies","sales@buildright.com","+63289001122","30 Days","BDO","123456789012","123-456-789-000"
-"CoolAir Maintenance Services","Contractor","HVAC Maintenance","service@coolair.com","+63289003344","15 Days","BPI","987654321098","987-654-321-000"
+"name","is_company","is_vendor","email","phone","vat","street","city","comment"
+"BuildRight Supplies Corp.","TRUE","TRUE","sales@buildright.com","+63289001122","123-456-789-000","123 Industrial Ave","Pasig City","Building Supplies & Construction Hardware"
+"CoolAir Maintenance Services","TRUE","TRUE","service@coolair.com","+63289003344","987-654-321-000","456 Service Blvd","Quezon City","HVAC Maintenance Contractor"

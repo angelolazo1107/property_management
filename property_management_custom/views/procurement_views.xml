@@ -14,17 +14,19 @@
                 <field name="canvass_attachment" filename="canvass_file_name"/>
                 <field name="canvass_file_name" invisible="1"/>
             </xpath>
-            <xpath expr="//page[@name='other_information']" position="inside">
-                <group string="Governance Approvals">
+            <xpath expr="//notebook" position="inside">
+                <page string="Governance Approvals" name="governance_approvals">
                     <group>
-                        <field name="dept_head_approved"/>
-                        <field name="dept_head_approver_id"/>
+                        <group string="Department Head Approval">
+                            <field name="dept_head_approved"/>
+                            <field name="dept_head_approver_id"/>
+                        </group>
+                        <group string="General Manager Approval">
+                            <field name="gm_approved"/>
+                            <field name="gm_approver_id"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="gm_approved"/>
-                        <field name="gm_approver_id"/>
-                    </group>
-                </group>
+                </page>
             </xpath>
         </field>
     </record>

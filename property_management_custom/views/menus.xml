@@ -12,23 +12,29 @@
               parent="menu_property_management_root"
               sequence="1"/>
 
+    <menuitem id="menu_property_tenants"
+              name="Tenants"
+              parent="menu_leasing_category"
+              action="base.action_partner_form"
+              sequence="1"/>
+
     <menuitem id="menu_property_buildings"
               name="Buildings &amp; Towers"
               parent="menu_leasing_category"
               action="action_property_building"
-              sequence="1"/>
+              sequence="2"/>
 
     <menuitem id="menu_property_units"
               name="Property Units"
               parent="menu_leasing_category"
               action="action_property_unit"
-              sequence="2"/>
+              sequence="3"/>
 
     <menuitem id="menu_lease_contracts"
               name="Lease Contracts Pipeline"
               parent="menu_leasing_category"
               action="action_lease_contract"
-              sequence="3"/>
+              sequence="4"/>
 
     <!-- 2. PMO Category -->
     <menuitem id="menu_pmo_category"
@@ -54,21 +60,33 @@
               action="action_pmo_job_order"
               sequence="3"/>
 
+    <menuitem id="menu_approval_matrix"
+              name="Approval Governance Matrix"
+              parent="menu_pmo_category"
+              action="action_approval_matrix"
+              sequence="4"/>
+
     <!-- 3. Admin & Services Category -->
     <menuitem id="menu_admin_category"
               name="Admin &amp; Fleet Services"
               parent="menu_property_management_root"
               sequence="3"/>
 
+    <menuitem id="menu_property_vendors"
+              name="Vendors &amp; Contractors"
+              parent="menu_admin_category"
+              action="base.action_partner_supplier_form"
+              sequence="1"/>
+
     <menuitem id="menu_office_supplies"
               name="Office Supply Requisitions"
               parent="menu_admin_category"
               action="action_office_supply_request"
-              sequence="1"/>
+              sequence="2"/>
 
     <menuitem id="menu_fleet_trips"
               name="Fleet Vehicle Trips"
               parent="menu_admin_category"
               action="action_fleet_trip_request"
-              sequence="2"/>
+              sequence="3"/>
 </odoo>
