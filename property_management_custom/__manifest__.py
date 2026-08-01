@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Property Management Enterprise Core',
-    'version': '17.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Real Estate / Property Management',
     'summary': 'Centralized Leasing, PMO Operations, Utility Readings, Job Orders, Fleet & Financial Approvals',
     'description': """
-Property Management Operating Platform for Odoo 19.4 on Odoo.sh
+Property Management Operating Platform for Odoo 19.0 on Odoo.sh
 ==============================================================
 Centralizes tenant lifecycle, PMO inspections, utility readings, procurement approvals,
 fleet trip tracking, and financial verification control gates.
@@ -20,6 +20,7 @@ fleet trip tracking, and financial verification control gates.
         'purchase',
         'stock',
         'maintenance',
+        'helpdesk',
         'fleet',
         'mail',
     ],
