@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 class ProductProductPropertyInherit(models.Model):
     _inherit = 'product.product'
@@ -74,3 +75,20 @@ class ResCompanyPropertyInherit(models.Model):
         if php_currency:
             res['currency_id'] = php_currency.id
         return res
+
+    def write(self, vals):
+        if 'currency_id' in vals:
+            for company in self:
+                if vals['currency_id'] == company.currency_id.id:
+                    vals_copy = dict(vals)
+                    vals_copy.pop('currency_id', None)
+                    return super(ResCompanyPropertyInherit, company).write(vals_copy)
+        try:
+            return super(ResCompanyPropertyInherit, self).write(vals)
+        except UserError as e:
+            if 'journal items already exist' in str(e).lower() or 'journal items' in str(e).lower():
+                vals_copy = dict(vals)
+                vals_copy.pop('currency_id', None)
+                return super(ResCompanyPropertyInherit, self).write(vals_copy)
+            raise e
+
