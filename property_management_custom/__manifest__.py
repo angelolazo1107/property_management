@@ -34,6 +34,7 @@ fleet trip tracking, and financial verification control gates.
         'views/property_unit_views.xml',
         'views/crm_lead_views.xml',
         'views/lease_contract_views.xml',
+        'views/pmo_inspection_views.xml',
         'views/pmo_views.xml',
         'views/procurement_views.xml',
         'views/fleet_views.xml',
