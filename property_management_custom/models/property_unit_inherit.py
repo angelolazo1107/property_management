@@ -37,7 +37,10 @@ class ProductProductPropertyInherit(models.Model):
             companies = self.env['res.company'].search([])
             for comp in companies:
                 if comp.currency_id != php_currency:
-                    comp.sudo().write({'currency_id': php_currency.id})
+                    try:
+                        comp.sudo().write({'currency_id': php_currency.id})
+                    except Exception:
+                        pass
         return res
 
 
@@ -54,7 +57,10 @@ class ProductTemplatePropertyInherit(models.Model):
             companies = self.env['res.company'].search([])
             for comp in companies:
                 if comp.currency_id != php_currency:
-                    comp.sudo().write({'currency_id': php_currency.id})
+                    try:
+                        comp.sudo().write({'currency_id': php_currency.id})
+                    except Exception:
+                        pass
         return res
 
 
