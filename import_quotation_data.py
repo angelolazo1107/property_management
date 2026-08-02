@@ -129,6 +129,9 @@ def setup_templates(uid, models, product_map):
         
         tpl_vals = {
             'name': tpl['name'],
+            'number_of_days': 30,
+            'duration_value': 1,
+            'duration_unit': 'year',
             'sale_order_template_line_ids': line_ids
         }
         
