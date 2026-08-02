@@ -54,7 +54,11 @@ class LeaseContract(models.Model):
         ('refunded', 'Deposit Refund Released'),
     ], string='Security Deposit Refund Status', default='pending', tracking=True)
 
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one(
+        'res.currency', 
+        string='Currency', 
+        default=lambda self: self.env.ref('base.PHP', raise_if_not_found=False) or self.env.company.currency_id
+    )
     notes = fields.Text(string='Contract Special Terms & Conditions')
 
     @api.depends('unpaid_rent_deduction', 'utility_deduction', 'damage_deduction', 'cleaning_deduction', 'penalties_deduction', 'missing_items_deduction')

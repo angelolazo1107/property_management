@@ -45,6 +45,38 @@ class SaleOrderPropertyInherit(models.Model):
         tracking=True
     )
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super(SaleOrderPropertyInherit, self).default_get(fields_list)
+        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
+        if php_currency:
+            res['currency_id'] = php_currency.id
+            pricelist = self.env['product.pricelist'].search([('currency_id', '=', php_currency.id)], limit=1)
+            if pricelist:
+                res['pricelist_id'] = pricelist.id
+        return res
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id_set_php_currency(self):
+        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
+        if php_currency:
+            self.currency_id = php_currency
+            if not self.pricelist_id or self.pricelist_id.currency_id != php_currency:
+                php_pricelist = self.env['product.pricelist'].search([('currency_id', '=', php_currency.id)], limit=1)
+                if php_pricelist:
+                    self.pricelist_id = php_pricelist
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
+        php_pricelist = self.env['product.pricelist'].search([('currency_id', '=', php_currency.id)], limit=1) if php_currency else False
+        for vals in vals_list:
+            if php_currency:
+                vals['currency_id'] = php_currency.id
+                if php_pricelist and not vals.get('pricelist_id'):
+                    vals['pricelist_id'] = php_pricelist.id
+        return super(SaleOrderPropertyInherit, self).create(vals_list)
+
     @api.onchange('reservation_fee_option')
     def _onchange_reservation_fee_option(self):
         if self.reservation_fee_option == '5000':
