@@ -21,6 +21,9 @@
                 <button name="action_view_quotations" type="object" class="oe_stat_button" icon="fa-file-text-o">
                     <field name="property_quotation_count" widget="statinfo" string="Quotations"/>
                 </button>
+                <button name="action_view_reservations" type="object" class="oe_stat_button" icon="fa-bookmark">
+                    <field name="property_reservation_count" widget="statinfo" string="Reservations"/>
+                </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Leasing &amp; Tenant Requirements" name="leasing_details">

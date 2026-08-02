@@ -51,6 +51,25 @@ class CrmLeadInherit(models.Model):
     property_quotation_ids = fields.One2many('sale.order', 'opportunity_id', string='Leasing Quotations')
     property_quotation_count = fields.Integer(string='Quotations Count', compute='_compute_property_quotation_count')
 
+    property_reservation_ids = fields.One2many('property.reservation', 'opportunity_id', string='Unit Reservations')
+    property_reservation_count = fields.Integer(string='Reservations Count', compute='_compute_property_reservation_count')
+
+    @api.depends('property_reservation_ids')
+    def _compute_property_reservation_count(self):
+        for rec in self:
+            rec.property_reservation_count = len(rec.property_reservation_ids)
+
+    def action_view_reservations(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("property_management_custom.action_property_reservation")
+        action['domain'] = [('opportunity_id', '=', self.id)]
+        action['context'] = {
+            'default_opportunity_id': self.id,
+            'default_tenant_id': self.partner_id.id if self.partner_id else False,
+            'default_unit_id': self.target_unit_id.id if self.target_unit_id else False,
+        }
+        return action
+
     @api.depends('property_quotation_ids')
     def _compute_property_quotation_count(self):
         for rec in self:

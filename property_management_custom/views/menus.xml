@@ -20,6 +20,12 @@
               action="sale.action_quotations_with_onboarding"
               sequence="12"/>
 
+    <menuitem id="menu_property_reservations"
+              name="Unit Reservations"
+              parent="crm.crm_menu_root"
+              action="action_property_reservation"
+              sequence="13"/>
+
     <menuitem id="menu_visitor_gate_passes"
               name="Security Visitor Gate Passes"
               parent="crm.crm_menu_root"
