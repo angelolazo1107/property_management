@@ -24,3 +24,22 @@ class ProductProductPropertyInherit(models.Model):
     water_meter_no = fields.Char(string='Water Meter ID')
     latest_electric_reading = fields.Float(string='Latest Electric Reading (kWh)')
     latest_water_reading = fields.Float(string='Latest Water Reading (cbm)')
+
+
+class ResCompanyCurrencyFix(models.Model):
+    _inherit = 'res.company'
+
+    def write(self, vals):
+        if 'currency_id' in vals:
+            currency_id = vals['currency_id']
+            for company in self:
+                if currency_id and company.currency_id.id != currency_id:
+                    self.env.cr.execute(
+                        "UPDATE res_company SET currency_id = %s WHERE id = %s",
+                        (currency_id, company.id)
+                    )
+                    company.invalidate_recordset(['currency_id'])
+            vals_copy = dict(vals)
+            vals_copy.pop('currency_id', None)
+            return super(ResCompanyCurrencyFix, self).write(vals_copy)
+        return super(ResCompanyCurrencyFix, self).write(vals)
