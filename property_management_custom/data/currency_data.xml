@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Activate Philippine Peso (PHP - ₱) Currency -->
+        <record id="base.PHP" model="res.currency">
+            <field name="active" eval="True"/>
+            <field name="symbol">₱</field>
+            <field name="position">before</field>
+        </record>
+
+        <!-- Set Default Company Currency to Philippine Peso (PHP) for Philippine-based operations -->
+        <record id="base.main_company" model="res.company">
+            <field name="currency_id" ref="base.PHP"/>
+        </record>
+    </data>
+</odoo>

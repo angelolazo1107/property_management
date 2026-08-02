@@ -37,6 +37,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/currency_data.xml',
         'data/crm_stage_data.xml',
         'data/quotation_account_data.xml',
         'data/quotation_product_data.xml',
