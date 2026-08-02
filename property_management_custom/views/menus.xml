@@ -1,105 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Main Top-Level App Menu -->
-    <menuitem id="menu_property_management_root"
-              name="Property Platform"
-              sequence="10"
-              web_icon="property_management_custom,static/description/icon.png"/>
-
-    <!-- Document Category Action -->
+    <!-- Document Category Window Action -->
     <record id="action_property_document_category" model="ir.actions.act_window">
         <field name="name">Document Management Folders</field>
         <field name="res_model">property.document.category</field>
         <field name="view_mode">list,form</field>
     </record>
 
-    <!-- 1. Leasing Category -->
-    <menuitem id="menu_leasing_category"
-              name="Leasing &amp; Tenants"
-              parent="menu_property_management_root"
-              sequence="1"/>
-
-    <menuitem id="menu_property_tenants"
-              name="Tenants"
-              parent="menu_leasing_category"
-              action="action_property_tenant"
-              sequence="1"/>
-
-    <menuitem id="menu_property_buildings"
-              name="Buildings &amp; Towers"
-              parent="menu_leasing_category"
-              action="action_property_building"
-              sequence="2"/>
-
-    <menuitem id="menu_property_units"
-              name="Property Units"
-              parent="menu_leasing_category"
-              action="action_property_unit"
-              sequence="3"/>
+    <!-- 1. Leasing & Units Custom Submenus Under CRM -->
+    <menuitem id="menu_leasing_root_custom"
+              name="Leasing &amp; Property Units"
+              parent="crm.crm_menu_root"
+              sequence="15"/>
 
     <menuitem id="menu_lease_contracts"
               name="Lease Contracts Pipeline"
-              parent="menu_leasing_category"
+              parent="menu_leasing_root_custom"
               action="action_lease_contract"
+              sequence="1"/>
+
+    <menuitem id="menu_property_units"
+              name="Property Units"
+              parent="menu_leasing_root_custom"
+              action="action_property_unit"
+              sequence="2"/>
+
+    <menuitem id="menu_property_buildings"
+              name="Buildings &amp; Towers"
+              parent="menu_leasing_root_custom"
+              action="action_property_building"
+              sequence="3"/>
+
+    <menuitem id="menu_property_tenants"
+              name="Tenants Master File"
+              parent="menu_leasing_root_custom"
+              action="action_property_tenant"
               sequence="4"/>
 
-    <!-- 2. PMO Category -->
-    <menuitem id="menu_pmo_category"
+    <!-- 2. PMO & Operations Custom Submenus Under Maintenance -->
+    <menuitem id="menu_pmo_root_custom"
               name="PMO Operations"
-              parent="menu_property_management_root"
-              sequence="2"/>
+              parent="maintenance.menu_m_request"
+              sequence="20"/>
 
     <menuitem id="menu_pmo_inspections"
               name="Move-In / Out Inspections"
-              parent="menu_pmo_category"
+              parent="menu_pmo_root_custom"
               action="action_pmo_inspection"
               sequence="1"/>
 
     <menuitem id="menu_pmo_utility_readings"
               name="Electric &amp; Water Readings"
-              parent="menu_pmo_category"
+              parent="menu_pmo_root_custom"
               action="action_pmo_utility_reading"
               sequence="2"/>
 
     <menuitem id="menu_pmo_job_orders"
               name="Job Orders &amp; Maintenance"
-              parent="menu_pmo_category"
+              parent="menu_pmo_root_custom"
               action="action_pmo_job_order"
               sequence="3"/>
 
     <menuitem id="menu_approval_matrix"
-              name="Approval Governance Matrix"
-              parent="menu_pmo_category"
+              name="Governance Approval Matrix"
+              parent="menu_pmo_root_custom"
               action="action_approval_matrix"
               sequence="4"/>
 
-    <!-- 3. Admin & Services Category -->
-    <menuitem id="menu_admin_category"
-              name="Admin &amp; Fleet Services"
-              parent="menu_property_management_root"
-              sequence="3"/>
-
-    <menuitem id="menu_property_vendors"
-              name="Vendors &amp; Contractors"
-              parent="menu_admin_category"
-              action="action_property_vendor"
-              sequence="1"/>
-
-    <menuitem id="menu_office_supplies"
-              name="Office Supply Requisitions"
-              parent="menu_admin_category"
-              action="action_office_supply_request"
-              sequence="2"/>
-
-    <menuitem id="menu_fleet_trips"
-              name="Fleet Vehicle Trips"
-              parent="menu_admin_category"
+    <!-- 3. Admin, Supplies & Fleet Custom Submenus -->
+    <menuitem id="menu_fleet_trips_custom"
+              name="Vehicle Trips &amp; Fleet Logs"
+              parent="fleet.menu_root"
               action="action_fleet_trip_request"
-              sequence="3"/>
+              sequence="10"/>
 
-    <menuitem id="menu_document_folders"
-              name="Document Management Folders"
-              parent="menu_admin_category"
+    <menuitem id="menu_office_supplies_custom"
+              name="Office Supply Requisitions"
+              parent="purchase.menu_purchase_root"
+              action="action_office_supply_request"
+              sequence="15"/>
+
+    <menuitem id="menu_property_vendors_custom"
+              name="Vendors &amp; Contractors"
+              parent="purchase.menu_purchase_root"
+              action="action_property_vendor"
+              sequence="20"/>
+
+    <menuitem id="menu_document_folders_custom"
+              name="Document Folders Configuration"
+              parent="base.menu_administration"
               action="action_property_document_category"
-              sequence="4"/>
+              sequence="30"/>
 </odoo>
