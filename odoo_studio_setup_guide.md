@@ -161,20 +161,42 @@ Add custom fields onto `sale.order` via Studio or backend XML module:
 14. **Submissions**: `Submitted to Billing` (`submitted_to_billing`), `Submitted to Legal` (`submitted_to_legal`).
 15. **BIS Status** (`state`): `Draft`, `For Billing Review`, `For Legal Review`, `Approved`, `Rejected`.
 
-#### Document Management Hierarchy (`property.document.category`):
-Root folder: `Tenant Files / Property Name / Unit Name / Tenant Name`
-Automated Subfolders:
-1. `Valid ID`
-2. `Proof of Income`
-3. `BIS`
-4. `Lease Contract`
-5. `Receipts`
-6. `Access Card / Biometrics`
-7. `Parking`
-8. `Wi-Fi`
-9. `Pet Registration`
-10. `Move-In / Move-Out`
-11. `Refund Documents`
+---
+
+## 10. Stage 5: Legal Contract Preparation & Move-In Gatekeeping Controls
+
+### Navigation: `CRM / Sales > Lease Package Contracts`
+
+#### Lease Contract Status Stages (`stage`):
+1. `Draft Contract` (`draft`)
+2. `For Tenant Review` (`tenant_review`)
+3. `For Signing` (`for_signing`)
+4. `Signed by Tenant` (`signed_tenant`)
+5. `Submitted to Billing` (`submitted_billing`)
+6. `Submitted to Legal` (`submitted_legal`)
+7. `For Notarization` (`for_notarization`)
+8. `Notarized` (`notarized`)
+9. `Released to Tenant` (`released_tenant`)
+10. `Archived` (`archived`)
+
+#### Legal Contract Fields (`lease.contract`):
+* **Lease Number**: Auto-generated (`LEASE-2026-XXXXX`).
+* **Tenant & Unit**: Linked contact (`tenant_id`) and assigned unit (`unit_id`).
+* **Contract Dates**: Start Date (`date_start`), End Date (`date_end`), Contract Term (`contract_term_months`).
+* **Payment Due Date**: Day of month selection (Every 1st, 5th, 10th, 15th, 30th).
+* **Financial Items**: Monthly Rent, Security Deposit, Furniture Rental, Parking Fee, Wi-Fi Fee.
+* **Legal Stipulations**: Renewal Terms (`renewal_terms`), Early Termination Clause (`early_termination_clause`), Security Deposit Forfeiture Rule (`deposit_forfeiture_rule`).
+* **Notary & Attachments**: Notary Status (`notary_status`: `Pending`, `Notarized`), Signed Copy (`signed_copy`).
+
+#### Strict 6-Point Move-In Gatekeeping Control Rules:
+Move-in clearance **CANNOT BE GRANTED** unless all 6 conditions are verified:
+1. **BIS is Approved:** Buyer/Tenant Information Sheet approved.
+2. **Tenant Documents Complete:** Valid ID & Proof of Income attached.
+3. **Payments Settled:** Security deposit & reservation payment verified by Accounting (`deposit_paid` = True).
+4. **Contract Signed or Exception Approved:** Contract in executed/notarized stage OR `Management Exception Approved for Move-In` checked with justification notes.
+5. **Unit Assessment Complete:** PMO turnover inspection done.
+6. **Move-In Form Prepared:** PMO Move-In turnover form completed.
+
 
 
 

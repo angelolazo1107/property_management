@@ -5,37 +5,120 @@
         <field name="name">lease.contract.form</field>
         <field name="model">lease.contract</field>
         <field name="arch" type="xml">
-            <form string="Tenant Lease Contract">
+            <form string="Tenant Lease Contract &amp; Legal Preparation">
                 <header>
-                    <button name="action_verify_payment_clearance" string="Verify Payment &amp; Activate Lease" type="object" class="btn-primary" invisible="stage != 'payment_clearance'"/>
-                    <button name="action_trigger_move_out" string="Trigger Move-Out Inspection" type="object" class="btn-warning" invisible="stage != 'active'"/>
-                    <button name="action_approve_deposit_refund" string="Approve Security Deposit Refund" type="object" class="btn-success" invisible="deposit_refund_status == 'approved' or stage != 'move_out'"/>
-                    <field name="stage" widget="statusbar" statusbar_visible="inquiry,reservation,bis_submitted,legal_review,payment_clearance,active,move_out,deposit_refund,terminated"/>
+                    <button name="action_submit_tenant_review" 
+                            type="object" 
+                            string="Submit for Tenant Review" 
+                            class="btn-secondary" 
+                            invisible="stage not in ('draft')"/>
+
+                    <button name="action_send_signing" 
+                            type="object" 
+                            string="Send for Signing" 
+                            class="btn-primary" 
+                            invisible="stage not in ('draft', 'tenant_review')"/>
+
+                    <button name="action_tenant_signed" 
+                            type="object" 
+                            string="Mark Signed by Tenant" 
+                            class="btn-success" 
+                            invisible="stage not in ('for_signing')"/>
+
+                    <button name="action_submit_legal" 
+                            type="object" 
+                            string="Submit to Legal for Notarization" 
+                            class="btn-info" 
+                            invisible="stage not in ('signed_tenant', 'submitted_billing')"/>
+
+                    <button name="action_notarize" 
+                            type="object" 
+                            string="Notarize Contract" 
+                            class="btn-success" 
+                            invisible="stage not in ('submitted_legal', 'for_notarization')"/>
+
+                    <button name="action_release_tenant" 
+                            type="object" 
+                            string="Release Executed Copy to Tenant" 
+                            class="btn-primary" 
+                            invisible="stage not in ('notarized')"/>
+
+                    <button name="action_verify_move_in_clearance" 
+                            type="object" 
+                            string="Verify &amp; Grant Move-In Clearance" 
+                            class="btn-success" 
+                            invisible="move_in_cleared"/>
+
+                    <button name="action_trigger_move_out" 
+                            type="object" 
+                            string="Trigger Move-Out Inspection" 
+                            class="btn-warning" 
+                            invisible="stage != 'active'"/>
+
+                    <button name="action_approve_deposit_refund" 
+                            type="object" 
+                            string="Approve Security Deposit Refund" 
+                            class="btn-success" 
+                            invisible="deposit_refund_status == 'approved' or stage != 'move_out'"/>
+
+                    <field name="stage" widget="statusbar" statusbar_visible="draft,tenant_review,for_signing,signed_tenant,submitted_legal,notarized,released_tenant,active"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name"/>
+                            <field name="name" readonly="1"/>
                         </h1>
                     </div>
                     <group>
-                        <group string="Tenant &amp; Unit Information">
-                            <field name="tenant_id"/>
-                            <field name="unit_id"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="monthly_rent"/>
-                            <field name="security_deposit"/>
-                        </group>
-                        <group string="Contract Dates &amp; Clearances">
+                        <group string="Tenant &amp; Lease Term Information">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
                             <field name="date_start"/>
                             <field name="date_end"/>
-                            <field name="bis_submitted"/>
-                            <field name="legal_clearance"/>
-                            <field name="deposit_paid"/>
-                            <field name="move_in_checklist_done"/>
+                            <field name="contract_term_months"/>
+                            <field name="payment_due_date"/>
+                        </group>
+                        <group string="Monthly Rental Financial Breakdown">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monthly_rent" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="furniture_rental_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="parking_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="wifi_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Notarization &amp; Signed Attachments">
+                            <field name="notary_status" widget="badge" decoration-warning="notary_status == 'pending'" decoration-success="notary_status == 'done'"/>
+                            <field name="signed_copy" filename="signed_copy_filename"/>
+                            <field name="signed_copy_filename" invisible="1"/>
+                        </group>
+                        <group string="Pipeline &amp; Reference Integrations">
+                            <field name="bis_id"/>
+                            <field name="opportunity_id"/>
+                        </group>
+                    </group>
+                    <group string="6-Point Move-In Compliance Checklist &amp; Gatekeeping">
+                        <group>
+                            <field name="bis_submitted" string="1. BIS Approved"/>
+                            <field name="deposit_paid" string="2. Security Deposit Paid"/>
+                            <field name="legal_clearance" string="3. Legal Clearance Approved"/>
+                            <field name="move_in_checklist_done" string="4. Move-In Form Prepared"/>
+                        </group>
+                        <group>
+                            <field name="move_in_cleared" readonly="1" widget="boolean_toggle"/>
+                            <field name="exception_approved"/>
+                            <field name="exception_reason" invisible="not exception_approved" required="exception_approved" placeholder="Enter GM or Operations exception approval authorization..."/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Legal Clauses &amp; Policy Rules" name="legal_clauses">
+                            <group>
+                                <field name="renewal_terms" placeholder="Specify annual escalation rate (e.g. 5% renewal adjustment) and notice timeline..."/>
+                                <field name="early_termination_clause" placeholder="Specify early exit penalty rules..."/>
+                                <field name="deposit_forfeiture_rule" placeholder="Specify security deposit breach &amp; forfeiture conditions..."/>
+                            </group>
+                        </page>
                         <page string="Move-Out Settlement &amp; Deposit Refund Ledger" name="deposit_ledger">
                             <group>
                                 <group string="Deductions Calculation">
@@ -53,8 +136,8 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Contract Notes &amp; Terms" name="notes">
-                            <field name="notes" placeholder="Enter special contract stipulations, payment schedules, or renewal terms..."/>
+                        <page string="Contract Notes &amp; Special Terms" name="notes">
+                            <field name="notes" placeholder="Enter special contract stipulations, payment schedules, or custom provisions..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -68,16 +151,16 @@
         <field name="name">lease.contract.tree</field>
         <field name="model">lease.contract</field>
         <field name="arch" type="xml">
-            <list string="Lease Contracts">
+            <list string="Lease Contracts" decoration-info="stage in ('draft', 'tenant_review', 'for_signing')" decoration-warning="stage in ('signed_tenant', 'submitted_legal', 'for_notarization')" decoration-success="stage in ('notarized', 'released_tenant', 'active')" decoration-muted="stage in ('terminated', 'archived')">
                 <field name="name"/>
                 <field name="tenant_id"/>
                 <field name="unit_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
-                <field name="monthly_rent"/>
+                <field name="monthly_rent" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="notary_status" widget="badge"/>
+                <field name="move_in_cleared" widget="boolean"/>
                 <field name="stage" widget="badge"/>
-                <field name="deposit_paid"/>
-                <field name="deposit_refund_status" widget="badge"/>
             </list>
         </field>
     </record>
@@ -87,5 +170,13 @@
         <field name="name">Lease Package Contracts</field>
         <field name="res_model">lease.contract</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Tenant Lease Contract!
+            </p>
+            <p>
+                Manage legal contract preparation, tenant review, signatures, notarization status, early termination policies, and strict 6-point move-in clearance controls.
+            </p>
+        </field>
     </record>
 </odoo>

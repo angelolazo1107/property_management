@@ -223,5 +223,9 @@ class CrmLeadInherit(models.Model):
 
     def action_verify_move_in_clearance(self):
         for rec in self:
-            rec.move_in_cleared = True
+            lease = self.env['lease.contract'].search([('opportunity_id', '=', rec.id)], limit=1)
+            if lease:
+                lease.action_verify_move_in_clearance()
+            else:
+                rec.move_in_cleared = True
 
