@@ -4,6 +4,9 @@
         <!-- 1. Bare Unit Rental Template -->
         <record id="template_bare_unit_rental" model="sale.order.template">
             <field name="name">Bare Unit Rental Quotation Template</field>
+            <field name="number_of_days">30</field>
+            <field name="duration_value">1</field>
+            <field name="duration_unit">year</field>
             <field name="note">Standard Bare Unit Leasing Package with Reservation Fee &amp; Security Deposit.</field>
         </record>
         <record id="line_bare_rental" model="sale.order.template.line">
@@ -25,6 +28,9 @@
         <!-- 2. Furnished Unit Rental Template -->
         <record id="template_furnished_unit_rental" model="sale.order.template">
             <field name="name">Furnished Unit Rental Quotation Template</field>
+            <field name="number_of_days">30</field>
+            <field name="duration_value">1</field>
+            <field name="duration_unit">year</field>
             <field name="note">Fully Furnished Unit Lease Package includes Furniture &amp; Appliances Package.</field>
         </record>
         <record id="line_furnished_rental" model="sale.order.template.line">
@@ -51,6 +57,9 @@
         <!-- 3. Rental with Parking Template -->
         <record id="template_rental_with_parking" model="sale.order.template">
             <field name="name">Rental with Parking Quotation Template</field>
+            <field name="number_of_days">30</field>
+            <field name="duration_value">1</field>
+            <field name="duration_unit">year</field>
             <field name="note">Property Lease Package inclusive of allocated Parking Space Slot.</field>
         </record>
         <record id="line_parking_rental" model="sale.order.template.line">
@@ -77,6 +86,9 @@
         <!-- 4. Rental with Wi-Fi Template -->
         <record id="template_rental_with_wifi" model="sale.order.template">
             <field name="name">Rental with Wi-Fi Quotation Template</field>
+            <field name="number_of_days">30</field>
+            <field name="duration_value">1</field>
+            <field name="duration_unit">year</field>
             <field name="note">Property Lease Package with high-speed Wi-Fi Internet pre-installed.</field>
         </record>
         <record id="line_wifi_rental" model="sale.order.template.line">
@@ -103,6 +115,9 @@
         <!-- 5. Rental with Access Card Template -->
         <record id="template_rental_with_access_card" model="sale.order.template">
             <field name="name">Rental with Access Card Quotation Template</field>
+            <field name="number_of_days">30</field>
+            <field name="duration_value">1</field>
+            <field name="duration_unit">year</field>
             <field name="note">Property Lease Package including custom Building Access Cards.</field>
         </record>
         <record id="line_card_rental" model="sale.order.template.line">
@@ -129,6 +144,9 @@
         <!-- 6. Rental with Pet Registration Template -->
         <record id="template_rental_with_pet" model="sale.order.template">
             <field name="name">Rental with Pet Registration Quotation Template</field>
+            <field name="number_of_days">30</field>
+            <field name="duration_value">1</field>
+            <field name="duration_unit">year</field>
             <field name="note">Pet-Friendly Lease Package including pet permit &amp; registration line items.</field>
         </record>
         <record id="line_pet_rental" model="sale.order.template.line">
