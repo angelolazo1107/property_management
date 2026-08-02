@@ -7,10 +7,5 @@
             <field name="symbol">₱</field>
             <field name="position">before</field>
         </record>
-
-        <!-- 2. Force Main Company Currency to Philippine Peso (PHP) -->
-        <record id="base.main_company" model="res.company">
-            <field name="currency_id" ref="base.PHP"/>
-        </record>
     </data>
 </odoo>
