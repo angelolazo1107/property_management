@@ -87,7 +87,11 @@ def setup_currency(uid, models):
         company_ids = models.execute_kw(DB_NAME, uid, API_KEY, 'res.company', 'search', [[]])
         if company_ids:
             models.execute_kw(DB_NAME, uid, API_KEY, 'res.company', 'write', [company_ids, {'currency_id': php_id}])
-            print(f"  [UPDATED] Main Company Currency set to PHP (₱) for ID {company_ids[0]}")
+            print(f"  [UPDATED] Main Company Currency set to PHP (₱)")
+        pricelist_ids = models.execute_kw(DB_NAME, uid, API_KEY, 'product.pricelist', 'search', [[]])
+        if pricelist_ids:
+            models.execute_kw(DB_NAME, uid, API_KEY, 'product.pricelist', 'write', [pricelist_ids, {'currency_id': php_id}])
+            print(f"  [UPDATED] Public Pricelist Currency set to PHP (₱)")
     else:
         print("  [NOTICE] Currency PHP not found in database registry.")
 
