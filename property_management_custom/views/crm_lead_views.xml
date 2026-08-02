@@ -13,11 +13,6 @@
                 <button name="action_verify_reservation_payment" string="Verify Reservation Fee (Accounting)" type="object" class="btn-primary" invisible="reservation_verified"/>
                 <button name="action_verify_move_in_clearance" string="Grant Move-In Clearance" type="object" class="btn-success" invisible="move_in_cleared"/>
             </xpath>
-            <xpath expr="//field[@name='tag_ids']" position="after">
-                <field name="target_unit_id" options="{'no_create': True}"/>
-                <field name="ocular_status" widget="badge" decoration-info="ocular_status == 'scheduled'" decoration-success="ocular_status == 'completed'"/>
-                <field name="unit_hold_status" widget="badge" decoration-warning="unit_hold_status == 'hold_active'"/>
-            </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Leasing &amp; Tenant Requirements" name="leasing_details">
                     <group>
