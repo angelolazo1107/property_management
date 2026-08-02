@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Acknowledgement Receipt -->
+    <record id="seq_sale_order_acknowledgement_receipt" model="ir.sequence">
+        <field name="name">Leasing Acknowledgement Receipt Sequence</field>
+        <field name="code">sale.order.acknowledgement.receipt</field>
+        <field name="prefix">AR-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- Form View Extension for sale.order -->
+    <record id="view_order_form_property_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.property.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Header Action Buttons for Reservation Fee Workflow -->
+            <xpath expr="//header" position="inside">
+                <button name="action_submit_reservation_proof" 
+                        type="object" 
+                        string="Submit Payment Proof to Billing" 
+                        class="btn-primary" 
+                        invisible="reservation_payment_status not in ('draft')"/>
+                
+                <button name="action_verify_reservation_payment" 
+                        type="object" 
+                        string="Verify Payment &amp; Block Unit" 
+                        class="btn-success" 
+                        invisible="reservation_payment_status not in ('submitted', 'draft')"/>
+
+                <button name="action_issue_acknowledgement_receipt" 
+                        type="object" 
+                        string="Issue Acknowledgement Receipt" 
+                        class="btn-info" 
+                        invisible="reservation_payment_status not in ('verified')"/>
+            </xpath>
+
+            <!-- Property Management Header Information -->
+            <xpath expr="//group[@name='partner_details']" position="after">
+                <group string="Property Lease Specifications" name="property_lease_details">
+                    <field name="target_unit_id" options="{'no_create': True}"/>
+                    <field name="intended_move_in_date"/>
+                    <field name="lease_term_months"/>
+                </group>
+            </xpath>
+
+            <!-- Reservation Deposit & Billing Clearance Notebook Page -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Reservation Deposit &amp; Billing Clearance" name="reservation_deposit_tab">
+                    <group>
+                        <group string="Reservation Deposit Configuration">
+                            <field name="reservation_fee_option" widget="radio"/>
+                            <field name="reservation_fee_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="reservation_payment_status" widget="badge" 
+                                   decoration-warning="reservation_payment_status == 'draft'" 
+                                   decoration-info="reservation_payment_status == 'submitted'" 
+                                   decoration-success="reservation_payment_status in ('verified', 'receipt_issued')" 
+                                   decoration-danger="reservation_payment_status == 'refunded'"/>
+                        </group>
+                        <group string="Proof of Payment &amp; Billing Verification">
+                            <field name="reservation_proof" filename="reservation_proof_filename"/>
+                            <field name="reservation_proof_filename" invisible="1"/>
+                            <field name="acknowledgement_receipt_no" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search View Extension for sale.order -->
+    <record id="view_sales_order_filter_property_inherit" model="ir.ui.view">
+        <field name="name">sale.order.search.property.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="target_unit_id"/>
+                <field name="acknowledgement_receipt_no"/>
+                <filter string="Target Property Assigned" name="has_target_unit" domain="[('target_unit_id', '!=', False)]"/>
+                <filter string="Reservation Payment Verified" name="reservation_verified" domain="[('reservation_payment_status', '=', 'verified')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Target Unit" name="group_target_unit" domain="[]" context="{'group_by': 'target_unit_id'}"/>
+                    <filter string="Reservation Payment Status" name="group_reservation_status" domain="[]" context="{'group_by': 'reservation_payment_status'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

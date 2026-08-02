@@ -79,3 +79,40 @@ Add fields for PMO inspections:
 #### Studio Approval Rules for Financial Actions
 1. **Deposit Refund Control:** Security Deposit refund invoices/bills require `Accounting Manager` validation signature before payment posting.
 2. **3-Way Match Checkpoint:** Vendor bills cannot be marked `Paid` without an attached `Goods Receipt` document reference.
+
+---
+
+## 6. Sales App: Quotation & Reservation Setup (Stage 3)
+
+### Navigation: `Sales > Quotation Templates / Products` -> Open Odoo Studio
+
+#### A. Custom Line Item Products & Accounting Mappings
+Navigate to `Sales > Products > Products` and ensure the following 8 products exist with respective Accounting treatment:
+1. **Monthly Rental** (Service -> Income Account `400100 - Rental Income`)
+2. **Furniture Rental Fee** (Service -> Income Account `400200 - Furniture Rental Income`)
+3. **Parking Space Rental Fee** (Service -> Income Account `400300 - Parking Fee Income`)
+4. **Wi-Fi / Internet Subscription Fee** (Service -> Income Account `400400 - Internet Fee Income`)
+5. **Building Access Card Fee** (Service -> Income Account `400500 - Access Card Fee Income`)
+6. **Pet Registration & Permit Fee** (Service -> Income Account `400900 - Pet Registration & Other Income`)
+7. **Lease Reservation Deposit Fee** (Service -> Current Liability `210100 - Unearned Revenue / Customer Deposit`)
+8. **Lease Security Deposit** (Service -> Current Liability `210200 - Security Deposit Payable`)
+
+#### B. Quotation Templates Configuration
+Navigate to `Sales > Configuration > Quotation Templates`:
+1. **Bare Unit Rental**: Monthly Rental + Lease Reservation Deposit Fee + Lease Security Deposit.
+2. **Furnished Unit Rental**: Monthly Rental + Furniture Rental Fee + Reservation Fee + Security Deposit.
+3. **Rental with Parking**: Monthly Rental + Parking Space Fee + Reservation Fee + Security Deposit.
+4. **Rental with Wi-Fi**: Monthly Rental + Wi-Fi Subscription Fee + Reservation Fee + Security Deposit.
+5. **Rental with Access Card**: Monthly Rental + Access Card Fee + Reservation Fee + Security Deposit.
+6. **Rental with Pet Registration**: Monthly Rental + Pet Registration Fee + Reservation Fee + Security Deposit.
+
+#### C. Quotation Form Customization (`sale.order`)
+Add custom fields onto `sale.order` via Studio or backend XML module:
+* **Target Property Unit** (`target_unit_id`): Linked to `product.product`.
+* **Intended Move-In Date** (`intended_move_in_date`): Date.
+* **Lease Duration** (`lease_term_months`): Integer (default: 12).
+* **Reservation Deposit Structure** (`reservation_fee_option`): Selection (`PHP 5,000`, `PHP 10,000`, `Custom`).
+* **Proof of Payment Upload** (`reservation_proof`): Binary Attachment.
+* **Reservation Status** (`reservation_payment_status`): Selection (`Pending`, `Submitted to Billing`, `Verified`, `Receipt Issued`).
+* **Acknowledgement Receipt Ref** (`acknowledgement_receipt_no`): Char / Sequence.
+

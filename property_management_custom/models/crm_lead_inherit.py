@@ -47,6 +47,72 @@ class CrmLeadInherit(models.Model):
     legal_clearance = fields.Boolean(string='Legal Clearance Approved', tracking=True)
     move_in_cleared = fields.Boolean(string='Move-In Financial Clearance Granted', tracking=True)
 
+    # Stage 3 Quotation & Reservation Integration
+    property_quotation_ids = fields.One2many('sale.order', 'opportunity_id', string='Leasing Quotations')
+    property_quotation_count = fields.Integer(string='Quotations Count', compute='_compute_property_quotation_count')
+
+    @api.depends('property_quotation_ids')
+    def _compute_property_quotation_count(self):
+        for rec in self:
+            rec.property_quotation_count = len(rec.property_quotation_ids)
+
+    def action_view_quotations(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
+        action['domain'] = [('opportunity_id', '=', self.id)]
+        action['context'] = {
+            'default_opportunity_id': self.id,
+            'default_partner_id': self.partner_id.id if self.partner_id else False,
+            'default_target_unit_id': self.target_unit_id.id if self.target_unit_id else False,
+            'default_intended_move_in_date': self.intended_move_in_date,
+        }
+        return action
+
+    def action_create_quotation(self):
+        self.ensure_one()
+        if not self.partner_id:
+            # Auto-create or require partner
+            partner_vals = {
+                'name': self.contact_name or self.partner_name or self.name,
+                'email': self.email_from,
+                'phone': self.phone or self.mobile,
+                'is_company': False if self.contact_name else True,
+            }
+            partner = self.env['res.partner'].create(partner_vals)
+            self.partner_id = partner.id
+
+        # Determine best quotation template based on requirements
+        template_xml_id = 'property_management_custom.template_bare_unit_rental'
+        if self.parking_required:
+            template_xml_id = 'property_management_custom.template_rental_with_parking'
+        elif self.wifi_required:
+            template_xml_id = 'property_management_custom.template_rental_with_wifi'
+        elif self.pet_details:
+            template_xml_id = 'property_management_custom.template_rental_with_pet'
+
+        template = self.env.ref(template_xml_id, raise_if_not_found=False)
+
+        so_vals = {
+            'partner_id': self.partner_id.id,
+            'opportunity_id': self.id,
+            'target_unit_id': self.target_unit_id.id if self.target_unit_id else False,
+            'intended_move_in_date': self.intended_move_in_date,
+            'sale_order_template_id': template.id if template else False,
+        }
+
+        sale_order = self.env['sale.order'].create(so_vals)
+        if template:
+            sale_order._onchange_sale_order_template_id()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Leasing Quotation',
+            'res_model': 'sale.order',
+            'res_id': sale_order.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
     @api.depends('ocular_visit_ids')
     def _compute_ocular_visit_count(self):
         for rec in self:
@@ -86,3 +152,4 @@ class CrmLeadInherit(models.Model):
     def action_verify_move_in_clearance(self):
         for rec in self:
             rec.move_in_cleared = True
+
