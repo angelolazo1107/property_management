@@ -43,6 +43,11 @@
                             class="btn-primary" 
                             invisible="stage not in ('notarized')"/>
 
+                    <button name="action_create_unit_assessment" 
+                            type="object" 
+                            string="Request Unit Assessment" 
+                            class="btn-primary"/>
+
                     <button name="action_verify_move_in_clearance" 
                             type="object" 
                             string="Verify &amp; Grant Move-In Clearance" 
@@ -64,6 +69,11 @@
                     <field name="stage" widget="statusbar" statusbar_visible="draft,tenant_review,for_signing,signed_tenant,submitted_legal,notarized,released_tenant,active"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_unit_assessments" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <field name="unit_assessment_task_count" widget="statinfo" string="Unit Assessments"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>

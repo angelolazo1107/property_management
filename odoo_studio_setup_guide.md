@@ -188,14 +188,43 @@ Add custom fields onto `sale.order` via Studio or backend XML module:
 * **Legal Stipulations**: Renewal Terms (`renewal_terms`), Early Termination Clause (`early_termination_clause`), Security Deposit Forfeiture Rule (`deposit_forfeiture_rule`).
 * **Notary & Attachments**: Notary Status (`notary_status`: `Pending`, `Notarized`), Signed Copy (`signed_copy`).
 
-#### Strict 6-Point Move-In Gatekeeping Control Rules:
-Move-in clearance **CANNOT BE GRANTED** unless all 6 conditions are verified:
-1. **BIS is Approved:** Buyer/Tenant Information Sheet approved.
-2. **Tenant Documents Complete:** Valid ID & Proof of Income attached.
-3. **Payments Settled:** Security deposit & reservation payment verified by Accounting (`deposit_paid` = True).
-4. **Contract Signed or Exception Approved:** Contract in executed/notarized stage OR `Management Exception Approved for Move-In` checked with justification notes.
-5. **Unit Assessment Complete:** PMO turnover inspection done.
-6. **Move-In Form Prepared:** PMO Move-In turnover form completed.
+---
+
+## 11. Stage 6: Unit Assessment & Turnover Tasks (SARA Replacement)
+
+### Navigation: `CRM / Sales > Unit Assessments & Turnover`
+
+#### Custom Task Model: Unit Assessment Task (`unit.assessment.task`)
+Internal request & turnover task system replacing external SARA tool:
+
+#### Task Stages (`stage`):
+1. `Request Created` (`request_created`)
+2. `Assigned to Admin` (`assigned_admin`)
+3. `Assigned to Housekeeping` (`assigned_housekeeping`)
+4. `Inspection Ongoing` (`inspection_ongoing`)
+5. `Cleaning Required` (`cleaning_required`)
+6. `Repair Required` (`repair_required`)
+7. `Completed` (`completed`)
+8. `Ready for Move-In` (`ready_move_in`)
+
+#### 11-Point Physical Inspection Checklist:
+1. **Unit cleanliness checked** (Required Boolean)
+2. **No existing damage confirmed** (Required Boolean)
+3. **Lights working** (Required Boolean)
+4. **Air-conditioning checked** (Required Boolean)
+5. **Plumbing checked** (Required Boolean)
+6. **Door lock checked** (Required Boolean)
+7. **Windows checked** (Required Boolean)
+8. **Furniture checked** (Required Boolean if unit is furnished)
+9. **Pre-Move-In Photos Upload** (`pre_move_in_photos` - Binary Attachment)
+10. **Admin Approval Sign-Off** (`admin_approval` - Boolean Sign-Off)
+11. **Housekeeping Approval Sign-Off** (`housekeeping_approval` - Boolean Sign-Off)
+
+#### Automated Unit Status Updates:
+* **Passed (`action_pass_assessment`):** Marks `overall_assessment_result = 'passed'`, task stage `Ready for Move-In`. Updates property unit `occupancy_status = 'available'`.
+* **Cleaning Required (`action_require_cleaning`):** Marks `overall_assessment_result = 'failed'`, task stage `Cleaning Required`. Updates property unit `occupancy_status = 'under_cleaning'`.
+* **Repair Required (`action_require_repair`):** Marks `overall_assessment_result = 'failed'`, task stage `Repair Required`. Updates property unit `occupancy_status = 'under_repair'`.
+
 
 
 

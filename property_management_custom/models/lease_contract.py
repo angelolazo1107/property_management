@@ -72,6 +72,44 @@ class LeaseContract(models.Model):
     bis_id = fields.Many2one('tenant.application.bis', string='Tenant BIS Reference')
     opportunity_id = fields.Many2one('crm.lead', string='Associated CRM Opportunity')
 
+    unit_assessment_task_ids = fields.One2many('unit.assessment.task', 'lease_contract_id', string='Unit Assessments')
+    unit_assessment_task_count = fields.Integer(string='Unit Assessments Count', compute='_compute_unit_assessment_task_count')
+
+    @api.depends('unit_assessment_task_ids')
+    def _compute_unit_assessment_task_count(self):
+        for rec in self:
+            rec.unit_assessment_task_count = len(rec.unit_assessment_task_ids)
+
+    def action_view_unit_assessments(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("property_management_custom.action_unit_assessment_task")
+        action['domain'] = [('lease_contract_id', '=', self.id)]
+        action['context'] = {
+            'default_lease_contract_id': self.id,
+            'default_unit_id': self.unit_id.id if self.unit_id else False,
+            'default_tenant_id': self.tenant_id.id if self.tenant_id else False,
+            'default_opportunity_id': self.opportunity_id.id if self.opportunity_id else False,
+        }
+        return action
+
+    def action_create_unit_assessment(self):
+        self.ensure_one()
+        task_vals = {
+            'unit_id': self.unit_id.id if self.unit_id else False,
+            'tenant_id': self.tenant_id.id if self.tenant_id else False,
+            'lease_contract_id': self.id,
+            'opportunity_id': self.opportunity_id.id if self.opportunity_id else False,
+        }
+        task = self.env['unit.assessment.task'].create(task_vals)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Unit Assessment & Turnover Task',
+            'res_model': 'unit.assessment.task',
+            'res_id': task.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
     bis_submitted = fields.Boolean(string='BIS Data Verified', tracking=True)
     legal_clearance = fields.Boolean(string='Legal Clearance Approved', tracking=True)
     deposit_paid = fields.Boolean(string='Security Deposit Paid (Accounting Verified)', tracking=True)

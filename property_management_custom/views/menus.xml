@@ -44,6 +44,12 @@
               action="action_lease_contract"
               sequence="14"/>
 
+    <menuitem id="menu_unit_assessment_task"
+              name="Unit Assessments &amp; Turnover"
+              parent="crm.crm_menu_root"
+              action="action_unit_assessment_task"
+              sequence="15"/>
+
     <menuitem id="menu_property_tenants"
               name="Tenants Master File"
               parent="crm.crm_menu_root"
