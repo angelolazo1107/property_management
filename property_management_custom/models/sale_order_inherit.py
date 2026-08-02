@@ -102,3 +102,16 @@ class SaleOrderPropertyInherit(models.Model):
                 body=f"Official Acknowledgement Receipt <b>{rec.acknowledgement_receipt_no}</b> sent to Tenant {rec.partner_id.name}.",
                 subject="Acknowledgement Receipt Issued"
             )
+
+
+class SaleOrderTemplatePropertyInherit(models.Model):
+    _inherit = 'sale.order.template'
+
+    duration_value = fields.Integer(string='Duration Value', default=1)
+    duration_unit = fields.Selection([
+        ('day', 'Days'),
+        ('week', 'Weeks'),
+        ('month', 'Months'),
+        ('year', 'Years'),
+    ], string='Duration Unit', default='year')
+
