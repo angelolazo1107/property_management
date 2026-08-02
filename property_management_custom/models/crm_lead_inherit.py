@@ -54,6 +54,59 @@ class CrmLeadInherit(models.Model):
     property_reservation_ids = fields.One2many('property.reservation', 'opportunity_id', string='Unit Reservations')
     property_reservation_count = fields.Integer(string='Reservations Count', compute='_compute_property_reservation_count')
 
+    bis_application_ids = fields.One2many('tenant.application.bis', 'opportunity_id', string='BIS Applications')
+    bis_application_count = fields.Integer(string='BIS Count', compute='_compute_bis_application_count')
+
+    @api.depends('bis_application_ids')
+    def _compute_bis_application_count(self):
+        for rec in self:
+            rec.bis_application_count = len(rec.bis_application_ids)
+
+    def action_view_bis(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("property_management_custom.action_tenant_application_bis")
+        action['domain'] = [('opportunity_id', '=', self.id)]
+        action['context'] = {
+            'default_opportunity_id': self.id,
+            'default_tenant_id': self.partner_id.id if self.partner_id else False,
+            'default_unit_id': self.target_unit_id.id if self.target_unit_id else False,
+            'default_move_in_date': self.intended_move_in_date,
+        }
+        return action
+
+    def action_create_bis(self):
+        self.ensure_one()
+        if not self.partner_id:
+            partner_vals = {
+                'name': self.contact_name or self.partner_name or self.name,
+                'email': self.email_from,
+                'phone': self.phone or self.mobile,
+                'is_company': False if self.contact_name else True,
+            }
+            partner = self.env['res.partner'].create(partner_vals)
+            self.partner_id = partner.id
+
+        bis_vals = {
+            'tenant_id': self.partner_id.id,
+            'unit_id': self.target_unit_id.id if self.target_unit_id else False,
+            'opportunity_id': self.id,
+            'move_in_date': self.intended_move_in_date,
+            'with_agent': True if self.broker_id else False,
+            'agent_id': self.broker_id.id if self.broker_id else False,
+        }
+        bis = self.env['tenant.application.bis'].create(bis_vals)
+        if self.target_unit_id:
+            bis._onchange_unit_id()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Tenant Application / BIS',
+            'res_model': 'tenant.application.bis',
+            'res_id': bis.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
     @api.depends('property_reservation_ids')
     def _compute_property_reservation_count(self):
         for rec in self:

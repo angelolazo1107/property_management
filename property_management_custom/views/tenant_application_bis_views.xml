@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for Tenant Application / BIS -->
+    <record id="seq_tenant_application_bis" model="ir.sequence">
+        <field name="name">Tenant BIS Application Sequence</field>
+        <field name="code">tenant.application.bis</field>
+        <field name="prefix">BIS-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- Form View for tenant.application.bis -->
+    <record id="view_tenant_application_bis_form" model="ir.ui.view">
+        <field name="name">tenant.application.bis.form</field>
+        <field name="model">tenant.application.bis</field>
+        <field name="arch" type="xml">
+            <form string="Tenant Application / Billing Information Sheet (BIS)">
+                <header>
+                    <button name="action_submit_billing" 
+                            type="object" 
+                            string="Submit to Billing" 
+                            class="btn-primary" 
+                            invisible="state not in ('draft')"/>
+
+                    <button name="action_submit_legal" 
+                            type="object" 
+                            string="Submit to Legal" 
+                            class="btn-success" 
+                            invisible="state not in ('draft', 'billing_review')"/>
+
+                    <button name="action_approve_bis" 
+                            type="object" 
+                            string="Approve BIS &amp; Prepare Lease Contract" 
+                            class="btn-info" 
+                            invisible="state != 'legal_review'"/>
+
+                    <button name="action_reject_bis" 
+                            type="object" 
+                            string="Reject Application" 
+                            class="btn-danger" 
+                            invisible="state in ('approved', 'rejected')"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,billing_review,legal_review,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tenant &amp; Unit Information">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="contact_info"/>
+                            <field name="move_in_date"/>
+                            <field name="lease_term"/>
+                        </group>
+                        <group string="Rental Pricing &amp; Security Deposit">
+                            <field name="bare_unit_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="furniture_rental_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="rental_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Agent &amp; Discount Remarks">
+                            <field name="with_agent"/>
+                            <field name="agent_id" invisible="not with_agent"/>
+                            <field name="discounted_price"/>
+                            <field name="discount_remarks" invisible="not discounted_price" required="discounted_price" placeholder="Specify discount justification, promo code, or GM approval notes..."/>
+                        </group>
+                        <group string="Required Verification Documents">
+                            <field name="valid_id" filename="valid_id_filename"/>
+                            <field name="valid_id_filename" invisible="1"/>
+                            <field name="proof_of_income" filename="proof_of_income_filename"/>
+                            <field name="proof_of_income_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Submissions &amp; Pipeline Links">
+                        <group>
+                            <field name="submitted_to_billing" readonly="1"/>
+                            <field name="submitted_to_legal" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="opportunity_id"/>
+                            <field name="reservation_id"/>
+                            <field name="lease_contract_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View for tenant.application.bis -->
+    <record id="view_tenant_application_bis_tree" model="ir.ui.view">
+        <field name="name">tenant.application.bis.list</field>
+        <field name="model">tenant.application.bis</field>
+        <field name="arch" type="xml">
+            <list string="Tenant BIS Applications" decoration-info="state == 'billing_review'" decoration-warning="state == 'legal_review'" decoration-success="state == 'approved'" decoration-muted="state == 'rejected'">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="rental_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="move_in_date"/>
+                <field name="submitted_to_billing"/>
+                <field name="submitted_to_legal"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View for tenant.application.bis -->
+    <record id="view_tenant_application_bis_kanban" model="ir.ui.view">
+        <field name="name">tenant.application.bis.kanban</field>
+        <field name="model">tenant.application.bis</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="rental_price"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div><strong>Tenant: </strong><field name="tenant_id"/></div>
+                                <div><strong>Unit: </strong><field name="unit_id"/></div>
+                                <div><strong>Rent: </strong><field name="rental_price" widget="monetary" options="{'currency_field': 'currency_id'}"/></div>
+                                <div><field name="state" widget="badge"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action Window for tenant.application.bis -->
+    <record id="action_tenant_application_bis" model="ir.actions.act_window">
+        <field name="name">Tenant BIS Applications</field>
+        <field name="res_model">tenant.application.bis</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Tenant Application / BIS!
+            </p>
+            <p>
+                Manage Buyer/Tenant Information Sheets (BIS), verify valid IDs, proof of income, bare unit and furniture pricing, discount approvals, and submit to Legal for contract preparation.
+            </p>
+        </field>
+    </record>
+</odoo>

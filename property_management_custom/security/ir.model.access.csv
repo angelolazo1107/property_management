@@ -11,3 +11,4 @@
 "access_approval_matrix_user","approval.matrix.user","model_approval_matrix",,1,1,1,1
 "access_property_document_category_user","property.document.category.user","model_property_document_category",,1,1,1,1
 "access_property_reservation_user","property.reservation.user","model_property_reservation",,1,1,1,1
+"access_tenant_application_bis_user","tenant.application.bis.user","model_tenant_application_bis",,1,1,1,1

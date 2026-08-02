@@ -26,6 +26,12 @@
               action="action_property_reservation"
               sequence="13"/>
 
+    <menuitem id="menu_tenant_application_bis"
+              name="Tenant BIS Applications"
+              parent="crm.crm_menu_root"
+              action="action_tenant_application_bis"
+              sequence="14"/>
+
     <menuitem id="menu_visitor_gate_passes"
               name="Security Visitor Gate Passes"
               parent="crm.crm_menu_root"

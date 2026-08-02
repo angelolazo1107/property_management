@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Root Directory for Tenant Files -->
+        <record id="doc_cat_tenant_files_root" model="property.document.category">
+            <field name="name">Tenant Files</field>
+            <field name="code">DOC_TENANT_ROOT</field>
+            <field name="module_scope">leasing</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="description">Root directory for all tenant document folders, unit files, and contract records.</field>
+        </record>
+
+        <!-- Subfolder Categories -->
+        <record id="doc_cat_valid_id" model="property.document.category">
+            <field name="name">Tenant Files / Valid ID</field>
+            <field name="code">DOC_VALID_ID</field>
+            <field name="module_scope">leasing</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Government issued IDs, passports, driver's licenses, ACR cards.</field>
+        </record>
+
+        <record id="doc_cat_proof_income" model="property.document.category">
+            <field name="name">Tenant Files / Proof of Income</field>
+            <field name="code">DOC_PROOF_INCOME</field>
+            <field name="module_scope">leasing</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Payslips, ITR, bank statements, certificate of employment.</field>
+        </record>
+
+        <record id="doc_cat_bis" model="property.document.category">
+            <field name="name">Tenant Files / BIS</field>
+            <field name="code">DOC_BIS</field>
+            <field name="module_scope">leasing</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Buyer / Tenant Information Sheet (BIS) forms.</field>
+        </record>
+
+        <record id="doc_cat_lease_contract" model="property.document.category">
+            <field name="name">Tenant Files / Lease Contract</field>
+            <field name="code">DOC_LEASE_CONTRACT</field>
+            <field name="module_scope">leasing</field>
+            <field name="folder_type">3_lease_contracts</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Draft, executed, and notarized lease contracts.</field>
+        </record>
+
+        <record id="doc_cat_receipts" model="property.document.category">
+            <field name="name">Tenant Files / Receipts</field>
+            <field name="code">DOC_RECEIPTS</field>
+            <field name="module_scope">accounting</field>
+            <field name="folder_type">28_ack_receipts</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Official Receipts (OR) and Acknowledgement Receipts (AR).</field>
+        </record>
+
+        <record id="doc_cat_access_card" model="property.document.category">
+            <field name="name">Tenant Files / Access Card &amp; Biometrics</field>
+            <field name="code">DOC_ACCESS_CARD</field>
+            <field name="module_scope">pmo</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">RFID access cards, biometrics registration, key turnover forms.</field>
+        </record>
+
+        <record id="doc_cat_parking" model="property.document.category">
+            <field name="name">Tenant Files / Parking</field>
+            <field name="code">DOC_PARKING</field>
+            <field name="module_scope">leasing</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Parking slot allocation permits and vehicle registration documents.</field>
+        </record>
+
+        <record id="doc_cat_wifi" model="property.document.category">
+            <field name="name">Tenant Files / Wi-Fi</field>
+            <field name="code">DOC_WIFI</field>
+            <field name="module_scope">leasing</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Internet subscription authorization forms and router installation receipts.</field>
+        </record>
+
+        <record id="doc_cat_pet_registration" model="property.document.category">
+            <field name="name">Tenant Files / Pet Registration</field>
+            <field name="code">DOC_PET_REG</field>
+            <field name="module_scope">pmo</field>
+            <field name="folder_type">2_tenant_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Condo pet permit forms, vaccination records, and pet photos.</field>
+        </record>
+
+        <record id="doc_cat_move_in_out" model="property.document.category">
+            <field name="name">Tenant Files / Move-In &amp; Move-Out</field>
+            <field name="code">DOC_MOVE_IN_OUT</field>
+            <field name="module_scope">pmo</field>
+            <field name="folder_type">7_move_in_forms</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">PMO Move-In baseline inspection forms and Move-Out turnover checklists.</field>
+        </record>
+
+        <record id="doc_cat_refund_docs" model="property.document.category">
+            <field name="name">Tenant Files / Refund Documents</field>
+            <field name="code">DOC_REFUND</field>
+            <field name="module_scope">accounting</field>
+            <field name="folder_type">22_refund_docs</field>
+            <field name="parent_id" ref="doc_cat_tenant_files_root"/>
+            <field name="description">Security deposit refund calculation sheets and payment vouchers.</field>
+        </record>
+    </data>
+</odoo>

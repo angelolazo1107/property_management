@@ -46,5 +46,53 @@ class PropertyDocumentCategory(models.Model):
         ('28_ack_receipts', '28. Acknowledgement Receipts'),
     ], string='Folder Designation', required=True)
 
+    parent_id = fields.Many2one('property.document.category', string='Parent Directory')
     is_restricted = fields.Boolean(string='Restricted Document Access', default=False)
     description = fields.Text(string='Compliance & Archival Guidelines')
+
+    @api.model
+    def create_tenant_subfolders(self, property_name='Property', unit_name='Unit', tenant_name='Tenant'):
+        """
+        Creates directory structure: Tenant Files / Property / Unit / Tenant Name
+        Subfolders:
+        - Valid ID
+        - Proof of Income
+        - BIS
+        - Lease Contract
+        - Receipts
+        - Access Card / Biometrics
+        - Parking
+        - Wi-Fi
+        - Pet Registration
+        - Move-In / Move-Out
+        - Refund Documents
+        """
+        subfolders = [
+            'Valid ID',
+            'Proof of Income',
+            'BIS',
+            'Lease Contract',
+            'Receipts',
+            'Access Card / Biometrics',
+            'Parking',
+            'Wi-Fi',
+            'Pet Registration',
+            'Move-In / Move-Out',
+            'Refund Documents',
+        ]
+        
+        root_path = f"Tenant Files / {property_name} / {unit_name} / {tenant_name}"
+        created_cats = []
+        for sf in subfolders:
+            folder_name = f"{root_path} / {sf}"
+            existing = self.search([('name', '=', folder_name)], limit=1)
+            if not existing:
+                cat = self.create({
+                    'name': folder_name,
+                    'code': f"DOC-{sf.upper().replace(' ', '_').replace('/', '_')}",
+                    'module_scope': 'leasing',
+                    'folder_type': '2_tenant_docs',
+                    'description': f"Automated archival folder for {tenant_name} ({unit_name}) - {sf}"
+                })
+                created_cats.append(cat)
+        return created_cats
