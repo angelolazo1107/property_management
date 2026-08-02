@@ -30,6 +30,7 @@ fleet trip tracking, and financial verification control gates.
     'data': [
         'security/ir.model.access.csv',
         'data/crm_stage_data.xml',
+        'views/tenant_views.xml',
         'views/property_unit_views.xml',
         'views/crm_lead_views.xml',
         'views/lease_contract_views.xml',
@@ -37,7 +38,6 @@ fleet trip tracking, and financial verification control gates.
         'views/procurement_views.xml',
         'views/fleet_views.xml',
         'views/office_supply_views.xml',
-        'views/tenant_views.xml',
         'views/approval_matrix_views.xml',
         'views/menus.xml',
     ],

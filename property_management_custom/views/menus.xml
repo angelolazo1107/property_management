@@ -22,7 +22,7 @@
     <menuitem id="menu_property_tenants"
               name="Tenants"
               parent="menu_leasing_category"
-              action="base.action_partner_form"
+              action="action_property_tenant"
               sequence="1"/>
 
     <menuitem id="menu_property_buildings"
@@ -82,7 +82,7 @@
     <menuitem id="menu_property_vendors"
               name="Vendors &amp; Contractors"
               parent="menu_admin_category"
-              action="base.action_partner_supplier_form"
+              action="action_property_vendor"
               sequence="1"/>
 
     <menuitem id="menu_office_supplies"
