@@ -164,17 +164,12 @@ class CrmLeadInherit(models.Model):
 
         template = self.env.ref(template_xml_id, raise_if_not_found=False)
 
-        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
-        php_pricelist = self.env['product.pricelist'].search([('currency_id', '=', php_currency.id)], limit=1) if php_currency else False
-
         so_vals = {
             'partner_id': self.partner_id.id,
             'opportunity_id': self.id,
             'target_unit_id': self.target_unit_id.id if self.target_unit_id else False,
             'intended_move_in_date': self.intended_move_in_date,
             'sale_order_template_id': template.id if template else False,
-            'currency_id': php_currency.id if php_currency else False,
-            'pricelist_id': php_pricelist.id if php_pricelist else False,
         }
 
         sale_order = self.env['sale.order'].create(so_vals)

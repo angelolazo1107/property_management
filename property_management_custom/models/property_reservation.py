@@ -65,7 +65,7 @@ class PropertyReservation(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 
         string='Currency', 
-        default=lambda self: self.env.ref('base.PHP', raise_if_not_found=False) or self.env.company.currency_id
+        default=lambda self: self.env.company.currency_id
     )
 
     @api.onchange('reservation_amount_preset')
