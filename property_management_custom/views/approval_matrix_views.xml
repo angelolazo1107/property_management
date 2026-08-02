@@ -1,13 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_approval_matrix_tree" model="ir.ui.view">
-        <field name="name">approval.matrix.list</field>
+    <!-- Approval Matrix Form View -->
+    <record id="view_approval_matrix_form" model="ir.ui.view">
+        <field name="name">approval.matrix.form</field>
         <field name="model">approval.matrix</field>
         <field name="arch" type="xml">
-            <list string="Approval Governance Matrix">
+            <form string="Approval Matrix Rule">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Rule Name (e.g. GM PO Approval > 50k)"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Category &amp; Scope">
+                            <field name="approval_category"/>
+                            <field name="module"/>
+                            <field name="transaction_type"/>
+                        </group>
+                        <group string="Financial Thresholds">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="min_amount"/>
+                            <field name="max_amount"/>
+                        </group>
+                    </group>
+                    <group string="Required Governance Approvers">
+                        <group>
+                            <field name="required_approvers" placeholder="e.g. Department Head, Procurement Manager"/>
+                        </group>
+                        <group>
+                            <field name="escalation_approver" placeholder="e.g. General Manager"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Policy Guidelines &amp; Exceptions" name="notes">
+                            <field name="notes" placeholder="Specify policy guidelines, exception triggers, or document requirements..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Approval Matrix Tree View -->
+    <record id="view_approval_matrix_tree" model="ir.ui.view">
+        <field name="name">approval.matrix.tree</field>
+        <field name="model">approval.matrix</field>
+        <field name="arch" type="xml">
+            <list string="Approval Matrix Rules">
                 <field name="name"/>
+                <field name="approval_category"/>
                 <field name="module"/>
-                <field name="transaction_type"/>
                 <field name="min_amount"/>
                 <field name="max_amount"/>
                 <field name="required_approvers"/>
@@ -16,46 +59,9 @@
         </field>
     </record>
 
-    <record id="view_approval_matrix_form" model="ir.ui.view">
-        <field name="name">approval.matrix.form</field>
-        <field name="model">approval.matrix</field>
-        <field name="arch" type="xml">
-            <form string="Approval Matrix Rule">
-                <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name" placeholder="Rule Name (e.g. Standard Operational PR)"/></h1>
-                    </div>
-                    <group>
-                        <group string="Scope &amp; Transaction">
-                            <field name="module"/>
-                            <field name="transaction_type"/>
-                        </group>
-                        <group string="Financial Thresholds">
-                            <field name="min_amount"/>
-                            <field name="max_amount"/>
-                            <field name="currency_id" invisible="1"/>
-                        </group>
-                    </group>
-                    <group string="Approval Hierarchy">
-                        <group>
-                            <field name="required_approvers"/>
-                        </group>
-                        <group>
-                            <field name="escalation_approver"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Policy Notes">
-                            <field name="notes" placeholder="Enter policy details, conditions, exceptions..."/>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
+    <!-- Approval Matrix Action -->
     <record id="action_approval_matrix" model="ir.actions.act_window">
-        <field name="name">Approval Governance Matrix</field>
+        <field name="name">Governance Approval Matrix</field>
         <field name="res_model">approval.matrix</field>
         <field name="view_mode">list,form</field>
     </record>

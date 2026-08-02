@@ -10,6 +10,7 @@ class PMOJobOrder(models.Model):
     name = fields.Char(string='Job Order Ref', required=True, copy=False, readonly=True, default='New')
     unit_id = fields.Many2one('property.unit', string='Property Unit', required=True)
     tenant_id = fields.Many2one('res.partner', string='Requesting Tenant / Dept', required=True)
+    helpdesk_ticket_id = fields.Many2one('helpdesk.ticket', string='Originating Helpdesk Ticket')
     
     category = fields.Selection([
         ('plumbing', 'Plumbing Maintenance'),
@@ -23,7 +24,8 @@ class PMOJobOrder(models.Model):
     job_cost = fields.Monetary(string='Estimated Job Cost', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     
-    payment_verified = fields.Boolean(string='Tenant Payment Verified', default=False)
+    payment_verified = fields.Boolean(string='Tenant Payment Verified (Accounting)', default=False)
+    management_waiver_approved = fields.Boolean(string='Management Payment Waiver Approved', default=False)
 
     scheduled_date = fields.Datetime(string='MST Scheduled Date & Time')
     assigned_technician_id = fields.Many2one('res.users', string='Assigned MST Technician')
@@ -48,8 +50,12 @@ class PMOJobOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('pmo.job.order') or 'JO-0001'
         return super(PMOJobOrder, self).create(vals)
 
+    def action_approve_waiver(self):
+        for rec in self:
+            rec.management_waiver_approved = True
+
     def action_schedule_mst(self):
         for rec in self:
-            if rec.is_chargeable and not rec.payment_verified:
-                raise UserError("Cannot Schedule Work: Chargeable Job Order requires payment verification before MST scheduling unless approved by Management.")
+            if rec.is_chargeable and not (rec.payment_verified or rec.management_waiver_approved):
+                raise UserError("Cannot Schedule Work: Chargeable Job Order requires full payment verification before MST scheduling unless approved by Management waiver!")
             rec.stage = 'scheduled'
