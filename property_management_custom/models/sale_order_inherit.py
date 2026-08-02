@@ -51,9 +51,13 @@ class SaleOrderPropertyInherit(models.Model):
         php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
         if php_currency:
             res['currency_id'] = php_currency.id
-            pricelist = self.env['product.pricelist'].search([('currency_id', '=', php_currency.id)], limit=1)
-            if pricelist:
-                res['pricelist_id'] = pricelist.id
+            # Automatically update all pricelists in database to PHP if needed
+            pricelists = self.env['product.pricelist'].search([])
+            for pl in pricelists:
+                if pl.currency_id != php_currency:
+                    pl.sudo().write({'currency_id': php_currency.id})
+            if pricelists:
+                res['pricelist_id'] = pricelists[0].id
         return res
 
     @api.onchange('partner_id')
@@ -61,20 +65,25 @@ class SaleOrderPropertyInherit(models.Model):
         php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
         if php_currency:
             self.currency_id = php_currency
-            if not self.pricelist_id or self.pricelist_id.currency_id != php_currency:
-                php_pricelist = self.env['product.pricelist'].search([('currency_id', '=', php_currency.id)], limit=1)
-                if php_pricelist:
-                    self.pricelist_id = php_pricelist
+            pricelists = self.env['product.pricelist'].search([])
+            for pl in pricelists:
+                if pl.currency_id != php_currency:
+                    pl.sudo().write({'currency_id': php_currency.id})
+            if pricelists:
+                self.pricelist_id = pricelists[0]
 
     @api.model_create_multi
     def create(self, vals_list):
         php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
-        php_pricelist = self.env['product.pricelist'].search([('currency_id', '=', php_currency.id)], limit=1) if php_currency else False
-        for vals in vals_list:
-            if php_currency:
+        if php_currency:
+            pricelists = self.env['product.pricelist'].search([])
+            for pl in pricelists:
+                if pl.currency_id != php_currency:
+                    pl.sudo().write({'currency_id': php_currency.id})
+            for vals in vals_list:
                 vals['currency_id'] = php_currency.id
-                if php_pricelist and not vals.get('pricelist_id'):
-                    vals['pricelist_id'] = php_pricelist.id
+                if pricelists and not vals.get('pricelist_id'):
+                    vals['pricelist_id'] = pricelists[0].id
         return super(SaleOrderPropertyInherit, self).create(vals_list)
 
     @api.onchange('reservation_fee_option')
