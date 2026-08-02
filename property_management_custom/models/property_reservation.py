@@ -56,6 +56,7 @@ class PropertyReservation(models.Model):
 
     opportunity_id = fields.Many2one('crm.lead', string='Associated CRM Inquiry')
     sale_order_id = fields.Many2one('sale.order', string='Quotation Ref')
+    tenant_application_bis_id = fields.Many2one('tenant.application.bis', string='BIS Application Ref')
     lease_contract_id = fields.Many2one('lease.contract', string='Lease Contract Ref')
 
     cancellation_reason = fields.Text(string='Cancellation Reason / Management Policy Notes')

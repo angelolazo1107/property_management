@@ -10,6 +10,7 @@
                 <button name="action_schedule_ocular" string="Schedule Ocular" type="object" class="btn-primary" invisible="ocular_status in ('scheduled', 'completed')"/>
                 <button name="action_complete_ocular" string="Complete Ocular" type="object" class="btn-success" invisible="ocular_status != 'scheduled'"/>
                 <button name="action_create_quotation" string="Create Leasing Quotation" type="object" class="btn-primary"/>
+                <button name="action_create_bis" string="Create BIS Sheet" type="object" class="btn-primary"/>
                 <button name="action_verify_bis" string="Verify BIS" type="object" class="btn-secondary" invisible="bis_status == 'verified'"/>
                 <button name="action_verify_reservation_payment" string="Verify Reservation Fee (Accounting)" type="object" class="btn-primary" invisible="reservation_verified"/>
                 <button name="action_verify_move_in_clearance" string="Grant Move-In Clearance" type="object" class="btn-success" invisible="move_in_cleared"/>
@@ -23,6 +24,9 @@
                 </button>
                 <button name="action_view_reservations" type="object" class="oe_stat_button" icon="fa-bookmark">
                     <field name="property_reservation_count" widget="statinfo" string="Reservations"/>
+                </button>
+                <button name="action_view_bis" type="object" class="oe_stat_button" icon="fa-id-card-o">
+                    <field name="bis_application_count" widget="statinfo" string="BIS Applications"/>
                 </button>
             </xpath>
             <xpath expr="//notebook" position="inside">

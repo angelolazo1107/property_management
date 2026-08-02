@@ -138,10 +138,44 @@ Add custom fields onto `sale.order` via Studio or backend XML module:
 13. **Manager Approval** (`manager_approval`): Boolean (Required for cancellation).
 14. **Cancellation Reason** (`cancellation_reason`): Text.
 
-#### Automated Business Controls:
-* **Payment Confirmation Unit Lock:** Unit occupancy status changes to `Reserved` **ONLY AFTER** payment confirmation.
-* **Lease Conversion:** Paid reservation converts into active lease contract and applies customer advance deposit.
-* **Manager Cancellation Enforcement:** Cancellation button blocks execution if `manager_approval` is False, ensuring management policy compliance.
+---
+
+## 9. Tenant Information & Documentation (BIS & Documents)
+
+### Navigation: `CRM / Sales > Tenant BIS Applications`
+
+#### Custom Model: Tenant Application / BIS (`tenant.application.bis`)
+1. **Tenant Name** (`tenant_id`): Linked contact (`res.partner`).
+2. **Unit Number** (`unit_id`): Linked unit (`product.product`).
+3. **Contact Information** (`contact_info`): Phone / Email.
+4. **Bare Unit Price** (`bare_unit_price`): Base rental.
+5. **Furniture Rental Price** (`furniture_rental_price`): If applicable.
+6. **Rental Price** (`rental_price`): Total monthly rent (Bare + Furniture).
+7. **Security Deposit** (`security_deposit`): Security deposit amount.
+8. **Target Move-In Date** (`move_in_date`): Date.
+9. **Lease Term** (`lease_term`): 6 Months, 1 Year, 2 Years, Custom.
+10. **With Agent** (`with_agent`) & **Agent Name** (`agent_id`): Linked agent.
+11. **Discounted Price** (`discounted_price`) & **Discount Remarks** (`discount_remarks`): Mandatory justification if discounted.
+12. **Valid ID Attachment** (`valid_id`): Binary file.
+13. **Proof of Income Attachment** (`proof_of_income`): Binary file.
+14. **Submissions**: `Submitted to Billing` (`submitted_to_billing`), `Submitted to Legal` (`submitted_to_legal`).
+15. **BIS Status** (`state`): `Draft`, `For Billing Review`, `For Legal Review`, `Approved`, `Rejected`.
+
+#### Document Management Hierarchy (`property.document.category`):
+Root folder: `Tenant Files / Property Name / Unit Name / Tenant Name`
+Automated Subfolders:
+1. `Valid ID`
+2. `Proof of Income`
+3. `BIS`
+4. `Lease Contract`
+5. `Receipts`
+6. `Access Card / Biometrics`
+7. `Parking`
+8. `Wi-Fi`
+9. `Pet Registration`
+10. `Move-In / Move-Out`
+11. `Refund Documents`
+
 
 
 

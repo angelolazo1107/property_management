@@ -15,3 +15,4 @@ from . import sale_order_inherit
 from . import approval_matrix
 from . import documents_tagging
 from . import property_reservation
+from . import tenant_application_bis
