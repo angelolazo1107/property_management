@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Property Management Enterprise Core',
+    'name': 'Property Management Extensions for Odoo Apps',
     'version': '19.0.1.0.0',
-    'category': 'Real Estate / Property Management',
-    'summary': 'Centralized Leasing, PMO Operations, Utility Readings, Job Orders, Fleet & Financial Approvals',
+    'category': 'Customizations',
+    'summary': 'Customizations for CRM, Sales, Purchase, Maintenance, Helpdesk, Fleet, Approvals & Accounting',
     'description': """
-Property Management Operating Platform for Odoo 19.0 on Odoo.sh
-==============================================================
-Centralizes tenant lifecycle, PMO inspections, utility readings, procurement approvals,
-fleet trip tracking, and financial verification control gates.
+Property Management Customization Extension for Odoo.sh Installed Apps
+======================================================================
+Customizes standard Odoo Enterprise apps (CRM, Sales, Purchase, Maintenance, Helpdesk, Fleet, Approvals, Accounting):
+- Extends CRM Lead form with ocular visits, requirements, reservation deposit verification & BIS status.
+- Extends Purchase Orders with 3-Supplier Canvass sheets, repeat order controls, and 3-Way Match checkpoints.
+- Extends Maintenance & Helpdesk with Move-In/Out inspection checklists, access items, and job orders.
+- Extends Fleet with trip consolidation and GSD collection verification.
+- Adds unified Approval Matrix rules and Document Management folder structures.
     """,
     'author': 'Coretech Innovations & Solutions Inc.',
     'website': 'https://alon-haraya-uat.odoo.com',
     'depends': [
         'base',
         'crm',
+        'calendar',
         'sale_management',
         'account',
         'purchase',
@@ -43,7 +48,7 @@ fleet trip tracking, and financial verification control gates.
         'views/menus.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
     'license': 'LGPL-3',
 }
