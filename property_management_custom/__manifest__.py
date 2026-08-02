@@ -8,6 +8,7 @@
 Property Management Customization Extension for Odoo.sh Installed Apps
 ======================================================================
 Integrates with standard Odoo Enterprise Properties App & core modules:
+- Stage 2 Ocular Visit Coordination model linked to CRM Leads with Security GC notification workflows.
 - Extends standard Properties App (product.product) with occupancy status, meter IDs & floor level.
 - Extends CRM Lead form with ocular visits, requirements, reservation deposit verification & BIS status.
 - Extends Purchase Orders with 3-Supplier Canvass sheets, repeat order controls, and 3-Way Match checkpoints.
@@ -37,6 +38,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'security/ir.model.access.csv',
         'data/crm_stage_data.xml',
         'views/tenant_views.xml',
+        'views/ocular_visit_views.xml',
         'views/crm_lead_views.xml',
         'views/lease_contract_views.xml',
         'views/pmo_inspection_views.xml',

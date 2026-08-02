@@ -7,7 +7,13 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <!-- 1. Leasing & Tenant Pipeline Submenus Under CRM -->
+    <!-- 1. Leasing & Ocular Visit Submenus Under CRM -->
+    <menuitem id="menu_ocular_visits"
+              name="Ocular Visit Coordination"
+              parent="crm.crm_menu_root"
+              action="action_ocular_visit"
+              sequence="11"/>
+
     <menuitem id="menu_lease_contracts"
               name="Lease Contracts Pipeline"
               parent="crm.crm_menu_root"

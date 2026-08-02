@@ -13,7 +13,11 @@ class CrmLeadInherit(models.Model):
     pet_details = fields.Char(string='Pet Details / Registration')
     broker_id = fields.Many2one('res.partner', string='Assigned Broker / Agent')
     
-    ocular_visit_date = fields.Datetime(string='Ocular Visit Schedule')
+    # Stage 2 Ocular Visit Integration
+    ocular_visit_ids = fields.One2many('ocular.visit', 'lead_id', string='Ocular Visit Records')
+    ocular_visit_count = fields.Integer(string='Ocular Visits Count', compute='_compute_ocular_visit_count')
+
+    ocular_visit_date = fields.Datetime(string='Next Ocular Visit Schedule')
     security_visitor_details = fields.Text(string='Visitor Security Details (For Gate Pass)')
     ocular_status = fields.Selection([
         ('pending', 'Pending Schedule'),
@@ -42,6 +46,23 @@ class CrmLeadInherit(models.Model):
 
     legal_clearance = fields.Boolean(string='Legal Clearance Approved', tracking=True)
     move_in_cleared = fields.Boolean(string='Move-In Financial Clearance Granted', tracking=True)
+
+    @api.depends('ocular_visit_ids')
+    def _compute_ocular_visit_count(self):
+        for rec in self:
+            rec.ocular_visit_count = len(rec.ocular_visit_ids)
+
+    def action_view_ocular_visits(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("property_management_custom.action_ocular_visit")
+        action['domain'] = [('lead_id', '=', self.id)]
+        action['context'] = {
+            'default_lead_id': self.id,
+            'default_visitor_name': self.contact_name or self.partner_name or self.name,
+            'default_contact_number': self.phone or self.mobile,
+            'default_agent_id': self.user_id.id if self.user_id else self.env.uid,
+        }
+        return action
 
     def action_schedule_ocular(self):
         for rec in self:

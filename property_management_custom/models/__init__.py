@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from . import property_unit_inherit
 from . import crm_lead_inherit
+from . import ocular_visit
 from . import lease_contract
 from . import pmo_inspection
 from . import pmo_utility_reading
