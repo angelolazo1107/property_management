@@ -80,4 +80,11 @@
             </list>
         </field>
     </record>
+
+    <!-- PMO Inspection Window Action -->
+    <record id="action_pmo_inspection" model="ir.actions.act_window">
+        <field name="name">Move-In &amp; Move-Out PMO Inspections</field>
+        <field name="res_model">pmo.inspection</field>
+        <field name="view_mode">list,form</field>
+    </record>
 </odoo>
