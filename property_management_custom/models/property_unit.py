@@ -38,6 +38,9 @@ class PropertyUnit(models.Model):
         ('available', 'Available'),
         ('reserved', 'Reserved'),
         ('occupied', 'Occupied'),
+        ('vacated', 'Vacated / Turnover'),
+        ('under_repair', 'Under Repair'),
+        ('under_cleaning', 'Under Cleaning'),
         ('maintenance', 'Under Maintenance'),
         ('blocked', 'Blocked / Out of Service'),
     ], string='Occupancy Status', default='available', tracking=True)

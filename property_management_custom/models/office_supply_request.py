@@ -11,14 +11,24 @@ class OfficeSupplyRequest(models.Model):
     requested_by_id = fields.Many2one('res.users', string='Requestor Name', default=lambda self: self.env.user, required=True)
     request_date = fields.Date(string='Request Date', default=fields.Date.context_today, required=True)
 
+    stock_availability = fields.Selection([
+        ('pending_check', 'Pending Admin Check'),
+        ('available', 'Stock Available in Inventory'),
+        ('out_of_stock', 'Out of Stock - PR Required'),
+    ], string='Stock Availability Status', default='pending_check', tracking=True)
+
+    pr_reference = fields.Char(string='Generated Purchase Request (PR) Ref')
+
     line_ids = fields.One2many('office.supply.request.line', 'request_id', string='Supplies Items List')
+    issuance_date = fields.Date(string='Item Issuance Date')
+    issued_by_id = fields.Many2one('res.users', string='Issued By (Admin/Warehouse)')
 
     status = fields.Selection([
         ('draft', 'Draft Requisition'),
         ('dept_approved', 'Dept Head Approved'),
         ('admin_review', 'Admin Stock Verified'),
-        ('released', 'Inventory Released'),
-        ('pr_raised', 'Sent to Procurement'),
+        ('released', 'Inventory Released to Dept'),
+        ('pr_raised', 'Sent to Procurement (PR Created)'),
     ], string='Status', default='draft', tracking=True)
 
     @api.model
@@ -30,6 +40,23 @@ class OfficeSupplyRequest(models.Model):
     def action_dept_approve(self):
         for rec in self:
             rec.status = 'dept_approved'
+
+    def action_admin_stock_check_available(self):
+        for rec in self:
+            rec.stock_availability = 'available'
+            rec.status = 'admin_review'
+
+    def action_admin_stock_check_out(self):
+        for rec in self:
+            rec.stock_availability = 'out_of_stock'
+            rec.status = 'pr_raised'
+            rec.pr_reference = f"PR-OSR-{rec.name}"
+
+    def action_release_supplies(self):
+        for rec in self:
+            rec.status = 'released'
+            rec.issuance_date = fields.Date.today()
+            rec.issued_by_id = self.env.user
 
 
 class OfficeSupplyRequestLine(models.Model):

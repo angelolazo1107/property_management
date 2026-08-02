@@ -1,34 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_lease_contract_kanban" model="ir.ui.view">
-        <field name="name">lease.contract.kanban</field>
+    <!-- Lease Contract Form View -->
+    <record id="view_lease_contract_form" model="ir.ui.view">
+        <field name="name">lease.contract.form</field>
         <field name="model">lease.contract</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage" class="o_kanban_mobile">
-                <field name="name"/>
-                <field name="tenant_id"/>
-                <field name="unit_id"/>
-                <field name="monthly_rent"/>
-                <field name="currency_id"/>
-                <field name="stage"/>
-                <templates>
-                    <t t-name="card">
-                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
-                            <div class="oe_kanban_details">
-                                <strong class="o_kanban_record_title"><field name="name"/></strong>
-                                <div><strong>Tenant: </strong><field name="tenant_id"/></div>
-                                <div><strong>Unit: </strong><field name="unit_id"/></div>
-                                <div><strong>Rent: </strong><field name="monthly_rent" widget="monetary"/></div>
-                            </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
+            <form string="Tenant Lease Contract">
+                <header>
+                    <button name="action_verify_payment_clearance" string="Verify Payment &amp; Activate Lease" type="object" class="btn-primary" invisible="stage != 'payment_clearance'"/>
+                    <button name="action_trigger_move_out" string="Trigger Move-Out Inspection" type="object" class="btn-warning" invisible="stage != 'active'"/>
+                    <button name="action_approve_deposit_refund" string="Approve Security Deposit Refund" type="object" class="btn-success" invisible="deposit_refund_status == 'approved' or stage != 'move_out'"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="inquiry,reservation,bis_submitted,legal_review,payment_clearance,active,move_out,deposit_refund,terminated"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tenant &amp; Unit Information">
+                            <field name="tenant_id"/>
+                            <field name="unit_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monthly_rent"/>
+                            <field name="security_deposit"/>
+                        </group>
+                        <group string="Contract Dates &amp; Clearances">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="bis_submitted"/>
+                            <field name="legal_clearance"/>
+                            <field name="deposit_paid"/>
+                            <field name="move_in_checklist_done"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Move-Out Settlement &amp; Deposit Refund Ledger" name="deposit_ledger">
+                            <group>
+                                <group string="Deductions Calculation">
+                                    <field name="unpaid_rent_deduction"/>
+                                    <field name="utility_deduction"/>
+                                    <field name="damage_deduction"/>
+                                    <field name="cleaning_deduction"/>
+                                    <field name="penalties_deduction"/>
+                                    <field name="missing_items_deduction"/>
+                                </group>
+                                <group string="Refund Summary &amp; Governance Status">
+                                    <field name="total_deductions" class="oe_subtotal_footer_separator"/>
+                                    <field name="net_refund_amount" class="oe_subtotal_footer_separator"/>
+                                    <field name="deposit_refund_status" widget="badge"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Contract Notes &amp; Terms" name="notes">
+                            <field name="notes" placeholder="Enter special contract stipulations, payment schedules, or renewal terms..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
         </field>
     </record>
 
+    <!-- Lease Contract Tree View -->
     <record id="view_lease_contract_tree" model="ir.ui.view">
-        <field name="name">lease.contract.list</field>
+        <field name="name">lease.contract.tree</field>
         <field name="model">lease.contract</field>
         <field name="arch" type="xml">
             <list string="Lease Contracts">
@@ -38,62 +75,17 @@
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="monthly_rent"/>
+                <field name="stage" widget="badge"/>
                 <field name="deposit_paid"/>
-                <field name="stage"/>
+                <field name="deposit_refund_status" widget="badge"/>
             </list>
         </field>
     </record>
 
-    <record id="view_lease_contract_form" model="ir.ui.view">
-        <field name="name">lease.contract.form</field>
-        <field name="model">lease.contract</field>
-        <field name="arch" type="xml">
-            <form string="Lease Contract">
-                <header>
-                    <button name="action_verify_payment_clearance" string="Approve Payment Clearance &amp; Move-In" type="object" class="btn-primary" invisible="stage != 'payment_clearance'"/>
-                    <button name="action_trigger_move_out" string="Initiate Move-Out" type="object" class="btn-secondary" invisible="stage != 'active'"/>
-                    <field name="stage" widget="statusbar" statusbar_visible="inquiry,quotation,bis_submitted,legal_review,payment_clearance,active,move_out,deposit_refund"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name"/></h1>
-                    </div>
-                    <group>
-                        <group string="Contract Details">
-                            <field name="tenant_id"/>
-                            <field name="unit_id"/>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
-                        </group>
-                        <group string="Financial Controls &amp; Clearance">
-                            <field name="monthly_rent"/>
-                            <field name="security_deposit"/>
-                            <field name="deposit_refund_amount"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="bis_submitted"/>
-                            <field name="legal_clearance"/>
-                            <field name="deposit_paid"/>
-                            <field name="move_in_checklist_done"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Terms &amp; Special Conditions">
-                            <field name="notes" placeholder="Enter special agreement terms..."/>
-                        </page>
-                    </notebook>
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
+    <!-- Lease Contract Action -->
     <record id="action_lease_contract" model="ir.actions.act_window">
-        <field name="name">Lease Contracts</field>
+        <field name="name">Lease Package Contracts</field>
         <field name="res_model">lease.contract</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 </odoo>

@@ -6,6 +6,13 @@
               sequence="10"
               web_icon="property_management_custom,static/description/icon.png"/>
 
+    <!-- Document Category Action -->
+    <record id="action_property_document_category" model="ir.actions.act_window">
+        <field name="name">Document Management Folders</field>
+        <field name="res_model">property.document.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
     <!-- 1. Leasing Category -->
     <menuitem id="menu_leasing_category"
               name="Leasing &amp; Tenants"
@@ -89,4 +96,10 @@
               parent="menu_admin_category"
               action="action_fleet_trip_request"
               sequence="3"/>
+
+    <menuitem id="menu_document_folders"
+              name="Document Management Folders"
+              parent="menu_admin_category"
+              action="action_property_document_category"
+              sequence="4"/>
 </odoo>

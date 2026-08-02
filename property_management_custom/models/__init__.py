@@ -10,3 +10,4 @@ from . import fleet_trip
 from . import office_supply_request
 from . import res_partner_inherit
 from . import approval_matrix
+from . import documents_tagging

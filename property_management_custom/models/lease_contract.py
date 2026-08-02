@@ -16,12 +16,10 @@ class LeaseContract(models.Model):
     
     monthly_rent = fields.Monetary(string='Monthly Rent Amount', currency_field='currency_id', required=True, tracking=True)
     security_deposit = fields.Monetary(string='Security Deposit Required', currency_field='currency_id', required=True)
-    deposit_refund_amount = fields.Monetary(string='Deposit Refund Eligible', currency_field='currency_id')
-    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
-
+    
     stage = fields.Selection([
         ('inquiry', 'Inquiry & Ocular Visit'),
-        ('quotation', 'Quotation & Reservation'),
+        ('reservation', 'Quotation & Reservation'),
         ('bis_submitted', 'BIS Submitted'),
         ('legal_review', 'Legal Contract Review'),
         ('payment_clearance', 'Accounting Payment Clearance'),
@@ -38,7 +36,43 @@ class LeaseContract(models.Model):
     deposit_paid = fields.Boolean(string='Security Deposit Paid (Accounting Verified)', tracking=True)
     move_in_checklist_done = fields.Boolean(string='PMO Move-In Checklist Completed')
     
+    # Move-Out & Deposit Settlement Ledger
+    unpaid_rent_deduction = fields.Monetary(string='Unpaid Rent Deduction', currency_field='currency_id')
+    utility_deduction = fields.Monetary(string='Utility Deduction', currency_field='currency_id')
+    damage_deduction = fields.Monetary(string='Damage Charges Deduction', currency_field='currency_id')
+    cleaning_deduction = fields.Monetary(string='Cleaning Charges Deduction', currency_field='currency_id')
+    penalties_deduction = fields.Monetary(string='Penalties / Late Charges', currency_field='currency_id')
+    missing_items_deduction = fields.Monetary(string='Missing Access Items Deduction', currency_field='currency_id')
+    
+    total_deductions = fields.Monetary(string='Total Deductions', currency_field='currency_id', compute='_compute_deductions', store=True)
+    net_refund_amount = fields.Monetary(string='Net Security Deposit Refundable', currency_field='currency_id', compute='_compute_net_refund', store=True)
+    
+    deposit_refund_status = fields.Selection([
+        ('pending', 'Pending Clearance'),
+        ('approved', 'Refund Approved by GM'),
+        ('processed', 'Accounting Voucher Prepared'),
+        ('refunded', 'Deposit Refund Released'),
+    ], string='Security Deposit Refund Status', default='pending', tracking=True)
+
+    currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     notes = fields.Text(string='Contract Special Terms & Conditions')
+
+    @api.depends('unpaid_rent_deduction', 'utility_deduction', 'damage_deduction', 'cleaning_deduction', 'penalties_deduction', 'missing_items_deduction')
+    def _compute_deductions(self):
+        for rec in self:
+            rec.total_deductions = (
+                rec.unpaid_rent_deduction +
+                rec.utility_deduction +
+                rec.damage_deduction +
+                rec.cleaning_deduction +
+                rec.penalties_deduction +
+                rec.missing_items_deduction
+            )
+
+    @api.depends('security_deposit', 'total_deductions')
+    def _compute_net_refund(self):
+        for rec in self:
+            rec.net_refund_amount = max(0.0, rec.security_deposit - rec.total_deductions)
 
     @api.model
     def create(self, vals):
@@ -57,4 +91,9 @@ class LeaseContract(models.Model):
     def action_trigger_move_out(self):
         for rec in self:
             rec.stage = 'move_out'
-            rec.unit_id.status = 'maintenance'
+            rec.unit_id.status = 'vacated'
+
+    def action_approve_deposit_refund(self):
+        for rec in self:
+            rec.deposit_refund_status = 'approved'
+            rec.stage = 'deposit_refund'
