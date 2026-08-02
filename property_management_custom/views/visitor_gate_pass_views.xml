@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Visitor Gate Pass Form View -->
+    <record id="view_visitor_gate_pass_form" model="ir.ui.view">
+        <field name="name">visitor.gate.pass.form</field>
+        <field name="model">visitor.gate.pass</field>
+        <field name="arch" type="xml">
+            <form string="Security Visitor Gate Pass">
+                <header>
+                    <button name="action_send_security" string="Send to Security GC" type="object" class="btn-primary" invisible="status != 'pending'"/>
+                    <button name="action_approve_security" string="Approve Gate Pass" type="object" class="btn-success" invisible="status != 'sent'"/>
+                    <button name="action_check_in" string="Gate Check-In" type="object" class="btn-primary" invisible="status != 'approved'"/>
+                    <button name="action_check_out" string="Gate Check-Out" type="object" class="btn-warning" invisible="status != 'checked_in'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,sent,approved,checked_in,checked_out"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Visitor &amp; Originating Visit">
+                            <field name="visitor_name"/>
+                            <field name="entry_datetime"/>
+                            <field name="agent_id"/>
+                            <field name="ocular_visit_id"/>
+                            <field name="lead_id"/>
+                        </group>
+                        <group string="Viewing Location &amp; Vehicle Gate Access">
+                            <field name="floor_and_unit"/>
+                            <field name="purpose"/>
+                            <field name="vehicle_info"/>
+                        </group>
+                    </group>
+                    <group string="Security Gate Timestamp Audit Log">
+                        <group>
+                            <field name="check_in_datetime"/>
+                        </group>
+                        <group>
+                            <field name="check_out_datetime"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Security Incident &amp; Gate Notes" name="security_notes">
+                            <field name="notes" placeholder="Security officer gate log, badge number issued, or access notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Visitor Gate Pass Tree View -->
+    <record id="view_visitor_gate_pass_tree" model="ir.ui.view">
+        <field name="name">visitor.gate.pass.tree</field>
+        <field name="model">visitor.gate.pass</field>
+        <field name="arch" type="xml">
+            <list string="Security Visitor Gate Passes">
+                <field name="name"/>
+                <field name="visitor_name"/>
+                <field name="entry_datetime"/>
+                <field name="agent_id"/>
+                <field name="floor_and_unit"/>
+                <field name="vehicle_info"/>
+                <field name="check_in_datetime"/>
+                <field name="check_out_datetime"/>
+                <field name="status" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Visitor Gate Pass Window Action -->
+    <record id="action_visitor_gate_pass" model="ir.actions.act_window">
+        <field name="name">Security Visitor Gate Passes</field>
+        <field name="res_model">visitor.gate.pass</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

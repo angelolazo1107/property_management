@@ -7,7 +7,8 @@
         <field name="arch" type="xml">
             <form string="Ocular Visit &amp; Security Gate Pass">
                 <header>
-                    <button name="action_send_security" string="Submit to Security GC" type="object" class="btn-primary" invisible="security_status != 'draft'"/>
+                    <button name="action_generate_gate_pass" string="Generate Security Gate Pass" type="object" class="btn-primary" invisible="gate_pass_id"/>
+                    <button name="action_send_security" string="Submit to Security GC" type="object" class="btn-secondary" invisible="security_status != 'draft'"/>
                     <button name="action_confirm_security" string="Security Confirmed" type="object" class="btn-success" invisible="security_status != 'sent'"/>
                     <button name="action_complete_visit" string="Mark Completed" type="object" class="btn-success" invisible="status == 'completed'"/>
                     <button name="action_no_show" string="Mark No Show" type="object" class="btn-secondary" invisible="status in ('completed', 'cancelled')"/>
@@ -49,6 +50,7 @@
                             <field name="parking_required"/>
                         </group>
                         <group>
+                            <field name="gate_pass_id"/>
                             <field name="security_status" widget="badge"/>
                         </group>
                     </group>
