@@ -75,15 +75,17 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//search" position="inside">
+            <xpath expr="//field[@name='name']" position="after">
                 <field name="target_unit_id"/>
                 <field name="acknowledgement_receipt_no"/>
+            </xpath>
+            <xpath expr="//search" position="inside">
                 <filter string="Target Property Assigned" name="has_target_unit" domain="[('target_unit_id', '!=', False)]"/>
                 <filter string="Reservation Payment Verified" name="reservation_verified" domain="[('reservation_payment_status', '=', 'verified')]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Target Unit" name="group_target_unit" domain="[]" context="{'group_by': 'target_unit_id'}"/>
-                    <filter string="Reservation Payment Status" name="group_reservation_status" domain="[]" context="{'group_by': 'reservation_payment_status'}"/>
-                </group>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Target Unit" name="group_target_unit" domain="[]" context="{'group_by': 'target_unit_id'}"/>
+                <filter string="Reservation Payment Status" name="group_reservation_status" domain="[]" context="{'group_by': 'reservation_payment_status'}"/>
             </xpath>
         </field>
     </record>
