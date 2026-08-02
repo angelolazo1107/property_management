@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 class OcularVisit(models.Model):
     _name = 'ocular.visit'
@@ -35,6 +36,9 @@ class OcularVisit(models.Model):
     plate_number = fields.Char(string='Vehicle Plate Number')
     parking_required = fields.Boolean(string='Parking Slot Required', default=False)
     
+    # Gate Pass Integration
+    gate_pass_id = fields.Many2one('visitor.gate.pass', string='Generated Security Gate Pass', readonly=True)
+
     security_status = fields.Selection([
         ('draft', 'Draft'),
         ('sent', 'Sent to Security GC'),
@@ -56,13 +60,58 @@ class OcularVisit(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('ocular.visit') or 'OV-00001'
         return super(OcularVisit, self).create(vals)
 
+    def action_generate_gate_pass(self):
+        for rec in self:
+            # Validate Implementation Rules
+            missing = []
+            if not rec.visitor_name:
+                missing.append("Visitor Name")
+            if not rec.visit_datetime:
+                missing.append("Entry Date and Time")
+            if not rec.agent_id:
+                missing.append("Contact Person / Agent")
+            if not rec.floor_level and not rec.unit_ids:
+                missing.append("Floor and Unit Number")
+            if not rec.purpose:
+                missing.append("Purpose of Visit")
+            
+            if missing:
+                raise UserError(f"Gate Pass Rule Violation: Before visit confirmation, the following fields are required: {', '.join(missing)}.")
+
+            unit_names = ", ".join(rec.unit_ids.mapped('name')) if rec.unit_ids else "N/A"
+            floor_and_unit = f"Floor {rec.floor_level or 'N/A'} - Units: {unit_names}"
+            vehicle_info = f"{dict(rec._fields['vehicle_type'].selection).get(rec.vehicle_type, 'None')}"
+            if rec.plate_number:
+                vehicle_info += f" (Plate: {rec.plate_number})"
+
+            gate_pass_vals = {
+                'ocular_visit_id': rec.id,
+                'visitor_name': rec.visitor_name,
+                'entry_datetime': rec.visit_datetime,
+                'agent_id': rec.agent_id.id,
+                'floor_and_unit': floor_and_unit,
+                'purpose': dict(rec._fields['purpose'].selection).get(rec.purpose, 'Ocular Visit'),
+                'vehicle_info': vehicle_info,
+                'status': 'sent',
+            }
+
+            if rec.gate_pass_id:
+                rec.gate_pass_id.write(gate_pass_vals)
+            else:
+                gate_pass = self.env['visitor.gate.pass'].create(gate_pass_vals)
+                rec.gate_pass_id = gate_pass.id
+
+            rec.security_status = 'sent'
+
     def action_send_security(self):
         for rec in self:
-            rec.security_status = 'sent'
+            rec.action_generate_gate_pass()
 
     def action_confirm_security(self):
         for rec in self:
             rec.security_status = 'confirmed'
+            if rec.gate_pass_id:
+                rec.gate_pass_id.status = 'approved'
 
     def action_complete_visit(self):
         for rec in self:

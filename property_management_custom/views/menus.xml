@@ -7,24 +7,30 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <!-- 1. Leasing & Ocular Visit Submenus Under CRM -->
+    <!-- 1. Leasing, Ocular Visit & Gate Pass Submenus Under CRM -->
     <menuitem id="menu_ocular_visits"
               name="Ocular Visit Coordination"
               parent="crm.crm_menu_root"
               action="action_ocular_visit"
               sequence="11"/>
 
+    <menuitem id="menu_visitor_gate_passes"
+              name="Security Visitor Gate Passes"
+              parent="crm.crm_menu_root"
+              action="action_visitor_gate_pass"
+              sequence="12"/>
+
     <menuitem id="menu_lease_contracts"
               name="Lease Contracts Pipeline"
               parent="crm.crm_menu_root"
               action="action_lease_contract"
-              sequence="12"/>
+              sequence="13"/>
 
     <menuitem id="menu_property_tenants"
               name="Tenants Master File"
               parent="crm.crm_menu_root"
               action="action_property_tenant"
-              sequence="13"/>
+              sequence="14"/>
 
     <!-- 2. PMO & Operations Custom Submenus Under Maintenance -->
     <menuitem id="menu_pmo_root_custom"
