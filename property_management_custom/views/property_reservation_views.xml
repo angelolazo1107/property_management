@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequences for Reservation & Acknowledgement Receipt -->
+    <record id="seq_property_reservation" model="ir.sequence">
+        <field name="name">Property Reservation Sequence</field>
+        <field name="code">property.reservation</field>
+        <field name="prefix">RES-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_property_reservation_ar" model="ir.sequence">
+        <field name="name">Reservation Acknowledgement Receipt Sequence</field>
+        <field name="code">property.reservation.ar</field>
+        <field name="prefix">AR-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- Form View for property.reservation -->
+    <record id="view_property_reservation_form" model="ir.ui.view">
+        <field name="name">property.reservation.form</field>
+        <field name="model">property.reservation</field>
+        <field name="arch" type="xml">
+            <form string="Unit Reservation Record">
+                <header>
+                    <button name="action_submit_payment" 
+                            type="object" 
+                            string="Submit Payment for Verification" 
+                            class="btn-primary" 
+                            invisible="state not in ('draft')"/>
+                    
+                    <button name="action_confirm_payment" 
+                            type="object" 
+                            string="Confirm Payment &amp; Reserve Unit" 
+                            class="btn-success" 
+                            invisible="state not in ('draft', 'for_payment')"/>
+
+                    <button name="action_convert_to_lease" 
+                            type="object" 
+                            string="Convert to Lease Contract" 
+                            class="btn-info" 
+                            invisible="state != 'paid'"/>
+
+                    <button name="action_approve_cancellation" 
+                            type="object" 
+                            string="Approve Cancellation (Manager)" 
+                            class="btn-warning" 
+                            invisible="manager_approval or state in ('converted', 'cancelled')"/>
+
+                    <button name="action_cancel" 
+                            type="object" 
+                            string="Cancel Reservation" 
+                            class="btn-danger" 
+                            invisible="state in ('converted', 'cancelled')"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,for_payment,paid,converted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tenant &amp; Unit Information">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="reservation_amount_preset" widget="radio"/>
+                            <field name="reservation_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="reservation_date"/>
+                            <field name="expiration_date"/>
+                        </group>
+                        <group string="Payment Verification &amp; Receipts">
+                            <field name="payment_status" widget="badge" 
+                                   decoration-warning="payment_status == 'unpaid'" 
+                                   decoration-info="payment_status == 'for_verification'" 
+                                   decoration-success="payment_status == 'paid'"/>
+                            <field name="proof_of_payment" filename="proof_of_payment_filename"/>
+                            <field name="proof_of_payment_filename" invisible="1"/>
+                            <field name="acknowledgement_receipt_no"/>
+                            <field name="billing_copy_attached"/>
+                            <field name="tenant_copy_issued"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Pipeline Integration">
+                            <field name="opportunity_id"/>
+                            <field name="sale_order_id"/>
+                            <field name="lease_contract_id"/>
+                        </group>
+                        <group string="Manager Approval &amp; Cancellation Controls">
+                            <field name="manager_approval" readonly="1"/>
+                            <field name="cancellation_reason" placeholder="State management policy notes or cancellation details..."/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View for property.reservation -->
+    <record id="view_property_reservation_tree" model="ir.ui.view">
+        <field name="name">property.reservation.list</field>
+        <field name="model">property.reservation</field>
+        <field name="arch" type="xml">
+            <list string="Unit Reservation Records" decoration-info="state == 'for_payment'" decoration-success="state in ('paid', 'converted')" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="reservation_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="reservation_date"/>
+                <field name="expiration_date"/>
+                <field name="payment_status" widget="badge"/>
+                <field name="acknowledgement_receipt_no"/>
+                <field name="manager_approval"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View for property.reservation -->
+    <record id="view_property_reservation_kanban" model="ir.ui.view">
+        <field name="name">property.reservation.kanban</field>
+        <field name="model">property.reservation</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="reservation_amount"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                <div><strong>Tenant: </strong><field name="tenant_id"/></div>
+                                <div><strong>Unit: </strong><field name="unit_id"/></div>
+                                <div><strong>Amount: </strong><field name="reservation_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/></div>
+                                <div><field name="state" widget="label_selection"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View for property.reservation -->
+    <record id="view_property_reservation_search" model="ir.ui.view">
+        <field name="name">property.reservation.search</field>
+        <field name="model">property.reservation</field>
+        <field name="arch" type="xml">
+            <search string="Search Reservations">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="acknowledgement_receipt_no"/>
+                <filter string="Paid &amp; Reserved" name="filter_paid" domain="[('state', '=', 'paid')]"/>
+                <filter string="Pending Verification" name="filter_verification" domain="[('payment_status', '=', 'for_verification')]"/>
+                <filter string="Manager Approved" name="filter_approved" domain="[('manager_approval', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Tenant" name="group_tenant" context="{'group_by': 'tenant_id'}"/>
+                    <filter string="Property Unit" name="group_unit" context="{'group_by': 'unit_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Window for property.reservation -->
+    <record id="action_property_reservation" model="ir.actions.act_window">
+        <field name="name">Unit Reservations</field>
+        <field name="res_model">property.reservation</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_property_reservation_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Property Unit Reservation Record!
+            </p>
+            <p>
+                Track tenant reservation fees (PHP 5,000 / PHP 10,000), proof of payment uploads, billing validation, Acknowledgement Receipts, and manager cancellation approvals.
+            </p>
+        </field>
+    </record>
+</odoo>

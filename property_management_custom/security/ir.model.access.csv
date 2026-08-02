@@ -10,3 +10,4 @@
 "access_office_supply_request_line_user","office.supply.request.line.user","model_office_supply_request_line",,1,1,1,1
 "access_approval_matrix_user","approval.matrix.user","model_approval_matrix",,1,1,1,1
 "access_property_document_category_user","property.document.category.user","model_property_document_category",,1,1,1,1
+"access_property_reservation_user","property.reservation.user","model_property_reservation",,1,1,1,1

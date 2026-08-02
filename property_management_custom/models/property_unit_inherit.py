@@ -24,3 +24,47 @@ class ProductProductPropertyInherit(models.Model):
     water_meter_no = fields.Char(string='Water Meter ID')
     latest_electric_reading = fields.Float(string='Latest Electric Reading (kWh)')
     latest_water_reading = fields.Float(string='Latest Water Reading (cbm)')
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super(ProductProductPropertyInherit, self).default_get(fields_list)
+        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
+        if php_currency:
+            # Force PHP active and set symbol
+            if not php_currency.active or php_currency.symbol != '₱':
+                php_currency.sudo().write({'active': True, 'symbol': '₱', 'position': 'before'})
+            # Force all companies in DB to PHP main currency
+            companies = self.env['res.company'].search([])
+            for comp in companies:
+                if comp.currency_id != php_currency:
+                    comp.sudo().write({'currency_id': php_currency.id})
+        return res
+
+
+class ProductTemplatePropertyInherit(models.Model):
+    _inherit = 'product.template'
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super(ProductTemplatePropertyInherit, self).default_get(fields_list)
+        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
+        if php_currency:
+            if not php_currency.active or php_currency.symbol != '₱':
+                php_currency.sudo().write({'active': True, 'symbol': '₱', 'position': 'before'})
+            companies = self.env['res.company'].search([])
+            for comp in companies:
+                if comp.currency_id != php_currency:
+                    comp.sudo().write({'currency_id': php_currency.id})
+        return res
+
+
+class ResCompanyPropertyInherit(models.Model):
+    _inherit = 'res.company'
+
+    @api.model
+    def default_get(self, fields_list):
+        res = super(ResCompanyPropertyInherit, self).default_get(fields_list)
+        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
+        if php_currency:
+            res['currency_id'] = php_currency.id
+        return res

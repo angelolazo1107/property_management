@@ -54,6 +54,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'views/fleet_views.xml',
         'views/office_supply_views.xml',
         'views/approval_matrix_views.xml',
+        'views/property_reservation_views.xml',
         'views/menus.xml',
     ],
     'installable': True,

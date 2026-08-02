@@ -116,3 +116,32 @@ Add custom fields onto `sale.order` via Studio or backend XML module:
 * **Reservation Status** (`reservation_payment_status`): Selection (`Pending`, `Submitted to Billing`, `Verified`, `Receipt Issued`).
 * **Acknowledgement Receipt Ref** (`acknowledgement_receipt_no`): Char / Sequence.
 
+---
+
+## 8. Reservation Record Custom Model (`property.reservation`)
+
+### Navigation: `CRM / Sales > Unit Reservations`
+
+#### Model Fields & Controls (`property.reservation`):
+1. **Tenant / Client** (`tenant_id`): Many2one to `res.partner`.
+2. **Reserved Unit** (`unit_id`): Many2one to `product.product`.
+3. **Reservation Fee Preset** (`reservation_amount_preset`): Selection (`PHP 5,000`, `PHP 10,000`, `Custom`).
+4. **Reservation Amount** (`reservation_amount`): Monetary.
+5. **Reservation Date Paid** (`reservation_date`): Date.
+6. **Expiration Date** (`expiration_date`): Date (Optional).
+7. **Payment Status** (`payment_status`): Selection (`Unpaid`, `For Verification`, `Paid`).
+8. **Proof of Payment** (`proof_of_payment`): Binary attachment.
+9. **Acknowledgement Receipt No.** (`acknowledgement_receipt_no`): Char (Auto-generated `AR-2026-XXXXX`).
+10. **Billing Copy Attached** (`billing_copy_attached`): Boolean.
+11. **Tenant Copy Issued** (`tenant_copy_issued`): Boolean.
+12. **Reservation Status** (`state`): Selection (`Draft`, `For Payment`, `Paid & Reserved`, `Expired`, `Converted`, `Cancelled`).
+13. **Manager Approval** (`manager_approval`): Boolean (Required for cancellation).
+14. **Cancellation Reason** (`cancellation_reason`): Text.
+
+#### Automated Business Controls:
+* **Payment Confirmation Unit Lock:** Unit occupancy status changes to `Reserved` **ONLY AFTER** payment confirmation.
+* **Lease Conversion:** Paid reservation converts into active lease contract and applies customer advance deposit.
+* **Manager Cancellation Enforcement:** Cancellation button blocks execution if `manager_approval` is False, ensuring management policy compliance.
+
+
+
