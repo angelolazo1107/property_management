@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ocular Visit Form View -->
+    <record id="view_ocular_visit_form" model="ir.ui.view">
+        <field name="name">ocular.visit.form</field>
+        <field name="model">ocular.visit</field>
+        <field name="arch" type="xml">
+            <form string="Ocular Visit &amp; Security Gate Pass">
+                <header>
+                    <button name="action_send_security" string="Submit to Security GC" type="object" class="btn-primary" invisible="security_status != 'draft'"/>
+                    <button name="action_confirm_security" string="Security Confirmed" type="object" class="btn-success" invisible="security_status != 'sent'"/>
+                    <button name="action_complete_visit" string="Mark Completed" type="object" class="btn-success" invisible="status == 'completed'"/>
+                    <button name="action_no_show" string="Mark No Show" type="object" class="btn-secondary" invisible="status in ('completed', 'cancelled')"/>
+                    <button name="action_cancel_visit" string="Cancel Visit" type="object" class="btn-danger" invisible="status == 'cancelled'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="scheduled,completed,no_show,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Visitor &amp; CRM Opportunity">
+                            <field name="lead_id"/>
+                            <field name="partner_id"/>
+                            <field name="visitor_name"/>
+                            <field name="contact_number"/>
+                        </group>
+                        <group string="Schedule &amp; Assigned Agent">
+                            <field name="visit_datetime"/>
+                            <field name="agent_id"/>
+                            <field name="purpose"/>
+                        </group>
+                    </group>
+                    <group string="Property &amp; Viewing Units">
+                        <group>
+                            <field name="building_name" placeholder="Building / Tower Name"/>
+                            <field name="floor_level" placeholder="Floor Level"/>
+                        </group>
+                        <group>
+                            <field name="unit_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <group string="Security Coordination &amp; Vehicle Access">
+                        <group>
+                            <field name="vehicle_type"/>
+                            <field name="plate_number" invisible="vehicle_type == 'none'"/>
+                            <field name="parking_required"/>
+                        </group>
+                        <group>
+                            <field name="security_status" widget="badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Client Feedback &amp; Post-Tour Notes" name="feedback_notes">
+                            <field name="feedback" placeholder="Record client comments, preferences, unit feedback, or follow-up notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Ocular Visit Tree View -->
+    <record id="view_ocular_visit_tree" model="ir.ui.view">
+        <field name="name">ocular.visit.tree</field>
+        <field name="model">ocular.visit</field>
+        <field name="arch" type="xml">
+            <list string="Ocular Visits">
+                <field name="name"/>
+                <field name="visitor_name"/>
+                <field name="contact_number"/>
+                <field name="visit_datetime"/>
+                <field name="agent_id"/>
+                <field name="unit_ids" widget="many2many_tags"/>
+                <field name="security_status" widget="badge"/>
+                <field name="status" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Ocular Visit Calendar View -->
+    <record id="view_ocular_visit_calendar" model="ir.ui.view">
+        <field name="name">ocular.visit.calendar</field>
+        <field name="model">ocular.visit</field>
+        <field name="arch" type="xml">
+            <calendar string="Ocular Visit Schedule" date_start="visit_datetime" color="agent_id">
+                <field name="visitor_name"/>
+                <field name="agent_id"/>
+                <field name="status"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Ocular Visit Window Action -->
+    <record id="action_ocular_visit" model="ir.actions.act_window">
+        <field name="name">Ocular Visit Coordination</field>
+        <field name="res_model">ocular.visit</field>
+        <field name="view_mode">list,form,calendar</field>
+    </record>
+</odoo>

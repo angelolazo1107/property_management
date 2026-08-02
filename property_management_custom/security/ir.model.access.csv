@@ -1,4 +1,5 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_ocular_visit_user","ocular.visit.user","model_ocular_visit",,1,1,1,1
 "access_lease_contract_user","lease.contract.user","model_lease_contract",,1,1,1,1
 "access_pmo_inspection_user","pmo.inspection.user","model_pmo_inspection",,1,1,1,1
 "access_pmo_utility_reading_user","pmo.utility.reading.user","model_pmo_utility_reading",,1,1,1,1

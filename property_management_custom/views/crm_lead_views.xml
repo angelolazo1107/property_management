@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- CRM Lead Form View Extension -->
+    <!-- CRM Lead Form View Extension for Stage 2 Ocular Visit Coordination -->
     <record id="view_crm_lead_form_property_inherit" model="ir.ui.view">
         <field name="name">crm.lead.form.property.inherit</field>
         <field name="model">crm.lead</field>
@@ -12,6 +12,11 @@
                 <button name="action_verify_bis" string="Verify BIS" type="object" class="btn-secondary" invisible="bis_status == 'verified'"/>
                 <button name="action_verify_reservation_payment" string="Verify Reservation Fee (Accounting)" type="object" class="btn-primary" invisible="reservation_verified"/>
                 <button name="action_verify_move_in_clearance" string="Grant Move-In Clearance" type="object" class="btn-success" invisible="move_in_cleared"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_ocular_visits" type="object" class="oe_stat_button" icon="fa-calendar-check-o">
+                    <field name="ocular_visit_count" widget="statinfo" string="Ocular Visits"/>
+                </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Leasing &amp; Tenant Requirements" name="leasing_details">
@@ -30,6 +35,20 @@
                             <field name="ocular_status" widget="radio"/>
                             <field name="security_visitor_details"/>
                         </group>
+                    </group>
+                    <group string="Ocular Visits Scheduled">
+                        <field name="ocular_visit_ids">
+                            <list editable="bottom">
+                                <field name="name"/>
+                                <field name="visitor_name"/>
+                                <field name="contact_number"/>
+                                <field name="visit_datetime"/>
+                                <field name="agent_id"/>
+                                <field name="unit_ids" widget="many2many_tags"/>
+                                <field name="security_status" widget="badge"/>
+                                <field name="status" widget="badge"/>
+                            </list>
+                        </field>
                     </group>
                     <group>
                         <group string="BIS &amp; Reservation Deposit">
