@@ -78,6 +78,19 @@ def connect_odoo():
     models = xmlrpc.client.ServerProxy(f'{ODOO_URL}/xmlrpc/2/object')
     return uid, models
 
+def setup_currency(uid, models):
+    print("\n--- Setting Up Currency (PHP ₱) ---")
+    php_ids = models.execute_kw(DB_NAME, uid, API_KEY, 'res.currency', 'search', [[['name', '=', 'PHP']]])
+    if php_ids:
+        php_id = php_ids[0]
+        models.execute_kw(DB_NAME, uid, API_KEY, 'res.currency', 'write', [[php_id], {'active': True, 'symbol': '₱', 'position': 'before'}])
+        company_ids = models.execute_kw(DB_NAME, uid, API_KEY, 'res.company', 'search', [[]])
+        if company_ids:
+            models.execute_kw(DB_NAME, uid, API_KEY, 'res.company', 'write', [company_ids, {'currency_id': php_id}])
+            print(f"  [UPDATED] Main Company Currency set to PHP (₱) for ID {company_ids[0]}")
+    else:
+        print("  [NOTICE] Currency PHP not found in database registry.")
+
 def setup_accounts(uid, models):
     print("\n--- Setting Up Accounts ---")
     account_map = {}
@@ -147,6 +160,7 @@ if __name__ == '__main__':
         print("Notice: Configuration unpopulated. Set ODOO_URL, ODOO_DB, ODOO_USER, ODOO_PASSWORD env vars to run live import.")
     else:
         uid, models = connect_odoo()
+        setup_currency(uid, models)
         acc_map = setup_accounts(uid, models)
         prod_map = setup_products(uid, models, acc_map)
         setup_templates(uid, models, prod_map)
