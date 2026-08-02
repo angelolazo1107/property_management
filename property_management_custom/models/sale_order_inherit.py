@@ -45,47 +45,6 @@ class SaleOrderPropertyInherit(models.Model):
         tracking=True
     )
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super(SaleOrderPropertyInherit, self).default_get(fields_list)
-        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
-        if php_currency:
-            res['currency_id'] = php_currency.id
-            # Automatically update all pricelists in database to PHP if needed
-            pricelists = self.env['product.pricelist'].search([])
-            for pl in pricelists:
-                if pl.currency_id != php_currency:
-                    pl.sudo().write({'currency_id': php_currency.id})
-            if pricelists:
-                res['pricelist_id'] = pricelists[0].id
-        return res
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id_set_php_currency(self):
-        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
-        if php_currency:
-            self.currency_id = php_currency
-            pricelists = self.env['product.pricelist'].search([])
-            for pl in pricelists:
-                if pl.currency_id != php_currency:
-                    pl.sudo().write({'currency_id': php_currency.id})
-            if pricelists:
-                self.pricelist_id = pricelists[0]
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        php_currency = self.env.ref('base.PHP', raise_if_not_found=False)
-        if php_currency:
-            pricelists = self.env['product.pricelist'].search([])
-            for pl in pricelists:
-                if pl.currency_id != php_currency:
-                    pl.sudo().write({'currency_id': php_currency.id})
-            for vals in vals_list:
-                vals['currency_id'] = php_currency.id
-                if pricelists and not vals.get('pricelist_id'):
-                    vals['pricelist_id'] = pricelists[0].id
-        return super(SaleOrderPropertyInherit, self).create(vals_list)
-
     @api.onchange('reservation_fee_option')
     def _onchange_reservation_fee_option(self):
         if self.reservation_fee_option == '5000':
@@ -96,7 +55,6 @@ class SaleOrderPropertyInherit(models.Model):
     @api.onchange('target_unit_id')
     def _onchange_target_unit_id(self):
         if self.target_unit_id and self.target_unit_id.list_price:
-            # Auto update monthly rental lines if available
             for line in self.order_line:
                 if line.product_id and line.product_id.name == 'Monthly Rental':
                     line.price_unit = self.target_unit_id.list_price
@@ -155,4 +113,3 @@ class SaleOrderTemplatePropertyInherit(models.Model):
         ('month', 'Months'),
         ('year', 'Years'),
     ], string='Duration Unit', default='year')
-
