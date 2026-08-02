@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class CrmLeadInherit(models.Model):
     _inherit = 'crm.lead'
 
-    target_unit_id = fields.Many2one('property.unit', string='Target Unit / Property')
+    target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="[('is_property_unit', '=', True)]")
     intended_move_in_date = fields.Date(string='Intended Move-In Date')
     preferred_budget = fields.Monetary(string='Preferred Rent Budget', currency_field='company_currency')
     
@@ -60,7 +60,7 @@ class CrmLeadInherit(models.Model):
             rec.reservation_verified = True
             rec.unit_hold_status = 'hold_active'
             if rec.target_unit_id:
-                rec.target_unit_id.status = 'reserved'
+                rec.target_unit_id.occupancy_status = 'reserved'
 
     def action_verify_move_in_clearance(self):
         for rec in self:

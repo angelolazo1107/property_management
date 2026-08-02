@@ -9,7 +9,7 @@ class LeaseContract(models.Model):
 
     name = fields.Char(string='Lease Ref Number', required=True, copy=False, readonly=True, default='New')
     tenant_id = fields.Many2one('res.partner', string='Tenant Name', required=True, tracking=True)
-    unit_id = fields.Many2one('property.unit', string='Assigned Unit', required=True, tracking=True)
+    unit_id = fields.Many2one('product.product', string='Assigned Property Unit', domain="[('is_property_unit', '=', True)]", required=True, tracking=True)
     
     date_start = fields.Date(string='Contract Start Date', required=True)
     date_end = fields.Date(string='Contract End Date', required=True)
@@ -85,13 +85,13 @@ class LeaseContract(models.Model):
             if not rec.deposit_paid:
                 raise UserError("Payment Clearance Blocked: Accounting must verify the security deposit receipt before move-in approval!")
             rec.stage = 'active'
-            rec.unit_id.status = 'occupied'
+            rec.unit_id.occupancy_status = 'occupied'
             rec.unit_id.current_tenant_id = rec.tenant_id
 
     def action_trigger_move_out(self):
         for rec in self:
             rec.stage = 'move_out'
-            rec.unit_id.status = 'vacated'
+            rec.unit_id.occupancy_status = 'vacated'
 
     def action_approve_deposit_refund(self):
         for rec in self:

@@ -1,6 +1,4 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_property_building_user","property.building.user","model_property_building",,1,1,1,1
-"access_property_unit_user","property.unit.user","model_property_unit",,1,1,1,1
 "access_lease_contract_user","lease.contract.user","model_lease_contract",,1,1,1,1
 "access_pmo_inspection_user","pmo.inspection.user","model_pmo_inspection",,1,1,1,1
 "access_pmo_utility_reading_user","pmo.utility.reading.user","model_pmo_utility_reading",,1,1,1,1

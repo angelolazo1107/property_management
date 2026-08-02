@@ -8,7 +8,7 @@ class PMOJobOrder(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Job Order Ref', required=True, copy=False, readonly=True, default='New')
-    unit_id = fields.Many2one('property.unit', string='Property Unit', required=True)
+    unit_id = fields.Many2one('product.product', string='Property Unit', domain="[('is_property_unit', '=', True)]", required=True)
     tenant_id = fields.Many2one('res.partner', string='Requesting Tenant / Dept', required=True)
     helpdesk_ticket_id = fields.Many2one('helpdesk.ticket', string='Originating Helpdesk Ticket')
     
