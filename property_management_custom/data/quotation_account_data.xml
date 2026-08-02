@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Income Accounts for Property Leasing -->
+        <record id="account_rental_income" model="account.account">
+            <field name="name">Rental Income - Property Units</field>
+            <field name="code">400100</field>
+            <field name="account_type">income</field>
+        </record>
+
+        <record id="account_furniture_rental_income" model="account.account">
+            <field name="name">Furniture Rental Income</field>
+            <field name="code">400200</field>
+            <field name="account_type">income</field>
+        </record>
+
+        <record id="account_parking_income" model="account.account">
+            <field name="name">Parking Fee Income</field>
+            <field name="code">400300</field>
+            <field name="account_type">income</field>
+        </record>
+
+        <record id="account_internet_income" model="account.account">
+            <field name="name">Internet / Wi-Fi Fee Income</field>
+            <field name="code">400400</field>
+            <field name="account_type">income</field>
+        </record>
+
+        <record id="account_access_card_income" model="account.account">
+            <field name="name">Access Card Fee Income</field>
+            <field name="code">400500</field>
+            <field name="account_type">income</field>
+        </record>
+
+        <record id="account_other_lease_income" model="account.account">
+            <field name="name">Pet Registration &amp; Other Lease Income</field>
+            <field name="code">400900</field>
+            <field name="account_type">income</field>
+        </record>
+
+        <!-- Current Liability Accounts for Reservation Deposits & Security Deposits -->
+        <record id="account_unearned_reservation_deposit" model="account.account">
+            <field name="name">Unearned Revenue - Reservation Deposits</field>
+            <field name="code">210100</field>
+            <field name="account_type">liability_current</field>
+        </record>
+
+        <record id="account_security_deposit_payable" model="account.account">
+            <field name="name">Security Deposit Payable (Tenant Liabilities)</field>
+            <field name="code">210200</field>
+            <field name="account_type">liability_current</field>
+        </record>
+    </data>
+</odoo>

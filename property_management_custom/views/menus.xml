@@ -14,23 +14,29 @@
               action="action_ocular_visit"
               sequence="11"/>
 
+    <menuitem id="menu_property_leasing_quotations"
+              name="Leasing Quotations"
+              parent="crm.crm_menu_root"
+              action="sale.action_quotations_with_onboarding"
+              sequence="12"/>
+
     <menuitem id="menu_visitor_gate_passes"
               name="Security Visitor Gate Passes"
               parent="crm.crm_menu_root"
               action="action_visitor_gate_pass"
-              sequence="12"/>
+              sequence="13"/>
 
     <menuitem id="menu_lease_contracts"
               name="Lease Contracts Pipeline"
               parent="crm.crm_menu_root"
               action="action_lease_contract"
-              sequence="13"/>
+              sequence="14"/>
 
     <menuitem id="menu_property_tenants"
               name="Tenants Master File"
               parent="crm.crm_menu_root"
               action="action_property_tenant"
-              sequence="14"/>
+              sequence="15"/>
 
     <!-- 2. PMO & Operations Custom Submenus Under Maintenance -->
     <menuitem id="menu_pmo_root_custom"

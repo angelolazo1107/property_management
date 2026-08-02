@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Bare Unit Rental Template -->
+        <record id="template_bare_unit_rental" model="sale.order.template">
+            <field name="name">Bare Unit Rental Quotation Template</field>
+            <field name="note">Standard Bare Unit Leasing Package with Reservation Fee &amp; Security Deposit.</field>
+        </record>
+        <record id="line_bare_rental" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_bare_unit_rental"/>
+            <field name="product_id" ref="product_monthly_rental"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_bare_reservation" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_bare_unit_rental"/>
+            <field name="product_id" ref="product_reservation_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_bare_deposit" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_bare_unit_rental"/>
+            <field name="product_id" ref="product_security_deposit"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+
+        <!-- 2. Furnished Unit Rental Template -->
+        <record id="template_furnished_unit_rental" model="sale.order.template">
+            <field name="name">Furnished Unit Rental Quotation Template</field>
+            <field name="note">Fully Furnished Unit Lease Package includes Furniture &amp; Appliances Package.</field>
+        </record>
+        <record id="line_furnished_rental" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_furnished_unit_rental"/>
+            <field name="product_id" ref="product_monthly_rental"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_furnished_furniture" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_furnished_unit_rental"/>
+            <field name="product_id" ref="product_furniture_rental"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_furnished_reservation" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_furnished_unit_rental"/>
+            <field name="product_id" ref="product_reservation_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_furnished_deposit" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_furnished_unit_rental"/>
+            <field name="product_id" ref="product_security_deposit"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+
+        <!-- 3. Rental with Parking Template -->
+        <record id="template_rental_with_parking" model="sale.order.template">
+            <field name="name">Rental with Parking Quotation Template</field>
+            <field name="note">Property Lease Package inclusive of allocated Parking Space Slot.</field>
+        </record>
+        <record id="line_parking_rental" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_parking"/>
+            <field name="product_id" ref="product_monthly_rental"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_parking_slot" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_parking"/>
+            <field name="product_id" ref="product_parking_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_parking_reservation" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_parking"/>
+            <field name="product_id" ref="product_reservation_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_parking_deposit" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_parking"/>
+            <field name="product_id" ref="product_security_deposit"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+
+        <!-- 4. Rental with Wi-Fi Template -->
+        <record id="template_rental_with_wifi" model="sale.order.template">
+            <field name="name">Rental with Wi-Fi Quotation Template</field>
+            <field name="note">Property Lease Package with high-speed Wi-Fi Internet pre-installed.</field>
+        </record>
+        <record id="line_wifi_rental" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_wifi"/>
+            <field name="product_id" ref="product_monthly_rental"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_wifi_addon" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_wifi"/>
+            <field name="product_id" ref="product_wifi_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_wifi_reservation" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_wifi"/>
+            <field name="product_id" ref="product_reservation_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_wifi_deposit" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_wifi"/>
+            <field name="product_id" ref="product_security_deposit"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+
+        <!-- 5. Rental with Access Card Template -->
+        <record id="template_rental_with_access_card" model="sale.order.template">
+            <field name="name">Rental with Access Card Quotation Template</field>
+            <field name="note">Property Lease Package including custom Building Access Cards.</field>
+        </record>
+        <record id="line_card_rental" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_access_card"/>
+            <field name="product_id" ref="product_monthly_rental"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_card_addon" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_access_card"/>
+            <field name="product_id" ref="product_access_card_fee"/>
+            <field name="product_uom_qty">2</field>
+        </record>
+        <record id="line_card_reservation" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_access_card"/>
+            <field name="product_id" ref="product_reservation_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_card_deposit" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_access_card"/>
+            <field name="product_id" ref="product_security_deposit"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+
+        <!-- 6. Rental with Pet Registration Template -->
+        <record id="template_rental_with_pet" model="sale.order.template">
+            <field name="name">Rental with Pet Registration Quotation Template</field>
+            <field name="note">Pet-Friendly Lease Package including pet permit &amp; registration line items.</field>
+        </record>
+        <record id="line_pet_rental" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_pet"/>
+            <field name="product_id" ref="product_monthly_rental"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_pet_addon" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_pet"/>
+            <field name="product_id" ref="product_pet_registration_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_pet_reservation" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_pet"/>
+            <field name="product_id" ref="product_reservation_fee"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+        <record id="line_pet_deposit" model="sale.order.template.line">
+            <field name="sale_order_template_id" ref="template_rental_with_pet"/>
+            <field name="product_id" ref="product_security_deposit"/>
+            <field name="product_uom_qty">1</field>
+        </record>
+    </data>
+</odoo>
