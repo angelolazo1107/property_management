@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import property_unit
+from . import property_unit_inherit
 from . import crm_lead_inherit
 from . import lease_contract
 from . import pmo_inspection

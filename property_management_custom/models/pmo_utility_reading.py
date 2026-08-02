@@ -7,7 +7,7 @@ class PMOUtilityReading(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='Reading Ref', required=True, copy=False, readonly=True, default='New')
-    unit_id = fields.Many2one('property.unit', string='Property Unit', required=True, tracking=True)
+    unit_id = fields.Many2one('product.product', string='Property Unit', domain="[('is_property_unit', '=', True)]", required=True, tracking=True)
     tenant_id = fields.Many2one('res.partner', string='Tenant Name')
     reading_date = fields.Date(string='Reading Date', default=fields.Date.context_today, required=True)
     
