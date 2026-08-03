@@ -78,7 +78,6 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'views/monthly_billing_views.xml',
         'views/move_out_clearance_views.xml',
         'views/deposit_refund_views.xml',
-        'views/property_unit_views.xml',
         'views/menus.xml',
     ],
     'installable': True,
