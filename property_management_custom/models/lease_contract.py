@@ -110,6 +110,11 @@ class LeaseContract(models.Model):
             'target': 'current',
         }
 
+    bis_submitted = fields.Boolean(string='BIS Data Verified', tracking=True)
+    legal_clearance = fields.Boolean(string='Legal Clearance Approved', tracking=True)
+    deposit_paid = fields.Boolean(string='Security Deposit Paid (Accounting Verified)', tracking=True)
+    move_in_checklist_done = fields.Boolean(string='PMO Move-In Checklist Completed', tracking=True)
+
     # Stage 11: Contract Signing & Processing Checklist (8 Items)
     reviewed_with_tenant = fields.Boolean(string='Contract Reviewed with Tenant', tracking=True)
     tenant_signed = fields.Boolean(string='Tenant Signed Contract', tracking=True)
