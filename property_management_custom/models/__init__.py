@@ -23,3 +23,5 @@ from . import parking_application
 from . import pet_registration
 from . import move_in_form
 from . import agent_commission
+from . import rental_registration_summary
+from . import move_in_gate_pass

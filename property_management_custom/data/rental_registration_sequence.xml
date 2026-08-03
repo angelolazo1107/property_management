@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Rental Registration Summary Sequence -->
+        <record id="seq_rental_registration_summary" model="ir.sequence">
+            <field name="name">Rental Registration Summary Sequence</field>
+            <field name="code">rental.registration.summary</field>
+            <field name="prefix">RREG-%(year)s-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Move-In Gate Pass Sequence -->
+        <record id="seq_move_in_gate_pass" model="ir.sequence">
+            <field name="name">Move-In Gate Pass Sequence</field>
+            <field name="code">move.in.gate.pass</field>
+            <field name="prefix">MGP-%(year)s-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

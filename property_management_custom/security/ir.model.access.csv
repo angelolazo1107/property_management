@@ -19,3 +19,5 @@
 "access_pet_registration_user","pet.registration.user","model_pet_registration",,1,1,1,1
 "access_move_in_form_user","move.in.form.user","model_move_in_form",,1,1,1,1
 "access_agent_commission_user","agent.commission.user","model_agent_commission",,1,1,1,1
+"access_rental_registration_summary_user","rental.registration.summary.user","model_rental_registration_summary",,1,1,1,1
+"access_move_in_gate_pass_user","move.in.gate.pass.user","model_move_in_gate_pass",,1,1,1,1

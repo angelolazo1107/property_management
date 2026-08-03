@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Rental Registration Summary Form View -->
+    <record id="view_rental_registration_summary_form" model="ir.ui.view">
+        <field name="name">rental.registration.summary.form</field>
+        <field name="model">rental.registration.summary</field>
+        <field name="arch" type="xml">
+            <form string="Rental Registration Summary &amp; SSP Posting">
+                <header>
+                    <button name="action_generate_summary" string="Compile Summary Data" type="object" class="btn-primary" invisible="state == 'posted'"/>
+                    <button name="action_post_to_sales_group" string="Post to SSP Leasing Sales Group" type="object" class="oe_highlight" invisible="state == 'posted'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,generated,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Summary Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tenant &amp; Property References">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="lease_contract_id" options="{'no_create': True}"/>
+                            <field name="move_in_form_id" options="{'no_create': True}"/>
+                            <field name="agent_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Lease &amp; Financial Parameters">
+                            <field name="furniture_package" placeholder="e.g. Fully Furnished Executive Package"/>
+                            <field name="move_in_date"/>
+                            <field name="lease_period" placeholder="e.g. Aug 1, 2026 to Jul 31, 2027 (12 Months)"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="deposit_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="rental_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <group string="Auxiliary Services Integration">
+                        <group string="Wi-Fi Credentials">
+                            <field name="wifi_info" placeholder="SSID, Password, Router Serial..."/>
+                        </group>
+                        <group string="Parking &amp; Vehicle Info">
+                            <field name="parking_info" placeholder="Assigned Slot, Sticker #, Plate..."/>
+                        </group>
+                    </group>
+                    <group string="SSP Sales Group Broadcast Status &amp; Remarks">
+                        <group>
+                            <field name="posted_to_sales_group" widget="boolean_toggle" readonly="1"/>
+                            <field name="posted_date" invisible="not posted_to_sales_group"/>
+                        </group>
+                        <group>
+                            <field name="other_notes" placeholder="Enter special remarks, turnover instructions..."/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rental Registration Summary List View -->
+    <record id="view_rental_registration_summary_tree" model="ir.ui.view">
+        <field name="name">rental.registration.summary.list</field>
+        <field name="model">rental.registration.summary</field>
+        <field name="arch" type="xml">
+            <list string="Rental Registration Summaries">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="furniture_package"/>
+                <field name="move_in_date"/>
+                <field name="lease_period"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="rental_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="agent_id"/>
+                <field name="posted_to_sales_group" widget="boolean"/>
+                <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'generated'" decoration-warning="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Rental Registration Summary Action -->
+    <record id="action_rental_registration_summary" model="ir.actions.act_window">
+        <field name="name">Rental Registration Summaries</field>
+        <field name="res_model">rental.registration.summary</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Rental Registration Summary!
+            </p>
+            <p>
+                Auto-compile tenant move-in parameters and broadcast executive summaries to the SSP Leasing Sales Group.
+            </p>
+        </field>
+    </record>
+
+    <!-- Move-In Gate Pass Form View -->
+    <record id="view_move_in_gate_pass_form" model="ir.ui.view">
+        <field name="name">move.in.gate.pass.form</field>
+        <field name="model">move.in.gate.pass</field>
+        <field name="arch" type="xml">
+            <form string="Move-In Gate Pass &amp; Security Control">
+                <header>
+                    <button name="action_submit_security" string="Submit to Security" type="object" class="btn-primary" invisible="security_status != 'pending'"/>
+                    <button name="action_security_approve" string="Approve Gate Pass (Security)" type="object" class="btn-success" invisible="security_status != 'sent'"/>
+                    <button name="action_mark_used" string="Mark Gate Pass Used" type="object" class="oe_highlight" invisible="security_status != 'approved'"/>
+                    <field name="security_status" widget="statusbar" statusbar_visible="pending,sent,approved,used"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Gate Pass Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Logistics &amp; Tenant Details">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="move_in_date"/>
+                            <field name="prepared_by_id" options="{'no_create': True}"/>
+                            <field name="submitted_to_security" widget="boolean_toggle" readonly="1"/>
+                        </group>
+                        <group string="Vehicle &amp; Cargo Details">
+                            <field name="vehicle_details" placeholder="Make, Model, Color, Plate (e.g. Toyota HiAce White - ABC 1234)..."/>
+                            <field name="items_for_move_in" placeholder="List furniture, appliances, boxes brought into the property..."/>
+                        </group>
+                    </group>
+                    <group string="Security Inspection Comments &amp; Remarks">
+                        <field name="notes" placeholder="Enter security guard notes, verification timestamps, or access clearance comments..." nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Move-In Gate Pass List View -->
+    <record id="view_move_in_gate_pass_tree" model="ir.ui.view">
+        <field name="name">move.in.gate.pass.list</field>
+        <field name="model">move.in.gate.pass</field>
+        <field name="arch" type="xml">
+            <list string="Move-In Gate Passes">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="move_in_date"/>
+                <field name="vehicle_details"/>
+                <field name="prepared_by_id"/>
+                <field name="submitted_to_security" widget="boolean"/>
+                <field name="security_status" widget="badge" decoration-success="security_status in ('approved', 'used')" decoration-info="security_status == 'sent'" decoration-warning="security_status == 'pending'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Move-In Gate Pass Action -->
+    <record id="action_move_in_gate_pass" model="ir.actions.act_window">
+        <field name="name">Move-In Gate Passes</field>
+        <field name="res_model">move.in.gate.pass</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Issue a new Move-In Gate Pass!
+            </p>
+            <p>
+                Manage move-in logistics, vehicle entry permits, brought-in items lists, and Security authorization.
+            </p>
+        </field>
+    </record>
+</odoo>
