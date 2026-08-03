@@ -16,3 +16,5 @@
 "access_access_request_user","access.request.user","model_access_request",,1,1,1,1
 "access_wifi_request_user","wifi.request.user","model_wifi_request",,1,1,1,1
 "access_parking_application_user","parking.application.user","model_parking_application",,1,1,1,1
+"access_pet_registration_user","pet.registration.user","model_pet_registration",,1,1,1,1
+"access_move_in_form_user","move.in.form.user","model_move_in_form",,1,1,1,1

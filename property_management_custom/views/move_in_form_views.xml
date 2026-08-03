@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Move-In Form Form View -->
+    <record id="view_move_in_form_form" model="ir.ui.view">
+        <field name="name">move.in.form.form</field>
+        <field name="model">move.in.form</field>
+        <field name="arch" type="xml">
+            <form string="PMO Move-In Form &amp; Clearance">
+                <header>
+                    <button name="action_submit" string="Submit Form" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_clear" string="Clear for Move-In" type="object" class="btn-success" invisible="state != 'for_approval'"/>
+                    <button name="action_confirm_moved_in" string="Confirm Tenant Moved In" type="object" class="btn-primary" invisible="state != 'cleared'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,for_approval,cleared,moved_in"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pet_registrations" type="object" class="oe_stat_button" icon="fa-paw">
+                            <field name="pet_registration_count" widget="statinfo" string="Pet Permits"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Move-In Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tenant &amp; Move-In Details">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="move_in_date"/>
+                            <field name="leasing_officer_id" options="{'no_create': True}"/>
+                            <field name="lease_contract_id" options="{'no_create': True}"/>
+                            <field name="pmo_inspection_id" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Financial Terms &amp; Deposit Summary">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="rental_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <group string="Signatures &amp; Execution Verification">
+                        <group string="Tenant Acknowledgment">
+                            <field name="tenant_signature" widget="binary" string="Tenant Signature *"/>
+                        </group>
+                        <group string="Leasing Officer / Agent Authorization">
+                            <field name="agent_signature" widget="binary" string="Agent Signature"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Registered Pets" name="pet_registrations">
+                            <field name="pet_registration_ids">
+                                <list string="Registered Pets">
+                                    <field name="name"/>
+                                    <field name="pet_name"/>
+                                    <field name="pet_type" widget="badge"/>
+                                    <field name="breed"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="registration_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-info="payment_status == 'waived'" decoration-warning="payment_status == 'unpaid'"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'active'" decoration-muted="state in ('draft', 'cancelled')"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Remarks &amp; Notes" name="notes">
+                            <field name="notes" placeholder="Enter special turnover instructions, key handovers, or move-in notes..." nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Move-In Form List View -->
+    <record id="view_move_in_form_tree" model="ir.ui.view">
+        <field name="name">move.in.form.list</field>
+        <field name="model">move.in.form</field>
+        <field name="arch" type="xml">
+            <list string="PMO Move-In Forms">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="move_in_date"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="rental_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="leasing_officer_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'moved_in'" decoration-info="state == 'cleared'" decoration-warning="state == 'for_approval'" decoration-muted="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Move-In Form Window Action -->
+    <record id="action_move_in_form" model="ir.actions.act_window">
+        <field name="name">Move-In Processing Forms</field>
+        <field name="res_model">move.in.form</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Move-In Form!
+            </p>
+            <p>
+                Manage tenant move-in execution, security deposit verification, tenant &amp; agent signatures, and pet registrations.
+            </p>
+        </field>
+    </record>
+
+    <!-- Pet Registration Form View -->
+    <record id="view_pet_registration_form" model="ir.ui.view">
+        <field name="name">pet.registration.form</field>
+        <field name="model">pet.registration</field>
+        <field name="arch" type="xml">
+            <form string="Pet Registration &amp; Permit">
+                <header>
+                    <button name="action_submit" string="Submit Registration &amp; Issue Fee Invoice" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_validate_payment" string="Validate Payment (Cashier)" type="object" class="btn-success" invisible="payment_status == 'paid'"/>
+                    <button name="action_waive_payment" string="Waive Fee" type="object" class="btn-secondary" invisible="payment_status == 'waived'"/>
+                    <button name="action_cancel" string="Cancel Permit" type="object" class="btn-danger" invisible="state == 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Customer Invoice</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Permit Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Pet &amp; Owner Details">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="move_in_form_id" options="{'no_create': True}"/>
+                            <field name="pet_name" placeholder="e.g. Max / Bella"/>
+                            <field name="pet_type" widget="radio"/>
+                            <field name="breed" placeholder="e.g. Golden Retriever / Persian Cat"/>
+                        </group>
+                        <group string="Fee &amp; Payment Status">
+                            <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-info="payment_status == 'waived'" decoration-warning="payment_status == 'unpaid'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="registration_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="invoice_id" readonly="1" invisible="not invoice_id"/>
+                            <field name="invoice_payment_state" invisible="not invoice_id"/>
+                        </group>
+                    </group>
+                    <group string="Pet Photo &amp; Vaccination Record Attachments">
+                        <group>
+                            <field name="pet_photo_filename" invisible="1"/>
+                            <field name="pet_photo" filename="pet_photo_filename" widget="binary" string="Pet Photo"/>
+                        </group>
+                        <group>
+                            <field name="vaccination_record_filename" invisible="1"/>
+                            <field name="vaccination_record" filename="vaccination_record_filename" widget="binary" string="Vaccination Record Attachment"/>
+                        </group>
+                    </group>
+                    <group string="Health &amp; Behavioral Notes">
+                        <field name="notes" placeholder="Enter microchip number, vet details, special handling requirements, or house rules compliance notes..." nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Pet Registration List View -->
+    <record id="view_pet_registration_tree" model="ir.ui.view">
+        <field name="name">pet.registration.list</field>
+        <field name="model">pet.registration</field>
+        <field name="arch" type="xml">
+            <list string="Pet Registrations &amp; Permits">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="pet_name"/>
+                <field name="pet_type" widget="badge" decoration-info="pet_type == 'dog'" decoration-primary="pet_type == 'cat'" decoration-success="pet_type == 'bird'"/>
+                <field name="breed"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="registration_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-info="payment_status == 'waived'" decoration-warning="payment_status == 'unpaid'"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-warning="state == 'draft'" decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Pet Registration Window Action -->
+    <record id="action_pet_registration" model="ir.actions.act_window">
+        <field name="name">Pet Registrations &amp; Permits</field>
+        <field name="res_model">pet.registration</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a new Pet Permit!
+            </p>
+            <p>
+                Manage tenant pet permits, PHP 500 registration fee invoicing, photo uploads, and vaccination records.
+            </p>
+        </field>
+    </record>
+</odoo>

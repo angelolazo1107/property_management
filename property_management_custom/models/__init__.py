@@ -20,3 +20,5 @@ from . import unit_assessment_task
 from . import access_request
 from . import wifi_request
 from . import parking_application
+from . import pet_registration
+from . import move_in_form
