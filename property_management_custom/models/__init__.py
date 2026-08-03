@@ -22,3 +22,4 @@ from . import wifi_request
 from . import parking_application
 from . import pet_registration
 from . import move_in_form
+from . import agent_commission

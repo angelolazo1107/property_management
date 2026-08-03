@@ -18,3 +18,4 @@
 "access_parking_application_user","parking.application.user","model_parking_application",,1,1,1,1
 "access_pet_registration_user","pet.registration.user","model_pet_registration",,1,1,1,1
 "access_move_in_form_user","move.in.form.user","model_move_in_form",,1,1,1,1
+"access_agent_commission_user","agent.commission.user","model_agent_commission",,1,1,1,1
