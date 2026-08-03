@@ -25,9 +25,15 @@
                             class="btn-success" 
                             invisible="stage not in ('for_signing')"/>
 
+                    <button name="action_submit_billing" 
+                            type="object" 
+                            string="Submit to Billing" 
+                            class="btn-info" 
+                            invisible="stage not in ('signed_tenant')"/>
+
                     <button name="action_submit_legal" 
                             type="object" 
-                            string="Submit to Legal for Notarization" 
+                            string="Forward to Legal for Notarization" 
                             class="btn-info" 
                             invisible="stage not in ('signed_tenant', 'submitted_billing')"/>
 
@@ -72,7 +78,7 @@
                             class="btn-success" 
                             invisible="deposit_refund_status == 'approved' or stage != 'move_out'"/>
 
-                    <field name="stage" widget="statusbar" statusbar_visible="draft,tenant_review,for_signing,signed_tenant,submitted_legal,notarized,released_tenant,active"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="draft,tenant_review,for_signing,signed_tenant,submitted_billing,submitted_legal,notarized,released_tenant,active"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -86,6 +92,7 @@
                         </button>
                     </div>
                     <div class="oe_title">
+                        <label for="name" string="Structured Contract Reference (LEASE-YYYY-PROPERTY-UNIT-SEQUENCE)"/>
                         <h1>
                             <field name="name" readonly="1"/>
                         </h1>
@@ -109,6 +116,20 @@
                             <field name="pet_registration_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="other_charges" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="reservation_fee_credit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <group string="Stage 11: Contract Signing &amp; Legal Processing Checklist (8 Required Items)">
+                        <group>
+                            <field name="reviewed_with_tenant" widget="boolean_toggle"/>
+                            <field name="tenant_signed" widget="boolean_toggle"/>
+                            <field name="house_rules_provided" widget="boolean_toggle"/>
+                            <field name="violation_forms_provided" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="submitted_to_billing" widget="boolean_toggle"/>
+                            <field name="forwarded_to_legal" widget="boolean_toggle"/>
+                            <field name="notarized" widget="boolean_toggle"/>
+                            <field name="tenant_received_notarized_copy" widget="boolean_toggle"/>
                         </group>
                     </group>
                     <group>

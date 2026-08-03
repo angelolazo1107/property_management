@@ -110,10 +110,15 @@ class LeaseContract(models.Model):
             'target': 'current',
         }
 
-    bis_submitted = fields.Boolean(string='BIS Data Verified', tracking=True)
-    legal_clearance = fields.Boolean(string='Legal Clearance Approved', tracking=True)
-    deposit_paid = fields.Boolean(string='Security Deposit Paid (Accounting Verified)', tracking=True)
-    move_in_checklist_done = fields.Boolean(string='PMO Move-In Checklist Completed', tracking=True)
+    # Stage 11: Contract Signing & Processing Checklist (8 Items)
+    reviewed_with_tenant = fields.Boolean(string='Contract Reviewed with Tenant', tracking=True)
+    tenant_signed = fields.Boolean(string='Tenant Signed Contract', tracking=True)
+    house_rules_provided = fields.Boolean(string='House Rules Provided', tracking=True)
+    violation_forms_provided = fields.Boolean(string='Violation Forms Provided', tracking=True)
+    submitted_to_billing = fields.Boolean(string='Submitted to Billing', tracking=True)
+    forwarded_to_legal = fields.Boolean(string='Forwarded to Legal', tracking=True)
+    notarized = fields.Boolean(string='Notarized', tracking=True)
+    tenant_received_notarized_copy = fields.Boolean(string='Tenant Received Notarized Copy', tracking=True)
 
     pet_registration_fee = fields.Monetary(string='Pet Registration Fee', currency_field='currency_id', default=0.0, tracking=True)
     other_charges = fields.Monetary(string='Other Charges / Move-In Setup', currency_field='currency_id', default=0.0, tracking=True)
@@ -175,13 +180,31 @@ class LeaseContract(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('lease.contract') or 'LEASE-2026-00001'
+            year = fields.Date.context_today(self).strftime('%Y')
+            property_code = 'SAPPHIRE'
+            unit_code = '1001'
+            
+            if vals.get('unit_id'):
+                unit = self.env['product.product'].browse(vals['unit_id'])
+                if unit and unit.name:
+                    parts = [p.strip() for p in unit.name.replace('-', ' ').split() if p.strip()]
+                    if len(parts) >= 2:
+                        property_code = parts[0].upper()
+                        unit_code = parts[-1].upper()
+                    elif len(parts) == 1:
+                        unit_code = parts[0].upper()
+
+            seq_raw = self.env['ir.sequence'].next_by_code('lease.contract') or '0001'
+            seq_num = seq_raw.split('-')[-1] if '-' in seq_raw else seq_raw
+            vals['name'] = f"LEASE-{year}-{property_code}-{unit_code}-{seq_num}"
+
         return super(LeaseContract, self).create(vals)
 
     def action_submit_tenant_review(self):
         for rec in self:
+            rec.reviewed_with_tenant = True
             rec.stage = 'tenant_review'
-            rec.message_post(body=f"Lease Contract <b>{rec.name}</b> submitted for Tenant Review.", subject="For Tenant Review")
+            rec.message_post(body=f"Lease Contract <b>{rec.name}</b> reviewed with and submitted to Tenant {rec.tenant_id.name}.", subject="For Tenant Review")
 
     def action_send_signing(self):
         for rec in self:
@@ -192,25 +215,37 @@ class LeaseContract(models.Model):
         for rec in self:
             if not rec.signed_copy:
                 raise UserError("Signed Copy Attachment Required: Please attach the executed contract copy before updating status to Signed by Tenant.")
+            rec.tenant_signed = True
+            rec.house_rules_provided = True
+            rec.violation_forms_provided = True
             rec.stage = 'signed_tenant'
-            rec.message_post(body=f"Lease Contract <b>{rec.name}</b> signed by Tenant {rec.tenant_id.name}.", subject="Signed by Tenant")
+            rec.message_post(body=f"Lease Contract <b>{rec.name}</b> signed by Tenant {rec.tenant_id.name}. House rules and violation forms provided.", subject="Signed by Tenant")
+
+    def action_submit_billing(self):
+        for rec in self:
+            rec.submitted_to_billing = True
+            rec.stage = 'submitted_billing'
+            rec.message_post(body=f"Signed Lease Contract <b>{rec.name}</b> submitted to Billing.", subject="Submitted to Billing")
 
     def action_submit_legal(self):
         for rec in self:
+            rec.forwarded_to_legal = True
             rec.stage = 'submitted_legal'
             rec.legal_clearance = True
-            rec.message_post(body=f"Lease Contract <b>{rec.name}</b> submitted to Legal for Notarization.", subject="Submitted to Legal")
+            rec.message_post(body=f"Lease Contract <b>{rec.name}</b> forwarded to Legal for Notarization.", subject="Forwarded to Legal")
 
     def action_notarize(self):
         for rec in self:
+            rec.notarized = True
             rec.notary_status = 'done'
             rec.stage = 'notarized'
             rec.message_post(body=f"Lease Contract <b>{rec.name}</b> successfully Notarized.", subject="Contract Notarized")
 
     def action_release_tenant(self):
         for rec in self:
+            rec.tenant_received_notarized_copy = True
             rec.stage = 'released_tenant'
-            rec.message_post(body=f"Executed Lease Contract <b>{rec.name}</b> released to Tenant {rec.tenant_id.name}.", subject="Released to Tenant")
+            rec.message_post(body=f"Notarized Executed Lease Contract <b>{rec.name}</b> received by Tenant {rec.tenant_id.name}.", subject="Notarized Copy Released")
 
     def action_create_move_in_invoice(self):
         for rec in self:
