@@ -78,7 +78,25 @@
                             class="btn-success" 
                             invisible="deposit_refund_status == 'approved' or stage != 'move_out'"/>
 
-                    <field name="stage" widget="statusbar" statusbar_visible="draft,tenant_review,for_signing,signed_tenant,submitted_billing,submitted_legal,notarized,released_tenant,active"/>
+                    <button name="action_mark_renewed" 
+                            type="object" 
+                            string="Mark Renewed" 
+                            class="btn-success" 
+                            invisible="stage not in ('active', 'for_renewal', 'renewal_offered')"/>
+
+                    <button name="action_mark_for_move_out" 
+                            type="object" 
+                            string="Mark For Move-Out (7-Day Notice)" 
+                            class="btn-warning" 
+                            invisible="stage not in ('active', 'for_renewal', 'renewal_offered')"/>
+
+                    <button name="action_mark_breached" 
+                            type="object" 
+                            string="Mark Contract Breached" 
+                            class="btn-danger" 
+                            invisible="stage in ('draft', 'terminated', 'breached')"/>
+
+                    <field name="stage" widget="statusbar" statusbar_visible="draft,active,for_renewal,renewal_offered,renewed,for_move_out,expired,terminated,breached"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -157,6 +175,15 @@
                             <field name="move_in_cleared_date" invisible="not move_in_cleared"/>
                             <field name="exception_approved"/>
                             <field name="exception_reason" invisible="not exception_approved" required="exception_approved" placeholder="Enter GM or Operations exception approval authorization..."/>
+                        </group>
+                    </group>
+                    <group string="Stage 18: Lease Expiration Monitoring &amp; Renewal Governance">
+                        <group string="Expiration Audit &amp; Reminders">
+                            <field name="days_until_expiry" widget="badge" decoration-danger="days_until_expiry &lt;= 7" decoration-warning="days_until_expiry &lt;= 30" decoration-info="days_until_expiry &lt;= 60" decoration-success="days_until_expiry &gt; 60"/>
+                            <field name="renewal_decision"/>
+                        </group>
+                        <group string="Notice &amp; Governance Controls">
+                            <field name="notice_date"/>
                         </group>
                     </group>
                     <notebook>

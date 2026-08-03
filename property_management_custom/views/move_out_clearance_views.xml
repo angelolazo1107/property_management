@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Move-Out Clearance Form View -->
+    <record id="view_move_out_clearance_form" model="ir.ui.view">
+        <field name="name">move.out.clearance.form</field>
+        <field name="model">move.out.clearance</field>
+        <field name="arch" type="xml">
+            <form string="Move-Out Clearance &amp; Departmental Sign-Off">
+                <header>
+                    <button name="action_submit_inspection" string="Schedule Inspection" type="object" class="btn-primary" invisible="clearance_status != 'draft'"/>
+                    <button name="action_complete_inspection" string="Complete Inspection" type="object" class="btn-info" invisible="clearance_status != 'for_inspection'"/>
+                    <button name="action_grant_clearance" string="Grant Final Exit Clearance" type="object" class="oe_highlight" invisible="clearance_status != 'for_billing_clearance'"/>
+                    <button name="action_close" string="Close Move-Out File" type="object" class="btn-success" invisible="clearance_status != 'cleared'"/>
+                    <field name="clearance_status" widget="statusbar" statusbar_visible="draft,for_inspection,for_billing_clearance,cleared,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Clearance Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Tenant &amp; Move-Out Parameters">
+                            <field name="lease_contract_id" options="{'no_create': True}"/>
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="reason"/>
+                            <field name="move_out_date"/>
+                            <field name="notice_date"/>
+                            <field name="notice_compliance" widget="badge" decoration-success="notice_compliance == 'compliant'" decoration-danger="notice_compliance == 'non_compliant'"/>
+                        </group>
+                        <group string="Unit Turnover &amp; Final Inspection Status">
+                            <field name="final_inspection_status" widget="radio"/>
+                        </group>
+                    </group>
+                    <group string="Stage 19: 8-Departmental Move-Out Sign-Off Checklist (Mandatory)">
+                        <group string="Operations &amp; Support Clearances">
+                            <field name="clearance_billing" widget="boolean_toggle"/>
+                            <field name="clearance_admin" widget="boolean_toggle"/>
+                            <field name="clearance_housekeeping" widget="boolean_toggle"/>
+                            <field name="clearance_it" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Security, Governance &amp; Finance Clearances">
+                            <field name="clearance_security" widget="boolean_toggle"/>
+                            <field name="clearance_parking" widget="boolean_toggle"/>
+                            <field name="clearance_legal" widget="boolean_toggle"/>
+                            <field name="clearance_finance" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Deposit Refund &amp; Forfeiture Ledger">
+                        <group string="Security Deposit &amp; Deductions">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="outstanding_balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="damage_charges" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="utility_charges" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="other_deductions" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group string="Forfeiture &amp; Net Refund Summary">
+                            <field name="deposit_forfeited" widget="boolean_toggle"/>
+                            <field name="forfeiture_reason" invisible="not deposit_forfeited" required="deposit_forfeited" placeholder="Enter official forfeiture justification (e.g. breach of contract, unnotified exit)..."/>
+                            <field name="refundable_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                    <group string="Move-Out Remarks &amp; Special Provisions">
+                        <field name="notes" placeholder="Enter move-out turnover remarks, key surrender logs..." nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Move-Out Clearance List View -->
+    <record id="view_move_out_clearance_tree" model="ir.ui.view">
+        <field name="name">move.out.clearance.list</field>
+        <field name="model">move.out.clearance</field>
+        <field name="arch" type="xml">
+            <list string="Move-Out Clearances &amp; Sign-Offs">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="lease_contract_id"/>
+                <field name="move_out_date"/>
+                <field name="reason" widget="badge" decoration-info="reason == 'end_of_lease'" decoration-warning="reason == 'early_termination'" decoration-danger="reason == 'breach'"/>
+                <field name="notice_compliance" widget="badge" decoration-success="notice_compliance == 'compliant'" decoration-danger="notice_compliance == 'non_compliant'"/>
+                <field name="final_inspection_status" widget="badge" decoration-success="final_inspection_status == 'passed'" decoration-warning="final_inspection_status == 'with_damage'"/>
+                <field name="deposit_forfeited" widget="boolean"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="refundable_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="clearance_status" widget="badge" decoration-success="clearance_status in ('cleared', 'closed')" decoration-info="clearance_status == 'for_billing_clearance'" decoration-warning="clearance_status in ('draft', 'for_inspection')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Move-Out Clearance Action -->
+    <record id="action_move_out_clearance" model="ir.actions.act_window">
+        <field name="name">Move-Out Clearances &amp; Sign-Offs</field>
+        <field name="res_model">move.out.clearance</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Process a new Move-Out Clearance!
+            </p>
+            <p>
+                Manage 8-departmental move-out sign-offs, notice compliance, final unit turnover inspection, damage deductions, and security deposit refund or forfeiture processing.
+            </p>
+        </field>
+    </record>
+</odoo>

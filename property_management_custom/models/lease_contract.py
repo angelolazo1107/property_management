@@ -45,11 +45,36 @@ class LeaseContract(models.Model):
         ('notarized', 'Notarized'),
         ('released_tenant', 'Released to Tenant'),
         ('active', 'Active Lease'),
+        ('for_renewal', 'For Renewal Discussion'),
+        ('renewal_offered', 'Renewal Offered'),
+        ('renewed', 'Renewed'),
+        ('for_move_out', 'For Move-Out'),
+        ('expired', 'Expired'),
         ('move_out', 'Move-Out Inspection'),
         ('deposit_refund', 'Security Deposit Refunded'),
         ('terminated', 'Closed / Terminated'),
+        ('breached', 'Breached'),
         ('archived', 'Archived'),
     ], string='Lease Contract Status', default='draft', tracking=True)
+
+    days_until_expiry = fields.Integer(
+        string='Days Until Expiry', 
+        compute='_compute_days_until_expiry', 
+        store=True
+    )
+    renewal_decision = fields.Selection([
+        ('pending', 'Pending Decision'),
+        ('renewing', 'Tenant Will Renew'),
+        ('vacating', 'Tenant Will Vacate'),
+        ('breach_terminated', 'Early Termination / Breach'),
+    ], string='Renewal Decision', default='pending', tracking=True)
+
+    notice_date = fields.Date(
+        string='Notice Date (7-Day Requirement)', 
+        tracking=True, 
+        help="Date when 7-day minimum move-out or termination notice was officially served."
+    )
+    last_expiry_activity_stage = fields.Integer(default=999)
 
     renewal_terms = fields.Text(string='Renewal Terms & Escalation Clause')
     early_termination_clause = fields.Text(
@@ -79,6 +104,98 @@ class LeaseContract(models.Model):
     def _compute_unit_assessment_task_count(self):
         for rec in self:
             rec.unit_assessment_task_count = len(rec.unit_assessment_task_ids)
+
+    @api.depends('date_end', 'stage')
+    def _compute_days_until_expiry(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.date_end and rec.stage in ['active', 'for_renewal', 'renewal_offered', 'for_move_out']:
+                rec.days_until_expiry = (rec.date_end - today).days
+            else:
+                rec.days_until_expiry = 0
+
+    def action_mark_renewed(self):
+        for rec in self:
+            rec.stage = 'renewed'
+            rec.renewal_decision = 'renewing'
+            rec.message_post(
+                body=f"Lease Contract <b>{rec.name}</b> marked as RENEWED by Tenant {rec.tenant_id.name}.",
+                subject="Lease Renewed"
+            )
+
+    def action_mark_for_move_out(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            rec.stage = 'for_move_out'
+            rec.renewal_decision = 'vacating'
+            if not rec.notice_date:
+                rec.notice_date = today
+            rec.message_post(
+                body=f"Lease Contract <b>{rec.name}</b> marked FOR MOVE-OUT. Official Notice Date: {rec.notice_date}.",
+                subject="Move-Out Notice Recorded"
+            )
+
+    def action_mark_breached(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            rec.stage = 'breached'
+            rec.renewal_decision = 'breach_terminated'
+            if not rec.notice_date:
+                rec.notice_date = today
+            rec.message_post(
+                body=f"⚠️ <b>LEASE CONTRACT BREACH / EARLY TERMINATION RECORDED</b>: Contract <b>{rec.name}</b> marked as BREACHED. Security deposit forfeiture rule applies. Official Notice Date: {rec.notice_date}.",
+                subject="Lease Contract Breached"
+            )
+
+    @api.model
+    def cron_lease_expiration_monitoring(self):
+        """ Daily Cron: 5-Tier Expiration Monitoring & Activity Automation Engine """
+        today = fields.Date.context_today(self)
+        active_leases = self.search([
+            ('stage', 'in', ['active', 'for_renewal', 'renewal_offered']),
+            ('date_end', '!=', False)
+        ])
+        for rec in active_leases:
+            days = (rec.date_end - today).days
+            rec.days_until_expiry = days
+
+            if days <= 0:
+                if rec.renewal_decision == 'pending':
+                    rec.stage = 'expired'
+                    rec.message_post(
+                        body=f"🚨 <b>EXPIRED CONTRACT ESCALATION</b>: Lease Contract <b>{rec.name}</b> reached expiry date ({rec.date_end}) without a confirmed renewal or move-out decision. Escalated to Executive Management.",
+                        subject="Contract Expired - Escalation Required"
+                    )
+            elif days <= 7:
+                if rec.last_expiry_activity_stage > 7:
+                    rec.last_expiry_activity_stage = 7
+                    rec.message_post(
+                        body=f"⏰ <b>REQUIRED TENANT FINAL NOTIFICATION (7 Days to Expiry)</b>: Mandatory 7-day move-out / renewal notice required for Tenant {rec.tenant_id.name} [Unit: {rec.unit_id.name}]. Expiry Date: {rec.date_end}.",
+                        subject="7-Day Final Notice Triggered"
+                    )
+            elif days <= 15:
+                if rec.last_expiry_activity_stage > 15:
+                    rec.last_expiry_activity_stage = 15
+                    rec.message_post(
+                        body=f"📌 <b>TENANT RENEWAL FOLLOW-UP (15 Days to Expiry)</b>: Follow up with Tenant {rec.tenant_id.name} to confirm intent to renew or vacate.",
+                        subject="15-Day Renewal Follow-Up"
+                    )
+            elif days <= 30:
+                if rec.last_expiry_activity_stage > 30:
+                    rec.last_expiry_activity_stage = 30
+                    rec.stage = 'renewal_offered'
+                    rec.message_post(
+                        body=f"✉️ <b>RENEWAL DISCUSSION &amp; OFFER (30 Days to Expiry)</b>: Renewal proposal &amp; rate package issued to Tenant {rec.tenant_id.name}.",
+                        subject="30-Day Renewal Proposal"
+                    )
+            elif days <= 60:
+                if rec.last_expiry_activity_stage > 60:
+                    rec.last_expiry_activity_stage = 60
+                    rec.stage = 'for_renewal'
+                    rec.message_post(
+                        body=f"🔍 <b>INTERNAL LEASING REVIEW (60 Days to Expiry)</b>: Assess tenant standing, rental escalation, and renewal eligibility for Unit {rec.unit_id.name}.",
+                        subject="60-Day Leasing Review"
+                    )
 
     def action_view_unit_assessments(self):
         self.ensure_one()

@@ -26,3 +26,4 @@ from . import agent_commission
 from . import rental_registration_summary
 from . import move_in_gate_pass
 from . import monthly_billing
+from . import move_out_clearance
