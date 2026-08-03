@@ -83,7 +83,7 @@
         <field name="name">access.request.search</field>
         <field name="model">access.request</field>
         <field name="arch" type="xml">
-            <search string="Search Access Applications">
+            <search>
                 <field name="name"/>
                 <field name="tenant_id"/>
                 <field name="unit_id"/>
