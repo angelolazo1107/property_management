@@ -8,259 +8,186 @@
     </record>
 
     <!-- ============================================================ -->
-    <!-- TOP-LEVEL MAIN APP MENU: PROPERTY LEASING SYSTEM              -->
+    <!-- 1. CRM / LEASING SALES APP (parent="crm.crm_menu_root")       -->
     <!-- ============================================================ -->
-    <menuitem id="menu_property_leasing_root"
-              name="Property Leasing"
-              sequence="10"/>
-
-    <!-- 1. LEAD INTAKE & VISITS -->
-    <menuitem id="menu_pl_lead_intake_cat"
-              name="Lead Intake &amp; Visits"
-              parent="menu_property_leasing_root"
-              sequence="1"/>
-
-    <menuitem id="menu_pl_crm_leads"
-              name="Inquiries &amp; Leads"
-              parent="menu_pl_lead_intake_cat"
-              action="crm.crm_lead_action_pipeline"
-              sequence="1"/>
-
-    <menuitem id="menu_pl_ocular_visits"
+    <menuitem id="menu_ocular_visits"
               name="Ocular Visit Coordination"
-              parent="menu_pl_lead_intake_cat"
+              parent="crm.crm_menu_root"
               action="action_ocular_visit"
-              sequence="2"/>
+              sequence="11"/>
 
-    <menuitem id="menu_pl_visitor_gate_passes"
-              name="Security Visitor Gate Passes"
-              parent="menu_pl_lead_intake_cat"
-              action="action_visitor_gate_pass"
-              sequence="3"/>
-
-    <!-- 2. PROPERTIES & TENANTS -->
-    <menuitem id="menu_pl_properties_tenants_cat"
-              name="Properties &amp; Tenants"
-              parent="menu_property_leasing_root"
-              sequence="2"/>
-
-    <menuitem id="menu_pl_property_units"
-              name="Units &amp; Parking Slots"
-              parent="menu_pl_properties_tenants_cat"
-              action="action_property_unit"
-              sequence="1"/>
-
-    <menuitem id="menu_pl_tenants_master"
-              name="Tenants Master File"
-              parent="menu_pl_properties_tenants_cat"
-              action="action_property_tenant"
-              sequence="2"/>
-
-    <!-- 3. LEASING PIPELINE & CONTRACTS -->
-    <menuitem id="menu_pl_leasing_pipeline_cat"
-              name="Leasing Pipeline &amp; Contracts"
-              parent="menu_property_leasing_root"
-              sequence="3"/>
-
-    <menuitem id="menu_pl_quotations"
+    <menuitem id="menu_property_leasing_quotations"
               name="Leasing Quotations"
-              parent="menu_pl_leasing_pipeline_cat"
+              parent="crm.crm_menu_root"
               action="sale.action_quotations_with_onboarding"
-              sequence="1"/>
+              sequence="12"/>
 
-    <menuitem id="menu_pl_reservations"
+    <menuitem id="menu_property_reservations"
               name="Unit Reservations"
-              parent="menu_pl_leasing_pipeline_cat"
+              parent="crm.crm_menu_root"
               action="action_property_reservation"
-              sequence="2"/>
+              sequence="13"/>
 
-    <menuitem id="menu_pl_bis_applications"
+    <menuitem id="menu_tenant_application_bis"
               name="Tenant BIS Applications"
-              parent="menu_pl_leasing_pipeline_cat"
+              parent="crm.crm_menu_root"
               action="action_tenant_application_bis"
-              sequence="3"/>
+              sequence="14"/>
 
-    <menuitem id="menu_pl_lease_contracts"
-              name="Lease Package Contracts"
-              parent="menu_pl_leasing_pipeline_cat"
+    <menuitem id="menu_visitor_gate_passes"
+              name="Security Visitor Gate Passes"
+              parent="crm.crm_menu_root"
+              action="action_visitor_gate_pass"
+              sequence="15"/>
+
+    <menuitem id="menu_lease_contracts"
+              name="Lease Contracts Pipeline"
+              parent="crm.crm_menu_root"
               action="action_lease_contract"
-              sequence="4"/>
+              sequence="16"/>
 
-    <menuitem id="menu_pl_move_in_forms"
+    <menuitem id="menu_move_in_form_crm"
               name="Move-In Processing Forms"
-              parent="menu_pl_leasing_pipeline_cat"
+              parent="crm.crm_menu_root"
               action="action_move_in_form"
-              sequence="5"/>
+              sequence="17"/>
 
-    <menuitem id="menu_pl_unit_assessments"
+    <menuitem id="menu_rental_registration_summary_crm"
+              name="Rental Registration Summaries"
+              parent="crm.crm_menu_root"
+              action="action_rental_registration_summary"
+              sequence="18"/>
+
+    <menuitem id="menu_move_in_gate_pass_crm"
+              name="Move-In Gate Passes"
+              parent="crm.crm_menu_root"
+              action="action_move_in_gate_pass"
+              sequence="19"/>
+
+    <menuitem id="menu_property_tenants"
+              name="Tenants Master File"
+              parent="crm.crm_menu_root"
+              action="action_property_tenant"
+              sequence="20"/>
+
+    <!-- ============================================================ -->
+    <!-- 2. MAINTENANCE & PMO OPERATIONS (parent="maintenance.menu_m_request") -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_pmo_root_custom"
+              name="PMO Operations"
+              parent="maintenance.menu_m_request"
+              sequence="20"/>
+
+    <menuitem id="menu_unit_assessment_task"
               name="Unit Assessments &amp; Turnover"
-              parent="menu_pl_leasing_pipeline_cat"
+              parent="menu_pmo_root_custom"
               action="action_unit_assessment_task"
-              sequence="6"/>
-
-    <!-- 4. TENANT SERVICES & PMO OPERATIONS -->
-    <menuitem id="menu_pl_tenant_services_cat"
-              name="Tenant Services &amp; PMO"
-              parent="menu_property_leasing_root"
-              sequence="4"/>
-
-    <menuitem id="menu_pl_access_requests"
-              name="Access Card &amp; Biometrics"
-              parent="menu_pl_tenant_services_cat"
-              action="action_access_request"
               sequence="1"/>
 
-    <menuitem id="menu_pl_wifi_requests"
-              name="Internet &amp; Wi-Fi Subscriptions"
-              parent="menu_pl_tenant_services_cat"
-              action="action_wifi_request"
+    <menuitem id="menu_pmo_inspections"
+              name="Move-In / Out Inspections"
+              parent="menu_pmo_root_custom"
+              action="action_pmo_inspection"
               sequence="2"/>
 
-    <menuitem id="menu_pl_parking_applications"
-              name="Parking Applications &amp; Stickers"
-              parent="menu_pl_tenant_services_cat"
-              action="action_parking_application"
+    <menuitem id="menu_pmo_utility_readings"
+              name="Electric &amp; Water Readings"
+              parent="menu_pmo_root_custom"
+              action="action_pmo_utility_reading"
               sequence="3"/>
 
-    <menuitem id="menu_pl_pet_registrations"
-              name="Pet Registrations &amp; Permits"
-              parent="menu_pl_tenant_services_cat"
-              action="action_pet_registration"
+    <menuitem id="menu_pmo_job_orders"
+              name="Job Orders &amp; Maintenance"
+              parent="menu_pmo_root_custom"
+              action="action_pmo_job_order"
               sequence="4"/>
 
-    <menuitem id="menu_pl_inspections"
-              name="Move-In / Out Inspections"
-              parent="menu_pl_tenant_services_cat"
-              action="action_pmo_inspection"
+    <menuitem id="menu_access_request"
+              name="Access Card &amp; Biometrics Applications"
+              parent="menu_pmo_root_custom"
+              action="action_access_request"
               sequence="5"/>
 
-    <menuitem id="menu_pl_utility_readings"
-              name="Electric &amp; Water Readings"
-              parent="menu_pl_tenant_services_cat"
-              action="action_pmo_utility_reading"
+    <menuitem id="menu_wifi_request"
+              name="Internet &amp; Wi-Fi Applications"
+              parent="menu_pmo_root_custom"
+              action="action_wifi_request"
               sequence="6"/>
 
-    <menuitem id="menu_pl_job_orders"
-              name="Job Orders &amp; Maintenance"
-              parent="menu_pl_tenant_services_cat"
-              action="action_pmo_job_order"
+    <menuitem id="menu_parking_application"
+              name="Parking Applications &amp; Stickers"
+              parent="menu_pmo_root_custom"
+              action="action_parking_application"
               sequence="7"/>
 
-    <!-- 5. BILLING & COLLECTIONS -->
-    <menuitem id="menu_pl_billing_collections_cat"
-              name="Billing &amp; Collections"
-              parent="menu_property_leasing_root"
+    <menuitem id="menu_pet_registration"
+              name="Pet Registrations &amp; Permits"
+              parent="menu_pmo_root_custom"
+              action="action_pet_registration"
+              sequence="8"/>
+
+    <menuitem id="menu_move_out_clearance"
+              name="Move-Out Clearances &amp; Sign-Offs"
+              parent="menu_pmo_root_custom"
+              action="action_move_out_clearance"
+              sequence="9"/>
+
+    <!-- ============================================================ -->
+    <!-- 3. ACCOUNTING & INVOICING APP (parent="account.menu_finance") -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_property_accounting_root"
+              name="Leasing Finance"
+              parent="account.menu_finance"
               sequence="5"/>
 
-    <menuitem id="menu_pl_monthly_billing"
+    <menuitem id="menu_recurring_monthly_billing_acc"
               name="Monthly Billing &amp; Collections"
-              parent="menu_pl_billing_collections_cat"
+              parent="menu_property_accounting_root"
               action="action_recurring_monthly_billing"
               sequence="1"/>
 
-    <!-- 6. MOVE-OUT & SETTLEMENT -->
-    <menuitem id="menu_pl_move_out_cat"
-              name="Move-Out &amp; Settlement"
-              parent="menu_property_leasing_root"
-              sequence="6"/>
-
-    <menuitem id="menu_pl_move_out_clearances"
-              name="Move-Out Clearances &amp; Sign-Offs"
-              parent="menu_pl_move_out_cat"
-              action="action_move_out_clearance"
-              sequence="1"/>
-
-    <menuitem id="menu_pl_move_in_gate_passes"
-              name="Move-In Gate Passes"
-              parent="menu_pl_move_out_cat"
-              action="action_move_in_gate_pass"
+    <menuitem id="menu_security_deposit_refund_acc"
+              name="Security Deposit Refunds"
+              parent="menu_property_accounting_root"
+              action="action_security_deposit_refund"
               sequence="2"/>
 
-    <menuitem id="menu_pl_deposit_refunds"
-              name="Security Deposit Refunds"
-              parent="menu_pl_move_out_cat"
-              action="action_security_deposit_refund"
+    <menuitem id="menu_agent_commission_acc"
+              name="Agent Commissions &amp; Payouts"
+              parent="menu_property_accounting_root"
+              action="action_agent_commission"
               sequence="3"/>
 
-    <!-- 7. AGENTS & COMMISSIONS -->
-    <menuitem id="menu_pl_agents_commissions_cat"
-              name="Agents &amp; Commissions"
-              parent="menu_property_leasing_root"
-              sequence="7"/>
+    <!-- ============================================================ -->
+    <!-- 4. PURCHASES, FLEET & GOVERNANCE                           -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_fleet_trips_custom"
+              name="Vehicle Trips &amp; Fleet Logs"
+              parent="fleet.menu_root"
+              action="action_fleet_trip_request"
+              sequence="10"/>
 
-    <menuitem id="menu_pl_agent_profiles"
-              name="Agent Profiles &amp; Vendors"
-              parent="menu_pl_agents_commissions_cat"
+    <menuitem id="menu_office_supplies_custom"
+              name="Office Supply Requisitions"
+              parent="purchase.menu_purchase_root"
+              action="action_office_supply_request"
+              sequence="15"/>
+
+    <menuitem id="menu_property_vendors_custom"
+              name="Vendors &amp; Contractors"
+              parent="purchase.menu_purchase_root"
               action="action_property_vendor"
-              sequence="1"/>
+              sequence="20"/>
 
-    <menuitem id="menu_pl_agent_commissions"
-              name="Commission Claims &amp; Payouts"
-              parent="menu_pl_agents_commissions_cat"
-              action="action_agent_commission"
-              sequence="2"/>
-
-    <!-- 8. REPORTING & REGISTRATION -->
-    <menuitem id="menu_pl_reporting_cat"
-              name="Reporting &amp; Registration"
-              parent="menu_property_leasing_root"
-              sequence="8"/>
-
-    <menuitem id="menu_pl_rental_registrations"
-              name="Rental Registration Summaries"
-              parent="menu_pl_reporting_cat"
-              action="action_rental_registration_summary"
-              sequence="1"/>
-
-    <menuitem id="menu_pl_approval_matrix"
+    <menuitem id="menu_approval_matrix"
               name="Governance Approval Matrix"
-              parent="menu_pl_reporting_cat"
+              parent="base.menu_administration"
               action="action_approval_matrix"
-              sequence="2"/>
+              sequence="25"/>
 
-    <!-- 9. CONFIGURATION & GOVERNANCE -->
-    <menuitem id="menu_pl_configuration_cat"
-              name="Configuration"
-              parent="menu_property_leasing_root"
-              sequence="9"/>
-
-    <menuitem id="menu_pl_document_folders"
-              name="Document Folders &amp; Categories"
-              parent="menu_pl_configuration_cat"
+    <menuitem id="menu_document_folders_custom"
+              name="Document Folders Configuration"
+              parent="base.menu_administration"
               action="action_property_document_category"
-              sequence="1"/>
-
-    <!-- ============================================================ -->
-    <!-- CROSS-MODULE MENU SHORTCUTS FOR CRM & MAINTENANCE           -->
-    <!-- ============================================================ -->
-    <menuitem id="menu_ocular_visits" name="Ocular Visit Coordination" parent="crm.crm_menu_root" action="action_ocular_visit" sequence="11"/>
-    <menuitem id="menu_property_leasing_quotations" name="Leasing Quotations" parent="crm.crm_menu_root" action="sale.action_quotations_with_onboarding" sequence="12"/>
-    <menuitem id="menu_property_reservations" name="Unit Reservations" parent="crm.crm_menu_root" action="action_property_reservation" sequence="13"/>
-    <menuitem id="menu_tenant_application_bis" name="Tenant BIS Applications" parent="crm.crm_menu_root" action="action_tenant_application_bis" sequence="14"/>
-    <menuitem id="menu_visitor_gate_passes" name="Security Visitor Gate Passes" parent="crm.crm_menu_root" action="action_visitor_gate_pass" sequence="15"/>
-    <menuitem id="menu_lease_contracts" name="Lease Contracts Pipeline" parent="crm.crm_menu_root" action="action_lease_contract" sequence="16"/>
-    <menuitem id="menu_unit_assessment_task" name="Unit Assessments &amp; Turnover" parent="crm.crm_menu_root" action="action_unit_assessment_task" sequence="17"/>
-    <menuitem id="menu_access_request_crm" name="Access Card &amp; Biometrics Applications" parent="crm.crm_menu_root" action="action_access_request" sequence="18"/>
-    <menuitem id="menu_wifi_request_crm" name="Internet &amp; Wi-Fi Applications" parent="crm.crm_menu_root" action="action_wifi_request" sequence="19"/>
-    <menuitem id="menu_parking_application_crm" name="Parking Applications &amp; Stickers" parent="crm.crm_menu_root" action="action_parking_application" sequence="20"/>
-    <menuitem id="menu_move_in_form_crm" name="Move-In Processing Forms" parent="crm.crm_menu_root" action="action_move_in_form" sequence="21"/>
-    <menuitem id="menu_pet_registration_crm" name="Pet Registrations &amp; Permits" parent="crm.crm_menu_root" action="action_pet_registration" sequence="22"/>
-    <menuitem id="menu_agent_commission_crm" name="Agent Commissions &amp; Payouts" parent="crm.crm_menu_root" action="action_agent_commission" sequence="23"/>
-    <menuitem id="menu_rental_registration_summary_crm" name="Rental Registration Summaries" parent="crm.crm_menu_root" action="action_rental_registration_summary" sequence="24"/>
-    <menuitem id="menu_move_in_gate_pass_crm" name="Move-In Gate Passes" parent="crm.crm_menu_root" action="action_move_in_gate_pass" sequence="25"/>
-    <menuitem id="menu_recurring_monthly_billing_crm" name="Monthly Billing &amp; Collections" parent="crm.crm_menu_root" action="action_recurring_monthly_billing" sequence="26"/>
-    <menuitem id="menu_move_out_clearance_crm" name="Move-Out Clearances &amp; Sign-Offs" parent="crm.crm_menu_root" action="action_move_out_clearance" sequence="27"/>
-    <menuitem id="menu_security_deposit_refund_crm" name="Security Deposit Refunds" parent="crm.crm_menu_root" action="action_security_deposit_refund" sequence="28"/>
-    <menuitem id="menu_property_tenants" name="Tenants Master File" parent="crm.crm_menu_root" action="action_property_tenant" sequence="29"/>
-
-    <menuitem id="menu_pmo_root_custom" name="PMO Operations" parent="maintenance.menu_m_request" sequence="20"/>
-    <menuitem id="menu_pmo_inspections" name="Move-In / Out Inspections" parent="menu_pmo_root_custom" action="action_pmo_inspection" sequence="1"/>
-    <menuitem id="menu_pmo_utility_readings" name="Electric &amp; Water Readings" parent="menu_pmo_root_custom" action="action_pmo_utility_reading" sequence="2"/>
-    <menuitem id="menu_pmo_job_orders" name="Job Orders &amp; Maintenance" parent="menu_pmo_root_custom" action="action_pmo_job_order" sequence="3"/>
-    <menuitem id="menu_approval_matrix" name="Governance Approval Matrix" parent="menu_pmo_root_custom" action="action_approval_matrix" sequence="4"/>
-
-    <menuitem id="menu_fleet_trips_custom" name="Vehicle Trips &amp; Fleet Logs" parent="fleet.menu_root" action="action_fleet_trip_request" sequence="10"/>
-    <menuitem id="menu_office_supplies_custom" name="Office Supply Requisitions" parent="purchase.menu_purchase_root" action="action_office_supply_request" sequence="15"/>
-    <menuitem id="menu_property_vendors_custom" name="Vendors &amp; Contractors" parent="purchase.menu_purchase_root" action="action_property_vendor" sequence="20"/>
-    <menuitem id="menu_document_folders_custom" name="Document Folders Configuration" parent="base.menu_administration" action="action_property_document_category" sequence="30"/>
+              sequence="30"/>
 </odoo>
