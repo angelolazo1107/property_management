@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Parking Application Form View -->
+    <record id="view_parking_application_form" model="ir.ui.view">
+        <field name="name">parking.application.form</field>
+        <field name="model">parking.application</field>
+        <field name="arch" type="xml">
+            <form string="Parking Application &amp; Sticker Management">
+                <header>
+                    <button name="action_submit" string="Submit Application" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_validate_payment" string="Validate Payment (Cashier)" type="object" class="btn-success" invisible="payment_status == 'paid'"/>
+                    <button name="action_waive_payment" string="Waive Fee" type="object" class="btn-secondary" invisible="payment_status == 'waived'"/>
+                    <button name="action_activate_parking" string="Activate &amp; Release Parking Slot" type="object" class="oe_highlight" invisible="state not in ('for_assignment', 'for_payment')"/>
+                    <button name="action_expire" string="Mark Pass Expired" type="object" class="btn-warning" invisible="state != 'active'"/>
+                    <button name="action_cancel" string="Cancel Pass" type="object" class="btn-danger" invisible="state in ('active', 'expired', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,for_payment,for_assignment,active,expired,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Customer Invoice</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Application Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Applicant &amp; Vehicle Details">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="parking_type"/>
+                            <field name="vehicle_type"/>
+                            <field name="plate_number" placeholder="e.g. ABC-1234 / 882-XYZ"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="parking_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group string="Payment &amp; Slot Assignment">
+                            <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-info="payment_status == 'waived'" decoration-warning="payment_status == 'unpaid'"/>
+                            <field name="invoice_id" readonly="1" invisible="not invoice_id"/>
+                            <field name="invoice_payment_state" invisible="not invoice_id"/>
+                            <field name="cashier_receipt_filename" invisible="1"/>
+                            <field name="cashier_receipt" filename="cashier_receipt_filename" widget="binary"/>
+                            <field name="assigned_parking_location" placeholder="e.g. Basement 1 - Slot 42"/>
+                            <field name="sticker_number" placeholder="e.g. STK-SAPPHIRE-2026-8801"/>
+                        </group>
+                    </group>
+                    <group string="Mandatory Verification Documents (OR / CR / Driver's License)">
+                        <group>
+                            <field name="or_attachment_filename" invisible="1"/>
+                            <field name="or_attachment" filename="or_attachment_filename" widget="binary" string="Official Receipt (OR) Attachment *"/>
+                            <field name="cr_attachment_filename" invisible="1"/>
+                            <field name="cr_attachment" filename="cr_attachment_filename" widget="binary" string="Certificate of Reg. (CR) Attachment *"/>
+                        </group>
+                        <group>
+                            <field name="drivers_license_filename" invisible="1"/>
+                            <field name="drivers_license" filename="drivers_license_filename" widget="binary" string="Driver's License Attachment *"/>
+                        </group>
+                    </group>
+                    <group string="Additional Notes / Remarks">
+                        <field name="notes" placeholder="Specify any reserved slot preferences, designated gate access, or special vehicle permits..." nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Parking Application List View -->
+    <record id="view_parking_application_tree" model="ir.ui.view">
+        <field name="name">parking.application.list</field>
+        <field name="model">parking.application</field>
+        <field name="arch" type="xml">
+            <list string="Parking Applications &amp; Stickers">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="parking_type" widget="badge" decoration-info="parking_type == 'sapphire_parking'" decoration-primary="parking_type == 'sapphire_sticker'" decoration-success="parking_type == 'marina_sticker'"/>
+                <field name="vehicle_type"/>
+                <field name="plate_number"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="parking_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-info="payment_status == 'waived'" decoration-warning="payment_status == 'unpaid'"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'" decoration-info="state in ('for_assignment', 'for_payment')" decoration-warning="state == 'draft'" decoration-muted="state in ('expired', 'cancelled')"/>
+                <field name="assigned_parking_location"/>
+                <field name="sticker_number"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Parking Application Window Action -->
+    <record id="action_parking_application" model="ir.actions.act_window">
+        <field name="name">Parking Applications &amp; Stickers</field>
+        <field name="res_model">parking.application</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Parking Application or Vehicle Sticker Request!
+            </p>
+            <p>
+                Manage Sapphire Parking, Sapphire Sticker, and Marina Sticker applications with mandatory OR/CR verification, slot assignment, and recurring lease billing integration.
+            </p>
+        </field>
+    </record>
+</odoo>

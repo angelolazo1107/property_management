@@ -19,3 +19,4 @@ from . import tenant_application_bis
 from . import unit_assessment_task
 from . import access_request
 from . import wifi_request
+from . import parking_application

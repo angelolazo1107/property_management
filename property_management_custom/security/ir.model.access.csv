@@ -15,3 +15,4 @@
 "access_unit_assessment_task_user","unit.assessment.task.user","model_unit_assessment_task",,1,1,1,1
 "access_access_request_user","access.request.user","model_access_request",,1,1,1,1
 "access_wifi_request_user","wifi.request.user","model_wifi_request",,1,1,1,1
+"access_parking_application_user","parking.application.user","model_parking_application",,1,1,1,1
