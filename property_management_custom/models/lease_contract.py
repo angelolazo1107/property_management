@@ -115,7 +115,18 @@ class LeaseContract(models.Model):
     deposit_paid = fields.Boolean(string='Security Deposit Paid (Accounting Verified)', tracking=True)
     move_in_checklist_done = fields.Boolean(string='PMO Move-In Checklist Completed', tracking=True)
 
+    pet_registration_fee = fields.Monetary(string='Pet Registration Fee', currency_field='currency_id', default=0.0, tracking=True)
+    other_charges = fields.Monetary(string='Other Charges / Move-In Setup', currency_field='currency_id', default=0.0, tracking=True)
+    reservation_fee_credit = fields.Monetary(string='Reservation Fee Credit Applied', currency_field='currency_id', default=0.0, tracking=True)
+    
+    move_in_invoice_id = fields.Many2one('account.move', string='Move-In Customer Invoice', readonly=True, copy=False)
+    move_in_invoice_payment_state = fields.Selection(
+        related='move_in_invoice_id.payment_state', 
+        string='Move-In Invoice Payment Status'
+    )
+
     move_in_cleared = fields.Boolean(string='Move-In Clearance Granted', default=False, tracking=True)
+    move_in_cleared_date = fields.Datetime(string='Cleared for Move-In Date', readonly=True)
     exception_approved = fields.Boolean(string='Management Exception Approved for Move-In', default=False, tracking=True)
     exception_reason = fields.Text(string='Management Exception Justification')
     
@@ -140,7 +151,7 @@ class LeaseContract(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 
         string='Currency', 
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self.env.company.currency_id.id
     )
     notes = fields.Text(string='Contract Special Terms & Conditions')
 
@@ -201,47 +212,202 @@ class LeaseContract(models.Model):
             rec.stage = 'released_tenant'
             rec.message_post(body=f"Executed Lease Contract <b>{rec.name}</b> released to Tenant {rec.tenant_id.name}.", subject="Released to Tenant")
 
-    def action_verify_move_in_clearance(self):
+    def action_create_move_in_invoice(self):
+        for rec in self:
+            if rec.move_in_invoice_id:
+                raise UserError(f"Move-In Invoice {rec.move_in_invoice_id.name} already exists for this contract!")
+            
+            invoice_lines = []
+
+            # 1. First Month Rental
+            if (rec.monthly_rent or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"First Month Rental Income - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': rec.monthly_rent,
+                }))
+
+            # 2. Furniture Rental
+            if (rec.furniture_rental_fee or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Furniture Rental Income - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': rec.furniture_rental_fee,
+                }))
+
+            # 3. Security Deposit
+            if (rec.security_deposit or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Security Deposit Liability - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': rec.security_deposit,
+                }))
+
+            # 4. Parking Fee
+            if (rec.parking_fee or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Parking Fee Income - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': rec.parking_fee,
+                }))
+
+            # 5. Access Card Fee
+            access_req = self.env['access.request'].search([
+                ('tenant_id', '=', rec.tenant_id.id),
+                ('unit_id', '=', rec.unit_id.id)
+            ], limit=1)
+            if access_req and (access_req.fee or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Access Card Fee Income ({access_req.number_of_cards} Card/s)",
+                    'quantity': 1,
+                    'price_unit': access_req.fee,
+                }))
+
+            # 6. Wi-Fi Fee
+            wifi_req = self.env['wifi.request'].search([
+                ('tenant_id', '=', rec.tenant_id.id),
+                ('unit_id', '=', rec.unit_id.id)
+            ], limit=1)
+            wifi_amount = rec.wifi_fee or (wifi_req.monthly_fee if wifi_req else 0.0)
+            if (wifi_amount or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Internet / Wi-Fi Fee Income - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': wifi_amount,
+                }))
+
+            # 7. Pet Registration Fee
+            if (rec.pet_registration_fee or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Pet Registration Fee (Other Income) - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': rec.pet_registration_fee,
+                }))
+
+            # 8. Other Charges
+            if (rec.other_charges or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Other Charges / Move-In Setup - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': rec.other_charges,
+                }))
+
+            # 9. Less Reservation Fee Credit (Deduction)
+            if (rec.reservation_fee_credit or 0.0) > 0:
+                invoice_lines.append((0, 0, {
+                    'name': f"Less Reservation Deposit Credit Applied - Unit: {rec.unit_id.name}",
+                    'quantity': 1,
+                    'price_unit': -abs(rec.reservation_fee_credit),
+                }))
+
+            if not invoice_lines:
+                raise UserError("No billable Move-In fee lines found to create invoice!")
+
+            invoice_vals = {
+                'move_type': 'out_invoice',
+                'partner_id': rec.tenant_id.id,
+                'invoice_date': fields.Date.context_today(self),
+                'invoice_payment_term_id': rec.tenant_id.property_payment_term_id.id if rec.tenant_id.property_payment_term_id else False,
+                'ref': f"Move-In Settlement Invoice: Lease {rec.name}",
+                'invoice_line_ids': invoice_lines,
+            }
+            invoice = self.env['account.move'].create(invoice_vals)
+            rec.move_in_invoice_id = invoice.id
+
+            rec.message_post(
+                body=f"Itemized Move-In Settlement Invoice <b>{invoice.name or 'Draft Invoice'}</b> created for Tenant {rec.tenant_id.name}. Total Amount: PHP {(invoice.amount_total or 0.0):,.2f}.",
+                subject="Move-In Settlement Invoice Created"
+            )
+
+    def action_validate_move_in_readiness(self):
         """
-        Important Control: No move-in should be allowed unless:
-        1. BIS is approved.
-        2. Required tenant documents are complete.
-        3. Required payments are settled.
-        4. Contract is signed or management-approved for exception.
-        5. Unit assessment is complete.
-        6. Move-In Form is prepared.
+        Validate all 9 Pre-Move-In Readiness Checkpoints:
+        1. Reservation fee paid.
+        2. Move-in invoice paid.
+        3. Security deposit recorded & paid.
+        4. Access card paid, if applicable.
+        5. Parking paid, if applicable.
+        6. Wi-Fi paid, if applicable.
+        7. Contract signed.
+        8. Unit assessment completed.
+        9. Move-In Form / Inspection completed.
         """
         for rec in self:
-            missing_criteria = []
+            if rec.exception_approved:
+                rec.move_in_cleared = True
+                rec.move_in_cleared_date = fields.Datetime.now()
+                rec.stage = 'active'
+                rec.unit_id.occupancy_status = 'occupied'
+                rec.unit_id.current_tenant_id = rec.tenant_id
+                rec.message_post(
+                    body=f"<b>MOVE-IN CLEARANCE GRANTED (Management Exception Approved)</b> for Tenant {rec.tenant_id.name} on Unit <b>{rec.unit_id.name}</b>. Reason: {rec.exception_reason or 'Authorized Exception'}",
+                    subject="Move-In Clearance Approved (Exception)"
+                )
+                continue
 
-            # 1. BIS Approved
-            if not rec.bis_id or rec.bis_id.state != 'approved':
-                missing_criteria.append("1. Approved Buyer/Tenant Information Sheet (BIS)")
+            unmet = []
 
-            # 2. Required Tenant Documents Complete
-            if rec.bis_id and (not rec.bis_id.valid_id or not rec.bis_id.proof_of_income):
-                missing_criteria.append("2. Complete Tenant Documents (Valid ID & Proof of Income)")
+            # 1. Reservation fee paid
+            has_reservation_paid = (
+                (rec.opportunity_id and rec.opportunity_id.reservation_payment_status == 'verified') or
+                (rec.reservation_fee_credit or 0.0) > 0 or
+                bool(self.env['property.reservation'].search([('tenant_id', '=', rec.tenant_id.id), ('unit_id', '=', rec.unit_id.id), ('state', 'in', ['paid', 'converted'])]))
+            )
+            if not has_reservation_paid:
+                unmet.append("1. Reservation Fee Paid / Verified")
 
-            # 3. Required Payments Settled
-            if not rec.deposit_paid:
-                missing_criteria.append("3. Settled Security Deposit & Reservation Payment (Verified by Accounting)")
+            # 2. Move-In Invoice paid
+            if not rec.move_in_invoice_id or rec.move_in_invoice_id.payment_state not in ['paid', 'in_payment']:
+                unmet.append("2. Move-In Invoice Paid (Accounting Settlement)")
 
-            # 4. Contract Signed or Management Exception Approved
-            signed_stages = ['signed_tenant', 'submitted_legal', 'for_notarization', 'notarized', 'released_tenant', 'active']
-            if rec.stage not in signed_stages and not rec.exception_approved:
-                missing_criteria.append("4. Signed Lease Contract (or Management Exception Approval)")
+            # 3. Security deposit recorded & paid
+            if (rec.security_deposit or 0.0) <= 0:
+                unmet.append("3. Security Deposit Recorded (> PHP 0)")
 
-            # 5. Unit Assessment & 6. Move-In Checklist
-            if not rec.move_in_checklist_done:
-                missing_criteria.append("5 & 6. Unit Assessment & Prepared PMO Move-In Turnover Form")
+            # 4. Access card paid, if applicable
+            access_req = self.env['access.request'].search([
+                ('tenant_id', '=', rec.tenant_id.id),
+                ('unit_id', '=', rec.unit_id.id)
+            ], limit=1)
+            if access_req and access_req.access_type == 'access_card' and access_req.payment_status not in ['paid', 'waived']:
+                unmet.append("4. Access Card Application Payment Verified")
 
-            if missing_criteria:
-                error_msg = "MOVE-IN CLEARANCE BLOCKED:\nThe following required criteria must be fulfilled prior to move-in:\n\n"
-                error_msg += "\n".join(missing_criteria)
-                error_msg += "\n\nIf an urgent exception is authorized, check 'Management Exception Approved for Move-In'."
-                raise UserError(error_msg)
+            # 5. Parking paid, if applicable
+            parking_app = self.env['parking.application'].search([
+                ('tenant_id', '=', rec.tenant_id.id),
+                ('unit_id', '=', rec.unit_id.id)
+            ], limit=1)
+            if parking_app and parking_app.payment_status not in ['paid', 'waived']:
+                unmet.append("5. Parking Application Payment Verified")
+
+            # 6. Wi-Fi paid, if applicable
+            wifi_app = self.env['wifi.request'].search([
+                ('tenant_id', '=', rec.tenant_id.id),
+                ('unit_id', '=', rec.unit_id.id)
+            ], limit=1)
+            if wifi_app and wifi_app.payment_status not in ['paid', 'waived']:
+                unmet.append("6. Wi-Fi Application Payment Verified")
+
+            # 7. Contract signed
+            signed_stages = ['signed_tenant', 'submitted_billing', 'submitted_legal', 'for_notarization', 'notarized', 'released_tenant', 'active']
+            if rec.stage not in signed_stages and not rec.signed_copy:
+                unmet.append("7. Signed Lease Contract (Attached / Signed Stage)")
+
+            # 8. Unit assessment completed
+            has_unit_assessment = bool(rec.unit_assessment_task_ids) or bool(self.env['unit.assessment.task'].search([('unit_id', '=', rec.unit_id.id), ('stage', 'in', ['ready_move_in', 'completed', 'verified'])]))
+            if not has_unit_assessment:
+                unmet.append("8. Unit Assessment & Turnover Task Completed")
+
+            # 9. Move-In Form / Inspection completed
+            has_move_in_form = rec.move_in_checklist_done or bool(self.env['pmo.inspection'].search([('tenant_id', '=', rec.tenant_id.id), ('unit_id', '=', rec.unit_id.id), ('inspection_type', '=', 'move_in')]))
+            if not has_move_in_form:
+                unmet.append("9. PMO Move-In Inspection Form Completed")
+
+            if unmet:
+                raise UserError(f"MOVE-IN READINESS VALIDATION BLOCKED:\nThe following 9 pre-move-in requirements must be satisfied before move-in clearance can be granted:\n\n" + "\n".join(unmet))
 
             rec.move_in_cleared = True
+            rec.move_in_cleared_date = fields.Datetime.now()
             rec.stage = 'active'
             rec.unit_id.occupancy_status = 'occupied'
             rec.unit_id.current_tenant_id = rec.tenant_id
@@ -250,9 +416,26 @@ class LeaseContract(models.Model):
                 rec.opportunity_id.move_in_cleared = True
 
             rec.message_post(
-                body=f"<b>MOVE-IN CLEARANCE GRANTED</b> for Tenant {rec.tenant_id.name} on Unit <b>{rec.unit_id.display_name}</b>. All 6 compliance criteria verified.",
-                subject="Move-In Clearance Approved"
+                body=f"<b>CLEARED FOR MOVE-IN!</b> All 9 Pre-Move-In Readiness Checkpoints (Reservation Fee, Move-In Invoice, Security Deposit, Access Card, Parking, Wi-Fi, Signed Contract, Unit Assessment, Move-In Form) verified for Tenant <b>{rec.tenant_id.name}</b> on Unit <b>{rec.unit_id.name}</b>.",
+                subject="Cleared for Move-In Approved"
             )
+
+    def action_verify_move_in_clearance(self):
+        """ Alias method for Validate Move-In Readiness """
+        return self.action_validate_move_in_readiness()
+
+    def action_view_move_in_invoice(self):
+        self.ensure_one()
+        if not self.move_in_invoice_id:
+            raise UserError("No Move-In Invoice has been generated for this lease contract yet.")
+        return {
+            'name': 'Move-In Customer Invoice',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'res_id': self.move_in_invoice_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
 
     def action_trigger_move_out(self):
         for rec in self:

@@ -48,9 +48,15 @@
                             string="Request Unit Assessment" 
                             class="btn-primary"/>
 
-                    <button name="action_verify_move_in_clearance" 
+                    <button name="action_create_move_in_invoice" 
                             type="object" 
-                            string="Verify &amp; Grant Move-In Clearance" 
+                            string="Create Move-In Settlement Invoice" 
+                            class="btn-primary" 
+                            invisible="move_in_invoice_id"/>
+
+                    <button name="action_validate_move_in_readiness" 
+                            type="object" 
+                            string="Validate Move-In Readiness (9 Checkpoints)" 
                             class="btn-success" 
                             invisible="move_in_cleared"/>
 
@@ -73,6 +79,11 @@
                         <button name="action_view_unit_assessments" type="object" class="oe_stat_button" icon="fa-tasks">
                             <field name="unit_assessment_task_count" widget="statinfo" string="Unit Assessments"/>
                         </button>
+                        <button name="action_view_move_in_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not move_in_invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Move-In Invoice</span>
+                            </div>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <h1>
@@ -88,13 +99,16 @@
                             <field name="contract_term_months"/>
                             <field name="payment_due_date"/>
                         </group>
-                        <group string="Monthly Rental Financial Breakdown">
+                        <group string="Monthly Rental &amp; Recurring Billing Charges">
                             <field name="currency_id" invisible="1"/>
                             <field name="monthly_rent" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="security_deposit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="furniture_rental_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="parking_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             <field name="wifi_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="pet_registration_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="other_charges" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="reservation_fee_credit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
                     <group>
@@ -106,9 +120,11 @@
                         <group string="Pipeline &amp; Reference Integrations">
                             <field name="bis_id"/>
                             <field name="opportunity_id"/>
+                            <field name="move_in_invoice_id" readonly="1" invisible="not move_in_invoice_id"/>
+                            <field name="move_in_invoice_payment_state" invisible="not move_in_invoice_id"/>
                         </group>
                     </group>
-                    <group string="6-Point Move-In Compliance Checklist &amp; Gatekeeping">
+                    <group string="9-Checkpoint Move-In Readiness &amp; Clearance Gatekeeping">
                         <group>
                             <field name="bis_submitted" string="1. BIS Approved"/>
                             <field name="deposit_paid" string="2. Security Deposit Paid"/>
@@ -117,6 +133,7 @@
                         </group>
                         <group>
                             <field name="move_in_cleared" readonly="1" widget="boolean_toggle"/>
+                            <field name="move_in_cleared_date" invisible="not move_in_cleared"/>
                             <field name="exception_approved"/>
                             <field name="exception_reason" invisible="not exception_approved" required="exception_approved" placeholder="Enter GM or Operations exception approval authorization..."/>
                         </group>
