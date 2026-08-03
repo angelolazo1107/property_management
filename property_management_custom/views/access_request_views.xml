@@ -94,7 +94,7 @@
                 <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
                 <filter string="For Payment" name="filter_for_payment" domain="[('state', '=', 'for_payment')]"/>
                 <filter string="For Processing" name="filter_for_processing" domain="[('state', '=', 'for_processing')]"/>
-                <filter string="Released / Completed" name="filter_released" domain="[('state', 'in', ('completed', 'released'))]"/>
+                <filter string="Released / Completed" name="filter_released" domain="[('state', 'in', ['completed', 'released'])]"/>
                 <separator/>
                 <filter string="Unpaid" name="filter_unpaid" domain="[('payment_status', '=', 'unpaid')]"/>
                 <filter string="Paid" name="filter_paid" domain="[('payment_status', '=', 'paid')]"/>
@@ -115,7 +115,6 @@
         <field name="name">Access Card / Biometrics Applications</field>
         <field name="res_model">access.request</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_access_request_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new Access Card or Biometrics Request!
