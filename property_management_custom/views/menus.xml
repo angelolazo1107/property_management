@@ -86,6 +86,12 @@
               action="action_approval_matrix"
               sequence="4"/>
 
+    <menuitem id="menu_access_request"
+              name="Access Card &amp; Biometrics Applications"
+              parent="menu_pmo_root_custom"
+              action="action_access_request"
+              sequence="5"/>
+
     <!-- 3. Admin, Supplies & Fleet Custom Submenus -->
     <menuitem id="menu_fleet_trips_custom"
               name="Vehicle Trips &amp; Fleet Logs"

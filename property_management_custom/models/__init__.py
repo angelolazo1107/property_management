@@ -17,3 +17,4 @@ from . import documents_tagging
 from . import property_reservation
 from . import tenant_application_bis
 from . import unit_assessment_task
+from . import access_request

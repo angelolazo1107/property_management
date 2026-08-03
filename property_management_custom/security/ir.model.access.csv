@@ -13,3 +13,4 @@
 "access_property_reservation_user","property.reservation.user","model_property_reservation",,1,1,1,1
 "access_tenant_application_bis_user","tenant.application.bis.user","model_tenant_application_bis",,1,1,1,1
 "access_unit_assessment_task_user","unit.assessment.task.user","model_unit_assessment_task",,1,1,1,1
+"access_access_request_user","access.request.user","model_access_request",,1,1,1,1
