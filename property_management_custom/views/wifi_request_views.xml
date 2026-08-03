@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wi-Fi Request Form View -->
+    <record id="view_wifi_request_form" model="ir.ui.view">
+        <field name="name">wifi.request.form</field>
+        <field name="model">wifi.request</field>
+        <field name="arch" type="xml">
+            <form string="Internet / Wi-Fi Application">
+                <header>
+                    <button name="action_submit" string="Submit Application" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_validate_payment" string="Validate Payment (Cashier)" type="object" class="btn-success" invisible="payment_status == 'paid'"/>
+                    <button name="action_waive_payment" string="Waive Fee" type="object" class="btn-secondary" invisible="payment_status == 'waived'"/>
+                    <button name="action_mark_installed" string="Mark as Installed (IT)" type="object" class="oe_highlight" invisible="state != 'for_it_installation'"/>
+                    <button name="action_cancel" string="Cancel Request" type="object" class="btn-danger" invisible="state in ('installed', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,for_payment,for_it_installation,installed,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Customer Invoice</span>
+                            </div>
+                        </button>
+                        <button name="action_view_helpdesk_ticket" type="object" class="oe_stat_button" icon="fa-ticket" invisible="not helpdesk_ticket_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">IT Helpdesk Ticket</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Application Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Applicant &amp; Subscription Plan">
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="plan_type" widget="radio"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monthly_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="installation_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_upfront_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                        <group string="Payment &amp; IT Device Details">
+                            <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-info="payment_status == 'waived'" decoration-warning="payment_status == 'unpaid'"/>
+                            <field name="invoice_id" readonly="1" invisible="not invoice_id"/>
+                            <field name="invoice_payment_state" invisible="not invoice_id"/>
+                            <field name="cashier_receipt_filename" invisible="1"/>
+                            <field name="cashier_receipt" filename="cashier_receipt_filename" widget="binary"/>
+                            <field name="helpdesk_ticket_id" readonly="1" invisible="not helpdesk_ticket_id"/>
+                            <field name="installation_schedule"/>
+                            <field name="wifi_username" placeholder="e.g. Unit102_WiFi_HighSpeed"/>
+                            <field name="wifi_password" placeholder="e.g. SafePass2026!"/>
+                            <field name="router_serial" placeholder="e.g. SN-RTR-99882103"/>
+                        </group>
+                    </group>
+                    <group string="Special Scope &amp; Technical Notes">
+                        <field name="notes" placeholder="Specify any port forwarding requirements, static IP request, or wiring instructions..." nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wi-Fi Request List View -->
+    <record id="view_wifi_request_tree" model="ir.ui.view">
+        <field name="name">wifi.request.list</field>
+        <field name="model">wifi.request</field>
+        <field name="arch" type="xml">
+            <list string="Internet / Wi-Fi Applications">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="plan_type" widget="badge" decoration-info="plan_type == 'residential'" decoration-primary="plan_type == 'commercial'"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="monthly_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="installation_schedule"/>
+                <field name="payment_status" widget="badge" decoration-success="payment_status == 'paid'" decoration-info="payment_status == 'waived'" decoration-warning="payment_status == 'unpaid'"/>
+                <field name="state" widget="badge" decoration-success="state == 'installed'" decoration-info="state == 'for_it_installation'" decoration-warning="state == 'for_payment'" decoration-muted="state == 'draft'" decoration-danger="state == 'cancelled'"/>
+                <field name="wifi_username"/>
+                <field name="router_serial"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Wi-Fi Request Window Action -->
+    <record id="action_wifi_request" model="ir.actions.act_window">
+        <field name="name">Internet / Wi-Fi Applications</field>
+        <field name="res_model">wifi.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Internet / Wi-Fi Subscription Request!
+            </p>
+            <p>
+                Manage tenant internet requests, automatic IT Helpdesk ticket generation, device serial logging, and Wi-Fi credentials.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -50,11 +50,23 @@
               action="action_unit_assessment_task"
               sequence="15"/>
 
+    <menuitem id="menu_access_request_crm"
+              name="Access Card &amp; Biometrics Applications"
+              parent="crm.crm_menu_root"
+              action="action_access_request"
+              sequence="16"/>
+
+    <menuitem id="menu_wifi_request_crm"
+              name="Internet &amp; Wi-Fi Applications"
+              parent="crm.crm_menu_root"
+              action="action_wifi_request"
+              sequence="17"/>
+
     <menuitem id="menu_property_tenants"
               name="Tenants Master File"
               parent="crm.crm_menu_root"
               action="action_property_tenant"
-              sequence="15"/>
+              sequence="18"/>
 
     <!-- 2. PMO & Operations Custom Submenus Under Maintenance -->
     <menuitem id="menu_pmo_root_custom"
@@ -91,6 +103,12 @@
               parent="menu_pmo_root_custom"
               action="action_access_request"
               sequence="5"/>
+
+    <menuitem id="menu_wifi_request"
+              name="Internet &amp; Wi-Fi Applications"
+              parent="menu_pmo_root_custom"
+              action="action_wifi_request"
+              sequence="6"/>
 
     <!-- 3. Admin, Supplies & Fleet Custom Submenus -->
     <menuitem id="menu_fleet_trips_custom"
