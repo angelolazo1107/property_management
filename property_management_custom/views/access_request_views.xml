@@ -8,10 +8,10 @@
             <form string="Access Card / Biometrics Application">
                 <header>
                     <button name="action_submit" string="Submit Application" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <button name="action_validate_payment" string="Validate Payment (Cashier)" type="object" class="btn-success" invisible="payment_status == 'paid' or state not in ('draft', 'for_payment')"/>
-                    <button name="action_waive_payment" string="Waive Fee" type="object" class="btn-secondary" invisible="payment_status == 'waived' or state not in ('draft', 'for_payment')"/>
-                    <button name="action_process" string="Move to Processing" type="object" class="btn-info" invisible="state != 'for_payment' or payment_status == 'unpaid'"/>
-                    <button name="action_release_card" string="Release Card / Grant Access" type="object" class="oe_highlight" invisible="state not in ('for_processing', 'for_payment')"/>
+                    <button name="action_validate_payment" string="Validate Payment (Cashier)" type="object" class="btn-success" invisible="payment_status == 'paid'"/>
+                    <button name="action_waive_payment" string="Waive Fee" type="object" class="btn-secondary" invisible="payment_status == 'waived'"/>
+                    <button name="action_process" string="Move to Processing" type="object" class="btn-info" invisible="state != 'for_payment'"/>
+                    <button name="action_release_card" string="Release Card / Grant Access" type="object" class="oe_highlight" invisible="state in ('completed', 'released')"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,for_payment,for_processing,completed,released"/>
                 </header>
                 <sheet>

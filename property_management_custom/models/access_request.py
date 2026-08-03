@@ -68,10 +68,9 @@ class AccessRequest(models.Model):
         readonly=True, 
         copy=False
     )
-    invoice_payment_state = fields.Char(
-        string='Invoice Payment Status', 
+    invoice_payment_state = fields.Selection(
         related='invoice_id.payment_state', 
-        store=True
+        string='Invoice Payment Status'
     )
 
     state = fields.Selection([
@@ -90,7 +89,7 @@ class AccessRequest(models.Model):
     currency_id = fields.Many2one(
         'res.currency', 
         string='Currency', 
-        default=lambda self: self.env.company.currency_id
+        default=lambda self: self.env.company.currency_id.id
     )
     notes = fields.Text(string='Notes / Remarks')
 
