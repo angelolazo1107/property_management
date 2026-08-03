@@ -153,7 +153,7 @@ class AccessRequest(models.Model):
                     rec.invoice_id = invoice.id
 
                 rec.message_post(
-                    body=f"Access Card Request <b>{rec.name}</b> submitted for {rec.number_of_cards} card(s). Invoice <b>{rec.invoice_id.name or 'Draft Invoice'}</b> created for PHP {rec.fee:,.2f}.",
+                    body=f"Access Card Request <b>{rec.name}</b> submitted for {rec.number_of_cards} card(s). Invoice <b>{rec.invoice_id.name or 'Draft Invoice'}</b> created for PHP {(rec.fee or 0.0):,.2f}.",
                     subject="Access Card Request & Invoice Created"
                 )
 
@@ -163,7 +163,7 @@ class AccessRequest(models.Model):
             if rec.state in ['draft', 'for_payment']:
                 rec.state = 'for_processing'
             rec.message_post(
-                body=f"Payment of PHP {rec.fee:,.2f} for Access Request <b>{rec.name}</b> confirmed by Cashier. Advanced to For Processing.",
+                body=f"Payment of PHP {(rec.fee or 0.0):,.2f} for Access Request <b>{rec.name}</b> confirmed by Cashier. Advanced to For Processing.",
                 subject="Payment Validated"
             )
 
