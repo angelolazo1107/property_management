@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Monthly Billing Form View -->
+    <record id="view_recurring_monthly_billing_form" model="ir.ui.view">
+        <field name="name">recurring.monthly.billing.form</field>
+        <field name="model">recurring.monthly.billing</field>
+        <field name="arch" type="xml">
+            <form string="Monthly Billing &amp; Collection Ledger">
+                <header>
+                    <button name="action_generate_invoice" string="Generate Draft Invoice (1st of Month)" type="object" class="btn-primary" invisible="invoice_id"/>
+                    <button name="action_validate_and_send" string="Validate &amp; Send Invoice (5th of Month)" type="object" class="oe_highlight" invisible="invoice_status == 'paid'"/>
+                    <button name="action_run_overdue_escalation" string="Run Overdue Escalation Engine" type="object" class="btn-warning"/>
+                    <field name="collection_status" widget="statusbar" statusbar_visible="current,due,for_followup,overdue"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Customer Invoice</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Billing Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Lease &amp; Tenant Parameters">
+                            <field name="lease_contract_id" options="{'no_create': True}"/>
+                            <field name="tenant_id" options="{'no_create': True}"/>
+                            <field name="unit_id" options="{'no_create': True}"/>
+                            <field name="billing_cycle_date"/>
+                            <field name="billing_day"/>
+                        </group>
+                        <group string="Monthly Recurring Charges Breakdown">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="monthly_rent" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="furniture_rent" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="parking_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="wifi_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="other_recurring_charges" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_monthly_billing" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                    <group string="Invoice &amp; Overdue Escalation Engine">
+                        <group string="Customer Invoice Status">
+                            <field name="invoice_id" readonly="1" invisible="not invoice_id"/>
+                            <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'paid'" decoration-info="invoice_status == 'sent'" decoration-warning="invoice_status == 'overdue'" decoration-muted="invoice_status == 'draft'"/>
+                        </group>
+                        <group string="Escalation &amp; Follow-Up Controls">
+                            <field name="overdue_days"/>
+                            <field name="escalation_level" widget="badge" decoration-danger="escalation_level == 'level_3'" decoration-warning="escalation_level in ('level_1', 'level_2')" decoration-success="escalation_level == 'none'"/>
+                            <field name="last_reminder_date" invisible="not last_reminder_date"/>
+                        </group>
+                    </group>
+                    <group string="Billing Remarks &amp; Collection Notes">
+                        <field name="notes" placeholder="Enter custom collection notes, promise-to-pay dates, or billing adjustments..." nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Monthly Billing List View -->
+    <record id="view_recurring_monthly_billing_tree" model="ir.ui.view">
+        <field name="name">recurring.monthly.billing.list</field>
+        <field name="model">recurring.monthly.billing</field>
+        <field name="arch" type="xml">
+            <list string="Monthly Billing &amp; Collection Ledger">
+                <field name="name"/>
+                <field name="tenant_id"/>
+                <field name="unit_id"/>
+                <field name="lease_contract_id"/>
+                <field name="billing_cycle_date"/>
+                <field name="billing_day"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="total_monthly_billing" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'paid'" decoration-info="invoice_status == 'sent'" decoration-warning="invoice_status == 'overdue'" decoration-muted="invoice_status == 'draft'"/>
+                <field name="collection_status" widget="badge" decoration-success="collection_status == 'current'" decoration-info="collection_status == 'due'" decoration-warning="collection_status == 'for_followup'" decoration-danger="collection_status == 'overdue'"/>
+                <field name="overdue_days"/>
+                <field name="escalation_level" widget="badge" decoration-danger="escalation_level == 'level_3'" decoration-warning="escalation_level in ('level_1', 'level_2')" decoration-success="escalation_level == 'none'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Monthly Billing Window Action -->
+    <record id="action_recurring_monthly_billing" model="ir.actions.act_window">
+        <field name="name">Monthly Billing &amp; Collections</field>
+        <field name="res_model">recurring.monthly.billing</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Monthly Billing record!
+            </p>
+            <p>
+                Manage recurring monthly rent, furniture, parking, and Wi-Fi billing, 5th-day invoice dispatch, and automated 3/7/15-day overdue escalation.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cron 1: Generate Monthly Draft Billings (Runs 1st Day of Month) -->
+        <record id="cron_generate_monthly_draft_invoices" model="ir.cron">
+            <field name="name">PMO: Generate Monthly Draft Recurring Billings (1st of Month)</field>
+            <field name="model_id" ref="model_recurring_monthly_billing"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_generate_monthly_draft_billings()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Cron 2: Validate & Send Monthly Invoices (Runs 5th Day of Month) -->
+        <record id="cron_send_monthly_invoices" model="ir.cron">
+            <field name="name">PMO: Validate &amp; Send Monthly Customer Invoices (5th of Month)</field>
+            <field name="model_id" ref="model_recurring_monthly_billing"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_send_monthly_invoices()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Cron 3: Process Overdue Escalation Engine (Runs Daily) -->
+        <record id="cron_process_billing_followup" model="ir.cron">
+            <field name="name">PMO: Overdue Billing Follow-Up &amp; Escalation Engine (Daily)</field>
+            <field name="model_id" ref="model_recurring_monthly_billing"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_process_billing_followup()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

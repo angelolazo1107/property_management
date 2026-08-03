@@ -98,11 +98,17 @@
               action="action_move_in_gate_pass"
               sequence="23"/>
 
+    <menuitem id="menu_recurring_monthly_billing_crm"
+              name="Monthly Billing &amp; Collections"
+              parent="crm.crm_menu_root"
+              action="action_recurring_monthly_billing"
+              sequence="24"/>
+
     <menuitem id="menu_property_tenants"
               name="Tenants Master File"
               parent="crm.crm_menu_root"
               action="action_property_tenant"
-              sequence="24"/>
+              sequence="25"/>
 
     <!-- 2. PMO & Operations Custom Submenus Under Maintenance -->
     <menuitem id="menu_pmo_root_custom"
@@ -181,6 +187,12 @@
               parent="menu_pmo_root_custom"
               action="action_move_in_gate_pass"
               sequence="12"/>
+
+    <menuitem id="menu_recurring_monthly_billing"
+              name="Monthly Billing &amp; Collections"
+              parent="menu_pmo_root_custom"
+              action="action_recurring_monthly_billing"
+              sequence="13"/>
 
     <!-- 3. Admin, Supplies & Fleet Custom Submenus -->
     <menuitem id="menu_fleet_trips_custom"
