@@ -1,0 +1,2 @@
+name,tenant_id/id,unit_id/id,plan_type,monthly_fee,installation_fee,wifi_username,router_serial,payment_status,state
+WIFI-2026-00001,,,residential,1500,500,UNIT101_WIFI,SN-RTR-00001,paid,installed

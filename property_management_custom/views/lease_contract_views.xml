@@ -108,6 +108,9 @@
                                 <span class="o_stat_text">Move-In Invoice</span>
                             </div>
                         </button>
+                        <button name="action_view_documents" type="object" class="oe_stat_button" icon="fa-paperclip">
+                            <field name="document_count" widget="statinfo" string="Documents"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Structured Contract Reference (LEASE-YYYY-PROPERTY-UNIT-SEQUENCE)"/>
@@ -181,9 +184,19 @@
                         <group string="Expiration Audit &amp; Reminders">
                             <field name="days_until_expiry" widget="badge" decoration-danger="days_until_expiry &lt;= 7" decoration-warning="days_until_expiry &lt;= 30" decoration-info="days_until_expiry &lt;= 60" decoration-success="days_until_expiry &gt; 60"/>
                             <field name="renewal_decision"/>
+                            <field name="is_holdover" invisible="1"/>
                         </group>
                         <group string="Notice &amp; Governance Controls">
                             <field name="notice_date"/>
+                        </group>
+                    </group>
+                    <group string="Holdover Penalty Governance &amp; Calculation" invisible="renewal_decision != 'holdover'">
+                        <group>
+                            <field name="holdover_penalty_rate"/>
+                            <field name="holdover_start_date"/>
+                        </group>
+                        <group>
+                            <field name="holdover_monthly_rent" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
                     <notebook>

@@ -97,6 +97,8 @@ class TenantApplicationBis(models.Model):
 
     def action_submit_billing(self):
         for rec in self:
+            if not rec.valid_id:
+                raise UserError("Document Validation Gate: Valid ID attachment is required before submitting BIS for Billing Review!")
             rec.submitted_to_billing = True
             rec.state = 'billing_review'
             rec.message_post(
@@ -117,6 +119,8 @@ class TenantApplicationBis(models.Model):
 
     def action_approve_bis(self):
         for rec in self:
+            if not rec.valid_id or not rec.proof_of_income:
+                raise UserError("BIS Approval Blocked: Both Valid ID and Proof of Income attachments are required before approving the tenant application!")
             rec.state = 'approved'
             
             # Create or Link Lease Contract

@@ -184,6 +184,17 @@ class SecurityDepositRefund(models.Model):
 
     def action_finance_approve(self):
         for rec in self:
+            # A6: Move-Out Clearance Guard — refund cannot be processed until clearance is fully signed off
+            if rec.move_out_clearance_id:
+                if rec.move_out_clearance_id.clearance_status not in ('cleared', 'closed'):
+                    raise UserError(
+                        f"Deposit Refund Blocked: The linked Move-Out Clearance '{rec.move_out_clearance_id.name}' "
+                        f"has not yet been fully signed off by all 8 departments.\n\n"
+                        f"Current Status: {dict(rec.move_out_clearance_id._fields['clearance_status'].selection).get(rec.move_out_clearance_id.clearance_status, '?')}\n\n"
+                        f"All 8 departmental clearances (Billing, Admin, Housekeeping, IT, Security, Parking, Legal, Finance) "
+                        f"must be completed before Finance can approve the security deposit refund."
+                    )
+
             if rec.refundable_amount > 0:
                 missing = []
                 if not rec.bank_name: missing.append("Bank Name")

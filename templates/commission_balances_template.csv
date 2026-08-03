@@ -1,0 +1,2 @@
+name,tenant_id/id,unit_id/id,lease_contract_id/id,agent_id/id,agent_type,commission_basis,commission_amount,approval_status,agent_bank_name,agent_bank_account_name,agent_bank_account_number
+COMM-2026-00001,,,,,outside,one_month,25000,approved,BDO,Juan Dela Cruz,1234567890

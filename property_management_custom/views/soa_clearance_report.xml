@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Action -->
+    <record id="action_report_soa_clearance" model="ir.actions.report">
+        <field name="name">Statement of Account (SOA) Clearance</field>
+        <field name="model">move.out.clearance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management_custom.report_soa_clearance_template</field>
+        <field name="report_file">soa_clearance_report</field>
+        <field name="print_report_name">'SOA_Clearance_' + (object.name or '').replace('/', '_')</field>
+        <field name="binding_model_id" ref="model_move_out_clearance"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb PDF Report Template -->
+    <template id="report_soa_clearance_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #333;">
+                        <!-- Header Title -->
+                        <div class="text-center mb-4" style="border-bottom: 2px solid #2c3e50; padding-bottom: 10px;">
+                            <h2 style="color: #2c3e50; font-weight: bold; margin-bottom: 5px;">STATEMENT OF ACCOUNT (SOA) CLEARANCE</h2>
+                            <p style="font-size: 13px; color: #7f8c8d; margin: 0;">Final Move-Out Financial Settlement &amp; Security Deposit Reconciliation</p>
+                        </div>
+
+                        <!-- Info Grid -->
+                        <table class="table table-sm table-bordered mb-4" style="width: 100%;">
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="width: 20%; font-weight: bold;">Clearance Ref:</td>
+                                <td style="width: 30%;"><span t-field="o.name"/></td>
+                                <td style="width: 20%; font-weight: bold;">Move-Out Date:</td>
+                                <td style="width: 30%;"><span t-field="o.move_out_date"/></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold;">Tenant Name:</td>
+                                <td><span t-field="o.tenant_id.name"/></td>
+                                <td style="font-weight: bold;">Lease Contract:</td>
+                                <td><span t-field="o.lease_contract_id.name"/></td>
+                            </tr>
+                            <tr style="background-color: #f8f9fa;">
+                                <td style="font-weight: bold;">Property Unit:</td>
+                                <td><span t-field="o.unit_id.name"/></td>
+                                <td style="font-weight: bold;">Exit Reason:</td>
+                                <td><span t-field="o.reason"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Statement Table -->
+                        <h4 style="color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Financial Settlement Summary</h4>
+                        <table class="table table-bordered table-sm mb-4" style="width: 100%;">
+                            <thead style="background-color: #2c3e50; color: white;">
+                                <tr>
+                                    <th>Description / Line Item</th>
+                                    <th class="text-end" style="width: 25%;">Amount (PHP)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Original Security Deposit (Credit)</strong></td>
+                                    <td class="text-end" style="color: #27ae60; font-weight: bold;">
+                                        + <span t-field="o.security_deposit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Outstanding Rent &amp; Balance Deduction</td>
+                                    <td class="text-end" style="color: #c0392b;">
+                                        - <span t-field="o.outstanding_balance" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Unbilled Utility Charges (Electric / Water)</td>
+                                    <td class="text-end" style="color: #c0392b;">
+                                        - <span t-field="o.utility_charges" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Unit Damage &amp; Repair Deductions</td>
+                                    <td class="text-end" style="color: #c0392b;">
+                                        - <span t-field="o.damage_charges" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Other Deductions &amp; Penalties</td>
+                                    <td class="text-end" style="color: #c0392b;">
+                                        - <span t-field="o.other_deductions" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr style="background-color: #ecf0f1; font-size: 14px; font-weight: bold;">
+                                    <td>NET REFUNDABLE / (DUE FROM TENANT)</td>
+                                    <td class="text-end" style="color: #2980b9;">
+                                        <span t-field="o.refundable_amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Departmental Clearance Summary -->
+                        <h4 style="color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Departmental Sign-Off Status</h4>
+                        <table class="table table-sm table-bordered mb-4" style="width: 100%; font-size: 11px;">
+                            <tr style="background-color: #f8f9fa;">
+                                <th>Department</th>
+                                <th>Clearance Check</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>1. Billing &amp; Accounting</td>
+                                <td>No outstanding rent or charges</td>
+                                <td><span t-esc="'PASSED' if o.clearance_billing else 'PENDING'"/></td>
+                            </tr>
+                            <tr>
+                                <td>2. PMO / Admin Inspection</td>
+                                <td>Unit turnover &amp; keys verified</td>
+                                <td><span t-esc="'PASSED' if o.clearance_admin else 'PENDING'"/></td>
+                            </tr>
+                            <tr>
+                                <td>3. IT / Connectivity</td>
+                                <td>Router &amp; modem returned</td>
+                                <td><span t-esc="'PASSED' if o.clearance_it else 'PENDING'"/></td>
+                            </tr>
+                            <tr>
+                                <td>4. Building Security</td>
+                                <td>Access card returned &amp; gate pass issued</td>
+                                <td><span t-esc="'PASSED' if o.clearance_security else 'PENDING'"/></td>
+                            </tr>
+                            <tr>
+                                <td>5. Finance Controller SOA Approval</td>
+                                <td>Final SOA clearance verified</td>
+                                <td><span t-esc="'APPROVED' if o.finance_soa_approved else 'PENDING'"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Signatures Block -->
+                        <div class="row mt-5" style="page-break-inside: avoid;">
+                            <div class="col-6 text-center">
+                                <div style="border-top: 1px solid #333; padding-top: 5px; margin-top: 40px;">
+                                    <strong>Tenant / Authorized Representative</strong><br/>
+                                    <span>Signature over Printed Name</span>
+                                </div>
+                            </div>
+                            <div class="col-6 text-center">
+                                <div style="border-top: 1px solid #333; padding-top: 5px; margin-top: 40px;">
+                                    <strong>Finance Controller / General Manager</strong><br/>
+                                    <span t-field="o.finance_approver_id.name"/><br/>
+                                    <small t-if="o.finance_approval_date">Approved Date: <span t-field="o.finance_approval_date"/></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

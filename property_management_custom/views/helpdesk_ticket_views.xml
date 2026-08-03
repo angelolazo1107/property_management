@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Helpdesk Ticket Form View Inheritance -->
+    <record id="view_helpdesk_ticket_form_inherit_property" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit.property</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_create_pmo_job_order" 
+                        string="Create PMO Job Order" 
+                        type="object" 
+                        class="btn-primary"/>
+            </header>
+            <div name="button_box" position="inside">
+                <button name="action_view_pmo_job_orders" 
+                        type="object" 
+                        class="oe_stat_button" 
+                        icon="fa-wrench">
+                    <field name="pmo_job_order_count" widget="statinfo" string="Job Orders"/>
+                </button>
+            </div>
+            <field name="partner_id" position="after">
+                <field name="unit_id" options="{'no_create': True}"/>
+                <field name="lease_contract_id" options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

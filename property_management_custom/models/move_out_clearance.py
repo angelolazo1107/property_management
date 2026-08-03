@@ -89,6 +89,10 @@ class MoveOutClearance(models.Model):
     clearance_legal = fields.Boolean(string='7. Legal Clearance: Breach & pre-termination terms reviewed', tracking=True)
     clearance_finance = fields.Boolean(string='8. Finance Clearance: Deposit refund or forfeiture processed', tracking=True)
 
+    finance_soa_approved = fields.Boolean(string='SOA Approved by Finance Controller', default=False, tracking=True)
+    finance_approver_id = fields.Many2one('res.users', string='SOA Finance Approver', tracking=True)
+    finance_approval_date = fields.Date(string='SOA Finance Approval Date', tracking=True)
+
     clearance_status = fields.Selection([
         ('draft', 'Draft Clearance'),
         ('for_inspection', 'For Inspection'),
@@ -177,6 +181,53 @@ class MoveOutClearance(models.Model):
             if rec.deposit_forfeited and not rec.forfeiture_reason:
                 raise UserError("Forfeiture Justification Required: Please enter the official reason for security deposit forfeiture!")
 
+            # A7: Breach + Forfeiture → Require Legal Review Activity Before Granting Clearance
+            if rec.reason == 'breach' and rec.deposit_forfeited:
+                # Check if a legal review activity has already been completed for this record
+                existing_legal_activity = self.env['mail.activity'].search([
+                    ('res_id', '=', rec.id),
+                    ('res_model', '=', 'move.out.clearance'),
+                    ('activity_type_id.name', 'ilike', 'To-Do'),
+                    ('note', 'ilike', 'Legal Review'),
+                ], limit=1)
+                if existing_legal_activity:
+                    # Activity exists — it must be marked done before clearance is granted
+                    raise UserError(
+                        "Legal Review Required (Contract Breach & Deposit Forfeiture):\n\n"
+                        "There is a pending Legal Review activity that must be completed and marked "
+                        "as 'Done' by the Legal team before exit clearance can be granted.\n\n"
+                        "Contract breach with deposit forfeiture requires legal sign-off to protect "
+                        "the company from dispute or legal challenge."
+                    )
+                else:
+                    # Auto-create legal review activity for the Legal team
+                    activity_type = self.env['mail.activity.type'].search([('name', 'ilike', 'To-Do')], limit=1)
+                    if activity_type:
+                        self.env['mail.activity'].create({
+                            'res_id': rec.id,
+                            'res_model_id': self.env['ir.model']._get('move.out.clearance').id,
+                            'activity_type_id': activity_type.id,
+                            'summary': f'Legal Review Required — Contract Breach & Deposit Forfeiture: {rec.name}',
+                            'note': (
+                                f'<b>Legal Review Required Before Exit Clearance</b><br/>'
+                                f'Tenant: {rec.tenant_id.name}<br/>'
+                                f'Unit: {rec.unit_id.name}<br/>'
+                                f'Reason: Contract Breach / Unnotified Exit<br/>'
+                                f'Forfeiture Reason: {rec.forfeiture_reason or "See clearance record"}<br/>'
+                                f'<br/>Please review the contract terms, confirm forfeiture eligibility, '
+                                f'and mark this activity as Done to allow clearance to proceed.'
+                            ),
+                            'date_deadline': fields.Date.add(fields.Date.context_today(self), days=2),
+                            'user_id': self.env.uid,
+                        })
+                    raise UserError(
+                        "Legal Review Activity Created (Contract Breach & Deposit Forfeiture):\n\n"
+                        "A Legal Review activity has been automatically created for this move-out record. "
+                        "The Legal team must review the breach terms, confirm deposit forfeiture eligibility, "
+                        "and mark the activity as 'Done' before exit clearance can be granted.\n\n"
+                        "This protects the company from legal dispute over forfeited security deposits."
+                    )
+
             rec.clearance_status = 'cleared'
             rec.message_post(
                 body=f"🎉 <b>FINAL MOVE-OUT EXIT CLEARANCE GRANTED</b> for Tenant <b>{rec.tenant_id.name}</b> [Unit: {rec.unit_id.name}]. Net Refundable Deposit: PHP {(rec.refundable_amount or 0.0):,.2f}.",
@@ -185,10 +236,36 @@ class MoveOutClearance(models.Model):
 
     def action_close(self):
         for rec in self:
+            # B4: Cannot close unless clearance is fully signed off
+            if rec.clearance_status != 'cleared':
+                raise UserError(
+                    f"Move-Out Close Blocked: The Move-Out Clearance '{rec.name}' must reach "
+                    f"'Cleared for Exit' status before it can be closed.\n\n"
+                    f"Current Status: {dict(rec._fields['clearance_status'].selection).get(rec.clearance_status, '?')}\n\n"
+                    f"All 8 departmental sign-offs must be completed and 'Grant Exit Clearance' "
+                    f"must be confirmed before this record can be closed."
+                )
             rec.clearance_status = 'closed'
             if rec.lease_contract_id:
+                # Only set terminated if legal_clearance is True (B2 guard on lease_contract)
+                rec.lease_contract_id.legal_clearance = True
                 rec.lease_contract_id.stage = 'terminated'
+                # Release unit back to vacated/available
+                if rec.unit_id:
+                    rec.unit_id.occupancy_status = 'vacated'
+                    rec.unit_id.current_tenant_id = False
             rec.message_post(
-                body=f"Move-Out File <b>{rec.name}</b> CLOSED. Lease Contract <b>{rec.lease_contract_id.name}</b> marked as Terminated.",
-                subject="Move-Out File Closed"
+                body=f"Move-Out File <b>{rec.name}</b> CLOSED. Lease Contract <b>{rec.lease_contract_id.name}</b> marked as Terminated. Unit released.",
+                subject="Move-Out File Closed & Lease Terminated"
+            )
+
+    def action_approve_finance_soa(self):
+        for rec in self:
+            rec.finance_soa_approved = True
+            rec.clearance_finance = True
+            rec.finance_approver_id = self.env.user
+            rec.finance_approval_date = fields.Date.context_today(self)
+            rec.message_post(
+                body=f"✅ <b>Statement of Account (SOA) Clearance Approved</b> by Finance Controller <b>{self.env.user.name}</b> on {rec.finance_approval_date}.",
+                subject="Finance SOA Clearance Approved"
             )

@@ -81,6 +81,21 @@ class PropertyReservation(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('property.reservation') or 'RES-2026-00001'
         return super(PropertyReservation, self).create(vals)
 
+    @api.constrains('unit_id', 'state')
+    def _check_unit_availability(self):
+        for rec in self:
+            if rec.state in ('draft', 'for_payment') and rec.unit_id:
+                if rec.unit_id.occupancy_status not in ('available', False):
+                    status_label = dict(rec.unit_id._fields['occupancy_status'].selection).get(
+                        rec.unit_id.occupancy_status, rec.unit_id.occupancy_status
+                    )
+                    raise UserError(
+                        f"Unit Reservation Blocked: Unit '{rec.unit_id.name}' is currently "
+                        f"'{status_label}' and cannot be reserved.\n\n"
+                        f"Only units with status 'Available' can be reserved. "
+                        f"Please select a different unit or wait for the unit to be released."
+                    )
+
     def action_submit_payment(self):
         for rec in self:
             if not rec.proof_of_payment:
@@ -163,3 +178,30 @@ class PropertyReservation(models.Model):
                 body=f"Reservation <b>{rec.name}</b> has been cancelled. Unit <b>{rec.unit_id.display_name}</b> released back to available inventory. Cancellation Reason: {rec.cancellation_reason or 'None provided'}",
                 subject="Reservation Cancelled"
             )
+
+    @api.model
+    def cron_reservation_auto_expiry(self):
+        """ Daily Cron: Auto-expire reservations unpaid past 5 days or past expiration_date """
+        today = fields.Date.context_today(self)
+        unpaid_reservations = self.search([
+            ('state', 'in', ['draft', 'for_payment']),
+            ('payment_status', '!=', 'paid'),
+        ])
+        for rec in unpaid_reservations:
+            should_expire = False
+            if rec.expiration_date and rec.expiration_date < today:
+                should_expire = True
+            elif rec.reservation_date:
+                expiry_limit = fields.Date.add(rec.reservation_date, days=5)
+                if expiry_limit < today:
+                    should_expire = True
+
+            if should_expire:
+                rec.state = 'expired'
+                if rec.unit_id and rec.unit_id.occupancy_status == 'reserved':
+                    rec.unit_id.occupancy_status = 'available'
+                    rec.unit_id.current_tenant_id = False
+                rec.message_post(
+                    body=f"⏰ <b>RESERVATION AUTO-EXPIRED</b>: Reservation <b>{rec.name}</b> for Tenant <b>{rec.tenant_id.name}</b> has automatically expired after 5 business days without confirmed payment. Unit <b>{rec.unit_id.display_name}</b> has been released back to Available inventory.",
+                    subject="Reservation Expired & Unit Released"
+                )

@@ -1,0 +1,2 @@
+name,tenant_id/id,unit_id/id,parking_type,vehicle_type,plate_number,assigned_parking_location,sticker_number,parking_fee,payment_status,state
+PARK-2026-00001,,,sapphire_parking,car,ABC 1234,B1 Slot 01,STK-001,3000,paid,active

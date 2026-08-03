@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- REPORT 1: Monthly Billing Report                             -->
+    <!-- ============================================================ -->
+    <record id="action_report_monthly_billing" model="ir.actions.report">
+        <field name="name">Monthly Billing Report</field>
+        <field name="model">recurring.monthly.billing</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management_custom.report_monthly_billing_template</field>
+        <field name="report_file">property_management_custom.report_monthly_billing_template</field>
+        <field name="print_report_name">'Monthly Billing - ' + object.name</field>
+        <field name="binding_model_id" ref="model_recurring_monthly_billing"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_monthly_billing_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row mb-4">
+                            <div class="col-12 text-center">
+                                <h2 style="color:#2c3e50;">MONTHLY BILLING STATEMENT</h2>
+                                <h4 style="color:#7f8c8d;">Reference: <t t-esc="o.name"/></h4>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3" style="border: 1px solid #dee2e6; padding: 15px; border-radius: 5px;">
+                            <div class="col-6">
+                                <strong>Tenant:</strong> <t t-esc="o.tenant_id.name"/><br/>
+                                <strong>Unit:</strong> <t t-esc="o.unit_id.name"/><br/>
+                                <strong>Billing Month:</strong> <t t-esc="o.billing_cycle_date"/><br/>
+                                <strong>Due Date:</strong> Every <t t-esc="o.billing_day"/>th of the month
+                            </div>
+                            <div class="col-6 text-right">
+                                <strong>Invoice Status:</strong>
+                                <span t-attf-style="color: #{'#27ae60' if o.invoice_status == 'paid' else '#e74c3c' if o.invoice_status == 'overdue' else '#f39c12'}">
+                                    <t t-esc="dict(o._fields['invoice_status'].selection).get(o.invoice_status, o.invoice_status)"/>
+                                </span><br/>
+                                <strong>Collection Status:</strong> <t t-esc="dict(o._fields['collection_status'].selection).get(o.collection_status, o.collection_status)"/><br/>
+                                <strong>Lease Contract:</strong> <t t-esc="o.lease_contract_id.name"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered table-sm mt-3">
+                            <thead style="background-color:#2c3e50; color:white;">
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-right">Amount (PHP)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Monthly Rental</td>
+                                    <td class="text-right"><t t-esc="'{:,.2f}'.format(o.monthly_rent or 0)"/></td>
+                                </tr>
+                                <tr t-if="o.furniture_rent">
+                                    <td>Furniture Rental Fee</td>
+                                    <td class="text-right"><t t-esc="'{:,.2f}'.format(o.furniture_rent or 0)"/></td>
+                                </tr>
+                                <tr t-if="o.parking_fee">
+                                    <td>Parking Fee</td>
+                                    <td class="text-right"><t t-esc="'{:,.2f}'.format(o.parking_fee or 0)"/></td>
+                                </tr>
+                                <tr t-if="o.wifi_fee">
+                                    <td>Internet / Wi-Fi Fee</td>
+                                    <td class="text-right"><t t-esc="'{:,.2f}'.format(o.wifi_fee or 0)"/></td>
+                                </tr>
+                                <tr t-if="o.other_charges">
+                                    <td>Other Recurring Charges</td>
+                                    <td class="text-right"><t t-esc="'{:,.2f}'.format(o.other_charges or 0)"/></td>
+                                </tr>
+                                <tr style="font-weight:bold; background-color:#ecf0f1;">
+                                    <td>TOTAL DUE THIS MONTH</td>
+                                    <td class="text-right">PHP <t t-esc="'{:,.2f}'.format(o.total_monthly_due or 0)"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <p style="font-size:10px; color:#7f8c8d;">
+                                    Payment is due every <t t-esc="o.billing_day"/>th of the month.
+                                    Late payments are subject to penalty charges per the lease contract terms.
+                                    Please bring this billing statement to the Cashier when making payment.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- REPORT 2: Collection Aging Report                            -->
+    <!-- ============================================================ -->
+    <record id="action_report_collection_aging" model="ir.actions.report">
+        <field name="name">Collection Aging Report</field>
+        <field name="model">recurring.monthly.billing</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management_custom.report_collection_aging_template</field>
+        <field name="report_file">property_management_custom.report_collection_aging_template</field>
+        <field name="print_report_name">'Collection Aging Report'</field>
+        <field name="binding_model_id" ref="model_recurring_monthly_billing"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_collection_aging_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="row mb-4">
+                        <div class="col-12 text-center">
+                            <h2 style="color:#2c3e50;">COLLECTION AGING REPORT</h2>
+                            <h5 style="color:#7f8c8d;">As of: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/></h5>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-sm">
+                        <thead style="background-color:#2c3e50; color:white;">
+                            <tr>
+                                <th>Billing Ref</th>
+                                <th>Tenant</th>
+                                <th>Unit</th>
+                                <th>Billing Month</th>
+                                <th class="text-right">Total Due</th>
+                                <th>Invoice Status</th>
+                                <th>Collection Status</th>
+                                <th>Overdue Days</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <tr t-attf-style="background-color: #{'#ffeeba' if o.collection_status == 'overdue' else '#f8d7da' if o.overdue_days > 15 else ''}">
+                                    <td><t t-esc="o.name"/></td>
+                                    <td><t t-esc="o.tenant_id.name"/></td>
+                                    <td><t t-esc="o.unit_id.name"/></td>
+                                    <td><t t-esc="o.billing_cycle_date"/></td>
+                                    <td class="text-right">PHP <t t-esc="'{:,.2f}'.format(o.total_monthly_due or 0)"/></td>
+                                    <td><t t-esc="dict(o._fields['invoice_status'].selection).get(o.invoice_status, '')"/></td>
+                                    <td><t t-esc="dict(o._fields['collection_status'].selection).get(o.collection_status, '')"/></td>
+                                    <td class="text-center" t-attf-style="color: #{'#e74c3c' if o.overdue_days > 7 else '#f39c12'}">
+                                        <t t-esc="o.overdue_days or 0"/> days
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- REPORT 3: Agent Commission Report                            -->
+    <!-- ============================================================ -->
+    <record id="action_report_agent_commission" model="ir.actions.report">
+        <field name="name">Agent Commission Report</field>
+        <field name="model">agent.commission</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management_custom.report_agent_commission_template</field>
+        <field name="report_file">property_management_custom.report_agent_commission_template</field>
+        <field name="print_report_name">'Agent Commission - ' + object.name</field>
+        <field name="binding_model_id" ref="model_agent_commission"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_agent_commission_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center mb-3" style="color:#2c3e50;">AGENT COMMISSION VOUCHER</h2>
+                        <div class="row mb-3" style="border:1px solid #dee2e6; padding:15px; border-radius:5px;">
+                            <div class="col-6">
+                                <strong>Claim Reference:</strong> <t t-esc="o.name"/><br/>
+                                <strong>Agent Name:</strong> <t t-esc="o.agent_id.name"/><br/>
+                                <strong>Agent Type:</strong> <t t-esc="dict(o._fields['agent_type'].selection).get(o.agent_type, '')"/><br/>
+                                <strong>Bank:</strong> <t t-esc="o.agent_bank_name"/> — <t t-esc="o.agent_bank_account_number"/>
+                            </div>
+                            <div class="col-6 text-right">
+                                <strong>Tenant:</strong> <t t-esc="o.tenant_id.name"/><br/>
+                                <strong>Unit:</strong> <t t-esc="o.unit_id.name"/><br/>
+                                <strong>Lease Contract:</strong> <t t-esc="o.lease_contract_id.name"/><br/>
+                                <strong>Approval Status:</strong> <t t-esc="dict(o._fields['approval_status'].selection).get(o.approval_status, '')"/>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-sm mt-3">
+                            <thead style="background-color:#2c3e50; color:white;">
+                                <tr>
+                                    <th>Commission Basis</th>
+                                    <th>Percentage</th>
+                                    <th class="text-right">Commission Amount (PHP)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><t t-esc="dict(o._fields['commission_basis'].selection).get(o.commission_basis, '')"/></td>
+                                    <td><t t-esc="'{:.1f}%'.format(o.commission_percentage or 100)"/></td>
+                                    <td class="text-right"><strong>PHP <t t-esc="'{:,.2f}'.format(o.commission_amount or 0)"/></strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <br/><br/>
+                                <div style="border-top:1px solid black; padding-top:5px;">Leasing Manager</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <br/><br/>
+                                <div style="border-top:1px solid black; padding-top:5px;">Finance Officer</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <br/><br/>
+                                <div style="border-top:1px solid black; padding-top:5px;">General Manager</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- REPORT 4: Security Deposit Refund Report                     -->
+    <!-- ============================================================ -->
+    <record id="action_report_deposit_refund" model="ir.actions.report">
+        <field name="name">Security Deposit Refund Report</field>
+        <field name="model">security.deposit.refund</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management_custom.report_deposit_refund_template</field>
+        <field name="report_file">property_management_custom.report_deposit_refund_template</field>
+        <field name="print_report_name">'Security Deposit Refund - ' + object.name</field>
+        <field name="binding_model_id" ref="model_security_deposit_refund"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_deposit_refund_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center mb-3" style="color:#2c3e50;">SECURITY DEPOSIT REFUND COMPUTATION</h2>
+                        <div class="row mb-3" style="border:1px solid #dee2e6; padding:15px; border-radius:5px;">
+                            <div class="col-6">
+                                <strong>Refund Reference:</strong> <t t-esc="o.name"/><br/>
+                                <strong>Tenant:</strong> <t t-esc="o.tenant_id.name"/><br/>
+                                <strong>Unit:</strong> <t t-esc="o.unit_id.name"/><br/>
+                                <strong>Lease Contract:</strong> <t t-esc="o.lease_contract_id.name"/>
+                            </div>
+                            <div class="col-6 text-right">
+                                <strong>Refund Application Date:</strong> <t t-esc="o.refund_application_date"/><br/>
+                                <strong>Expected Release:</strong> <t t-esc="o.expected_release_date"/><br/>
+                                <strong>Payment Status:</strong> <t t-esc="dict(o._fields['payment_status'].selection).get(o.payment_status, '')"/><br/>
+                                <strong>Finance Approval:</strong> <t t-esc="dict(o._fields['finance_approval'].selection).get(o.finance_approval, '')"/>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-sm">
+                            <thead style="background-color:#2c3e50; color:white;">
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-right">Amount (PHP)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background-color:#d4edda;">
+                                    <td><strong>Original Security Deposit</strong></td>
+                                    <td class="text-right"><strong><t t-esc="'{:,.2f}'.format(o.original_security_deposit or 0)"/></strong></td>
+                                </tr>
+                                <tr t-if="o.outstanding_rent_deduction">
+                                    <td>Less: Outstanding Rent</td>
+                                    <td class="text-right" style="color:#e74c3c;">(<t t-esc="'{:,.2f}'.format(o.outstanding_rent_deduction or 0)"/>)</td>
+                                </tr>
+                                <tr t-if="o.damage_deduction">
+                                    <td>Less: Damage Charges</td>
+                                    <td class="text-right" style="color:#e74c3c;">(<t t-esc="'{:,.2f}'.format(o.damage_deduction or 0)"/>)</td>
+                                </tr>
+                                <tr t-if="o.utility_deduction">
+                                    <td>Less: Utility Charges</td>
+                                    <td class="text-right" style="color:#e74c3c;">(<t t-esc="'{:,.2f}'.format(o.utility_deduction or 0)"/>)</td>
+                                </tr>
+                                <tr t-if="o.other_deduction">
+                                    <td>Less: Other Deductions</td>
+                                    <td class="text-right" style="color:#e74c3c;">(<t t-esc="'{:,.2f}'.format(o.other_deduction or 0)"/>)</td>
+                                </tr>
+                                <tr style="font-weight:bold; background-color:#d1ecf1; border-top: 2px solid #2c3e50;">
+                                    <td>NET REFUNDABLE AMOUNT</td>
+                                    <td class="text-right" style="color:#27ae60;">PHP <t t-esc="'{:,.2f}'.format(o.refundable_amount or 0)"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-3" style="border:1px solid #dee2e6; padding:10px; border-radius:5px;">
+                            <strong>Bank Transfer Details:</strong><br/>
+                            Bank: <t t-esc="o.bank_name"/> | Account: <t t-esc="o.account_name"/> | No.: <t t-esc="o.account_number"/>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-4 text-center"><br/><br/>
+                                <div style="border-top:1px solid black; padding-top:5px;">Tenant Signature</div>
+                            </div>
+                            <div class="col-4 text-center"><br/><br/>
+                                <div style="border-top:1px solid black; padding-top:5px;">Finance Officer</div>
+                            </div>
+                            <div class="col-4 text-center"><br/><br/>
+                                <div style="border-top:1px solid black; padding-top:5px;">General Manager</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- REPORT 5: Expiring Leases Report                             -->
+    <!-- ============================================================ -->
+    <record id="action_report_expiring_leases" model="ir.actions.report">
+        <field name="name">Expiring Leases Report</field>
+        <field name="model">lease.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management_custom.report_expiring_leases_template</field>
+        <field name="report_file">property_management_custom.report_expiring_leases_template</field>
+        <field name="print_report_name">'Expiring Leases Report'</field>
+        <field name="binding_model_id" ref="model_lease_contract"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_expiring_leases_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center mb-3" style="color:#2c3e50;">EXPIRING LEASES REPORT</h2>
+                    <h5 class="text-center mb-4" style="color:#7f8c8d;">As of: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%B %d, %Y')"/></h5>
+                    <table class="table table-bordered table-sm">
+                        <thead style="background-color:#2c3e50; color:white;">
+                            <tr>
+                                <th>Lease No.</th>
+                                <th>Tenant</th>
+                                <th>Unit</th>
+                                <th>Lease End Date</th>
+                                <th class="text-center">Days to Expiry</th>
+                                <th>Renewal Decision</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <tr t-attf-style="background-color: #{'#f8d7da' if (o.days_until_expiry or 0) &lt;= 7 else '#ffeeba' if (o.days_until_expiry or 0) &lt;= 30 else '#d4edda' if (o.days_until_expiry or 0) &lt;= 60 else ''}">
+                                    <td><t t-esc="o.name"/></td>
+                                    <td><t t-esc="o.tenant_id.name"/></td>
+                                    <td><t t-esc="o.unit_id.name"/></td>
+                                    <td><t t-esc="o.date_end"/></td>
+                                    <td class="text-center"><strong><t t-esc="o.days_until_expiry or 0"/> days</strong></td>
+                                    <td><t t-esc="dict(o._fields['renewal_decision'].selection).get(o.renewal_decision, '')"/></td>
+                                    <td><t t-esc="dict(o._fields['stage'].selection).get(o.stage, '')"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div class="mt-3 row text-center" style="font-size:11px;">
+                        <div class="col-3" style="background:#f8d7da; padding:5px;">🔴 7 Days or Less — CRITICAL</div>
+                        <div class="col-3" style="background:#ffeeba; padding:5px;">🟡 8–30 Days — URGENT</div>
+                        <div class="col-3" style="background:#d4edda; padding:5px;">🟢 31–60 Days — FOR DISCUSSION</div>
+                        <div class="col-3" style="background:#ffffff; padding:5px;">⚪ 60+ Days — MONITORING</div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- REPORT 6: Move-Out Clearance Status Report                   -->
+    <!-- ============================================================ -->
+    <record id="action_report_move_out_clearance" model="ir.actions.report">
+        <field name="name">Move-Out Clearance Certificate</field>
+        <field name="model">move.out.clearance</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management_custom.report_move_out_clearance_template</field>
+        <field name="report_file">property_management_custom.report_move_out_clearance_template</field>
+        <field name="print_report_name">'Move-Out Clearance - ' + object.name</field>
+        <field name="binding_model_id" ref="model_move_out_clearance"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_move_out_clearance_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center mb-2" style="color:#2c3e50;">MOVE-OUT CLEARANCE CERTIFICATE</h2>
+                        <div class="row mb-3" style="border:1px solid #dee2e6; padding:15px; border-radius:5px;">
+                            <div class="col-6">
+                                <strong>Clearance Reference:</strong> <t t-esc="o.name"/><br/>
+                                <strong>Tenant:</strong> <t t-esc="o.tenant_id.name"/><br/>
+                                <strong>Unit:</strong> <t t-esc="o.unit_id.name"/><br/>
+                                <strong>Move-Out Date:</strong> <t t-esc="o.move_out_date"/>
+                            </div>
+                            <div class="col-6 text-right">
+                                <strong>Reason:</strong> <t t-esc="dict(o._fields['reason'].selection).get(o.reason, '')"/><br/>
+                                <strong>Notice Compliance:</strong> <t t-esc="dict(o._fields['notice_compliance'].selection).get(o.notice_compliance, '')"/><br/>
+                                <strong>Final Inspection:</strong> <t t-esc="dict(o._fields['final_inspection_status'].selection).get(o.final_inspection_status, '')"/><br/>
+                                <strong>Clearance Status:</strong> <t t-esc="dict(o._fields['clearance_status'].selection).get(o.clearance_status, '')"/>
+                            </div>
+                        </div>
+                        <h5 class="mt-3">8-Departmental Sign-Off Checklist</h5>
+                        <table class="table table-bordered table-sm">
+                            <thead style="background-color:#2c3e50; color:white;">
+                                <tr><th>Department</th><th>Clearance Item</th><th class="text-center">Status</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Billing</td><td>No outstanding rent or charges</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_billing else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_billing else '✗ Pending'"/></td></tr>
+                                <tr><td>Admin</td><td>Unit turnover inspected</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_admin else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_admin else '✗ Pending'"/></td></tr>
+                                <tr><td>Housekeeping</td><td>Cleanliness verified</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_housekeeping else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_housekeeping else '✗ Pending'"/></td></tr>
+                                <tr><td>IT</td><td>Wi-Fi router &amp; modem returned</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_it else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_it else '✗ Pending'"/></td></tr>
+                                <tr><td>Security</td><td>Access card returned &amp; gate pass issued</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_security else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_security else '✗ Pending'"/></td></tr>
+                                <tr><td>Parking</td><td>Sticker &amp; parking slot cleared</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_parking else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_parking else '✗ Pending'"/></td></tr>
+                                <tr><td>Legal</td><td>Breach &amp; pre-termination terms reviewed</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_legal else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_legal else '✗ Pending'"/></td></tr>
+                                <tr><td>Finance</td><td>Deposit refund or forfeiture processed</td><td class="text-center" t-attf-style="color:#{'27ae60' if o.clearance_finance else 'e74c3c'}"><t t-esc="'✓ Cleared' if o.clearance_finance else '✗ Pending'"/></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-3" style="border:1px solid #dee2e6; padding:10px; border-radius:5px;">
+                            <strong>Net Refundable Security Deposit: PHP
+                                <t t-esc="'{:,.2f}'.format(o.refundable_amount or 0)"/>
+                            </strong>
+                            <t t-if="o.deposit_forfeited">
+                                <span style="color:#e74c3c;"> — DEPOSIT FORFEITED: <t t-esc="o.forfeiture_reason"/></span>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

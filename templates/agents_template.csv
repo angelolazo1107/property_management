@@ -1,0 +1,3 @@
+name,agent_type,is_company,supplier_rank,agent_bank_name,agent_bank_account_name,agent_bank_account_number,notes
+Juan Dela Cruz - Agent,outside,False,1,BDO,Juan Dela Cruz,1234567890,
+SSP Realty Co.,outside,True,1,BPI,SSP Realty Inc.,0987654321,

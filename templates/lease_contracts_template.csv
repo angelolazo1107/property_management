@@ -1,0 +1,2 @@
+name,tenant_id/id,unit_id/id,date_start,date_end,contract_term_months,monthly_rent,security_deposit,furniture_rental_fee,parking_fee,wifi_fee,stage,payment_due_date,bis_submitted,deposit_paid,signed_copy_filename
+LEASE-2026-XXXX-UNIT-0001,,,2026-01-01,2027-01-01,12,25000,50000,0,3000,1500,active,5,True,True,signed_lease.pdf

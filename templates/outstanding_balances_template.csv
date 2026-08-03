@@ -1,0 +1,2 @@
+name,tenant_id/id,unit_id/id,lease_contract_id/id,billing_cycle_date,billing_day,monthly_rent,furniture_rent,parking_fee,wifi_fee,other_charges,invoice_status,collection_status
+BILL-2026-00001,,,,2026-01-05,5,25000,0,3000,1500,0,posted,current

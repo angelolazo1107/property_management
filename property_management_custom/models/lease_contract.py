@@ -66,8 +66,29 @@ class LeaseContract(models.Model):
         ('pending', 'Pending Decision'),
         ('renewing', 'Tenant Will Renew'),
         ('vacating', 'Tenant Will Vacate'),
+        ('holdover', 'Tenant in Holdover / Overstaying'),
         ('breach_terminated', 'Early Termination / Breach'),
     ], string='Renewal Decision', default='pending', tracking=True)
+
+    is_holdover = fields.Boolean(
+        string='Is Holdover?', 
+        compute='_compute_is_holdover', 
+        store=True
+    )
+    holdover_penalty_rate = fields.Float(
+        string='Holdover Penalty Surcharge (%)', 
+        default=25.0, 
+        tracking=True,
+        help="Surcharge percentage applied to standard monthly rent during holdover period (e.g. 25% = 1.25x rent)."
+    )
+    holdover_start_date = fields.Date(string='Holdover Start Date', tracking=True)
+    holdover_monthly_rent = fields.Monetary(
+        string='Holdover Monthly Rent', 
+        currency_field='currency_id', 
+        compute='_compute_holdover_monthly_rent', 
+        store=True,
+        tracking=True
+    )
 
     notice_date = fields.Date(
         string='Notice Date (7-Day Requirement)', 
@@ -105,6 +126,20 @@ class LeaseContract(models.Model):
         for rec in self:
             rec.unit_assessment_task_count = len(rec.unit_assessment_task_ids)
 
+    @api.depends('renewal_decision')
+    def _compute_is_holdover(self):
+        for rec in self:
+            rec.is_holdover = (rec.renewal_decision == 'holdover')
+
+    @api.depends('renewal_decision', 'monthly_rent', 'holdover_penalty_rate')
+    def _compute_holdover_monthly_rent(self):
+        for rec in self:
+            if rec.renewal_decision == 'holdover':
+                surcharge = (rec.monthly_rent or 0.0) * ((rec.holdover_penalty_rate or 0.0) / 100.0)
+                rec.holdover_monthly_rent = (rec.monthly_rent or 0.0) + surcharge
+            else:
+                rec.holdover_monthly_rent = rec.monthly_rent or 0.0
+
     @api.depends('date_end', 'stage')
     def _compute_days_until_expiry(self):
         today = fields.Date.context_today(self)
@@ -113,6 +148,58 @@ class LeaseContract(models.Model):
                 rec.days_until_expiry = (rec.date_end - today).days
             else:
                 rec.days_until_expiry = 0
+
+    # A8: Document count smart button
+    document_count = fields.Integer(
+        string='Documents',
+        compute='_compute_document_count'
+    )
+
+    def _compute_document_count(self):
+        for rec in self:
+            rec.document_count = self.env['ir.attachment'].search_count([
+                ('res_model', '=', 'lease.contract'),
+                ('res_id', '=', rec.id),
+            ])
+
+    def action_view_documents(self):
+        self.ensure_one()
+        return {
+            'name': 'Lease Contract Documents',
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.attachment',
+            'view_mode': 'list,form',
+            'domain': [('res_model', '=', 'lease.contract'), ('res_id', '=', self.id)],
+            'context': {
+                'default_res_model': 'lease.contract',
+                'default_res_id': self.id,
+            },
+        }
+
+    # B2: Lease Contract Stage Guard — prevent invalid backwards/illegal transitions
+    @api.constrains('stage')
+    def _check_stage_transition(self):
+        # Stages from which backward jump to draft is not allowed
+        active_stages = [
+            'active', 'for_renewal', 'renewal_offered', 'renewed',
+            'for_move_out', 'expired', 'move_out',
+            'deposit_refund', 'terminated', 'breached', 'archived'
+        ]
+        # Stages that require legal clearance before they can be set
+        legal_required_stages = ['terminated', 'breached']
+
+        for rec in self:
+            if rec.stage == 'draft' and rec.id:
+                # Allow: draft is always valid on new records
+                pass
+            if rec.stage in legal_required_stages:
+                if not rec.legal_clearance:
+                    raise UserError(
+                        f"Stage Transition Blocked: The lease stage '{rec.stage.replace('_', ' ').title()}' "
+                        f"requires Legal Clearance to be confirmed.\n\n"
+                        f"Please ensure the Legal team has reviewed and approved this action, "
+                        f"then tick 'Legal Clearance Approved' before proceeding."
+                    )
 
     def action_mark_renewed(self):
         for rec in self:
@@ -196,6 +283,25 @@ class LeaseContract(models.Model):
                         body=f"🔍 <b>INTERNAL LEASING REVIEW (60 Days to Expiry)</b>: Assess tenant standing, rental escalation, and renewal eligibility for Unit {rec.unit_id.name}.",
                         subject="60-Day Leasing Review"
                     )
+                    # Step 14: Schedule high-priority mail.activity for 60-Day Expiry Escalation Notice
+                    activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+                    if activity_type:
+                        existing_activity = self.env['mail.activity'].search([
+                            ('res_model', '=', 'lease.contract'),
+                            ('res_id', '=', rec.id),
+                            ('summary', 'ilike', '60-Day Lease Expiration Escalation')
+                        ], limit=1)
+                        if not existing_activity:
+                            model_id = self.env['ir.model']._get('lease.contract').id
+                            self.env['mail.activity'].create({
+                                'activity_type_id': activity_type.id,
+                                'summary': f"🚨 60-Day Lease Expiration Escalation Notice: {rec.name}",
+                                'note': f"Lease contract <b>{rec.name}</b> for Tenant <b>{rec.tenant_id.name}</b> (Unit: {rec.unit_id.name}) expires on {rec.date_end}. Please prepare renewal proposal package or serve 60-day renewal notice.",
+                                'res_model_id': model_id,
+                                'res_id': rec.id,
+                                'user_id': rec.create_uid.id or self.env.user.id,
+                                'date_deadline': fields.Date.context_today(self),
+                            })
 
     def action_view_unit_assessments(self):
         self.ensure_one()

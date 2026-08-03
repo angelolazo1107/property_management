@@ -117,6 +117,18 @@ class MoveInForm(models.Model):
 
     def action_clear(self):
         for rec in self:
+            # B3: Cleared state requires linked contract to be in a signed stage
+            signed_stages = [
+                'signed_tenant', 'submitted_billing', 'submitted_legal',
+                'for_notarization', 'notarized', 'released_tenant', 'active'
+            ]
+            if rec.lease_contract_id and rec.lease_contract_id.stage not in signed_stages:
+                raise UserError(
+                    f"Move-In Clearance Blocked: The linked Lease Contract '{rec.lease_contract_id.name}' "
+                    f"has not yet been signed by the tenant.\n\n"
+                    f"Current Contract Stage: {dict(rec.lease_contract_id._fields['stage'].selection).get(rec.lease_contract_id.stage, '?')}\n\n"
+                    f"The tenant must sign the lease contract before move-in clearance can be granted."
+                )
             if not rec.tenant_signature:
                 raise UserError("Tenant Signature Required: Please ensure the tenant signature is provided on the Move-In Form before clearing.")
             rec.state = 'cleared'
@@ -127,6 +139,13 @@ class MoveInForm(models.Model):
 
     def action_confirm_moved_in(self):
         for rec in self:
+            # B3: Can only confirm moved-in after clearance is granted
+            if rec.state != 'cleared':
+                raise UserError(
+                    f"Move-In Confirmation Blocked: The Move-In Form must be in 'Cleared for Move-In' status before confirming move-in.\n\n"
+                    f"Current Status: {dict(rec._fields['state'].selection).get(rec.state, '?')}\n\n"
+                    f"Please complete the clearance process (signature, contract verification) first."
+                )
             if not rec.tenant_signature:
                 raise UserError("Tenant Signature Required: Please capture the tenant signature before marking Moved In.")
             
