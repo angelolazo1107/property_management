@@ -110,11 +110,17 @@
               action="action_move_out_clearance"
               sequence="25"/>
 
+    <menuitem id="menu_security_deposit_refund_crm"
+              name="Security Deposit Refunds"
+              parent="crm.crm_menu_root"
+              action="action_security_deposit_refund"
+              sequence="26"/>
+
     <menuitem id="menu_property_tenants"
               name="Tenants Master File"
               parent="crm.crm_menu_root"
               action="action_property_tenant"
-              sequence="26"/>
+              sequence="27"/>
 
     <!-- 2. PMO & Operations Custom Submenus Under Maintenance -->
     <menuitem id="menu_pmo_root_custom"
@@ -205,6 +211,12 @@
               parent="menu_pmo_root_custom"
               action="action_move_out_clearance"
               sequence="14"/>
+
+    <menuitem id="menu_security_deposit_refund"
+              name="Security Deposit Refunds"
+              parent="menu_pmo_root_custom"
+              action="action_security_deposit_refund"
+              sequence="15"/>
 
     <!-- 3. Admin, Supplies & Fleet Custom Submenus -->
     <menuitem id="menu_fleet_trips_custom"

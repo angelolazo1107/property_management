@@ -23,3 +23,4 @@
 "access_move_in_gate_pass_user","move.in.gate.pass.user","model_move_in_gate_pass",,1,1,1,1
 "access_recurring_monthly_billing_user","recurring.monthly.billing.user","model_recurring_monthly_billing",,1,1,1,1
 "access_move_out_clearance_user","move.out.clearance.user","model_move_out_clearance",,1,1,1,1
+"access_security_deposit_refund_user","security.deposit.refund.user","model_security_deposit_refund",,1,1,1,1
