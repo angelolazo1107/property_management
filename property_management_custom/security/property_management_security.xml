@@ -11,42 +11,36 @@
         <!-- Leasing & Sales User -->
         <record id="group_property_user" model="res.groups">
             <field name="name">Leasing User</field>
-            <field name="category_id" ref="module_category_property_management"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- Leasing & Sales Manager -->
         <record id="group_property_manager" model="res.groups">
             <field name="name">Leasing Manager</field>
-            <field name="category_id" ref="module_category_property_management"/>
             <field name="implied_ids" eval="[(4, ref('group_property_user'))]"/>
         </record>
 
         <!-- PMO Operations User -->
         <record id="group_pmo_user" model="res.groups">
             <field name="name">PMO Operations User</field>
-            <field name="category_id" ref="module_category_property_management"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- PMO Operations Manager -->
         <record id="group_pmo_manager" model="res.groups">
             <field name="name">PMO Operations Manager</field>
-            <field name="category_id" ref="module_category_property_management"/>
             <field name="implied_ids" eval="[(4, ref('group_pmo_user'))]"/>
         </record>
 
         <!-- Security Gate Guard -->
         <record id="group_security_guard" model="res.groups">
             <field name="name">Security Gate Guard</field>
-            <field name="category_id" ref="module_category_property_management"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- Leasing Finance / Accounting Controller -->
         <record id="group_property_finance" model="res.groups">
             <field name="name">Leasing Finance Controller</field>
-            <field name="category_id" ref="module_category_property_management"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
     </data>

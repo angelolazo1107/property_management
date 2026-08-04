@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1 Odoo UAT Test Scripts & Validation Pack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --text-dark: #1f2937;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin: 0;
+            padding: 40px;
+            background-color: #ffffff;
+        }
+
+        .header-container {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 26px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .meta-info span strong {
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 10px;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            color: #1f2937;
+            font-size: 15px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            page-break-after: avoid;
+        }
+
+        .script-meta {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 13px;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background-color: #f3f4f6;
+            color: var(--primary-color);
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .notice-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .no-print {
+                display: none;
+            }
+            h2 {
+                page-break-before: auto;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .print-btn:hover {
+            background-color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="print-btn no-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+    <div class="header-container">
+        <h1>Phase 1 Odoo User Acceptance Testing (UAT) Test Scripts & Validation Pack</h1>
+        <div class="meta-info">
+            <span><strong>Project:</strong> Odoo 19 Property Management</span>
+            <span><strong>Target System:</strong> Odoo Enterprise</span>
+            <span><strong>Version:</strong> 1.0</span>
+            <span><strong>Date:</strong> August 2026</span>
+        </div>
+    </div>
+
+    <div class="notice-box">
+        <strong>Tester Instructions:</strong> Perform test steps sequentially. Record outcome (Pass/Fail) and tester initials. All Critical and Major defects must be resolved prior to Go-Live sign-off.
+    </div>
+
+    <h2>1. CRM & Leasing Workstream</h2>
+
+    <h3>UAT-SCRIPT-01: Website Inquiry to CRM Lead Routing</h3>
+    <div class="script-meta"><strong>Target Model:</strong> crm.lead | <strong>Department:</strong> Leasing / Marketing</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1.1</td>
+                <td>Open Website Inquiry form or create lead in CRM (CRM > Pipeline).</td>
+                <td>New lead record created.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>1.2</td>
+                <td>Select Target Unit / Property, Intended Move-In Date, and Budget.</td>
+                <td>Target Unit links to product.product.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>1.3</td>
+                <td>Check Parking, Wi-Fi, or Pet requirements.</td>
+                <td>Requirement flags saved on Lead.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>1.4</td>
+                <td>Move Lead stage to Ocular Visit.</td>
+                <td>Lead stage updates to Ocular Visit.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-02: Ocular Visit Scheduling & Security Gate Pass</h3>
+    <div class="script-meta"><strong>Target Model:</strong> ocular.visit, visitor.gate.pass | <strong>Department:</strong> Leasing / PMO Security</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2.1</td>
+                <td>From CRM Lead, click Ocular Visits stat button -> Create.</td>
+                <td>Ocular visit form opens with lead pre-filled.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2.2</td>
+                <td>Set visit date, time, visitor name, and contact details.</td>
+                <td>Schedule saved.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2.3</td>
+                <td>Click Schedule Visit & Notify Security.</td>
+                <td>Ocular status becomes scheduled. Visitor Gate Pass created.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2.4</td>
+                <td>Click Mark Visit Completed.</td>
+                <td>Status updates to completed.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-03: Leasing Quotation Creation & Template Selection</h3>
+    <div class="script-meta"><strong>Target Model:</strong> sale.order | <strong>Department:</strong> Leasing / Sales</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>3.1</td>
+                <td>On CRM Lead, click Create Leasing Quotation.</td>
+                <td>Sales Order created with tenant info.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3.2</td>
+                <td>Select quotation template (e.g. Furnished Unit Rental or Rental with Parking).</td>
+                <td>Line items populate (Rent, Deposit, Parking, Wi-Fi).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3.3</td>
+                <td>Confirm price unit matches target unit list price.</td>
+                <td>Unit list price populated automatically.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>3.4</td>
+                <td>Send quotation by email or confirm order.</td>
+                <td>Quotation sent or confirmed. Unit auto-reserved.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-04: Unit Reservation Payment Verification & Hold</h3>
+    <div class="script-meta"><strong>Target Model:</strong> property.reservation | <strong>Department:</strong> Leasing / Billing Accounting</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>4.1</td>
+                <td>Navigate to CRM > Unit Reservations -> Create.</td>
+                <td>Reservation form opens. Auto-ref RES-YYYY-#####.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4.2</td>
+                <td>Select Tenant, Target Unit, and Fee Structure (e.g. PHP 5,000).</td>
+                <td>Fee amount populated.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4.3</td>
+                <td>Attach proof of payment and click Submit Payment for Verification.</td>
+                <td>State updates to for_verification.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>4.4</td>
+                <td>Click Verify Payment & Issue AR.</td>
+                <td>Payment verified. AR-##### issued. Unit occupancy_status becomes reserved.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-05: Buyer/Tenant Information Sheet (BIS) Application</h3>
+    <div class="script-meta"><strong>Target Model:</strong> tenant.application.bis | <strong>Department:</strong> Leasing / Legal / Billing</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>5.1</td>
+                <td>Navigate to CRM > Tenant BIS Applications -> Create.</td>
+                <td>BIS form opens. Auto-ref BIS-YYYY-#####.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5.2</td>
+                <td>Attach Valid ID and Proof of Income.</td>
+                <td>Attachments saved.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5.3</td>
+                <td>Click Submit to Billing Review.</td>
+                <td>State updates to billing_review. Valid ID gate enforced.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5.4</td>
+                <td>Click Submit to Legal Review.</td>
+                <td>State updates to legal_review. ID & Income proof enforced.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>5.5</td>
+                <td>Click Approve BIS.</td>
+                <td>State updates to approved. Lease contract auto-created & tenant document subfolders initialized.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-06: Lease Contract Preparation & Notarization</h3>
+    <div class="script-meta"><strong>Target Model:</strong> lease.contract | <strong>Department:</strong> Leasing / Legal</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>6.1</td>
+                <td>Open Lease Contract (LEASE-YYYY-PROPERTY-UNIT-#####).</td>
+                <td>Contract form displays terms & legal clauses.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6.2</td>
+                <td>Click Send for Signing -> Mark Signed by Tenant.</td>
+                <td>Attached signed copy enforced before stage update.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6.3</td>
+                <td>Click Submit to Billing -> Forward to Legal for Notarization.</td>
+                <td>Stage updates to submitted_legal.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>6.4</td>
+                <td>Click Notarize Contract -> Release Executed Copy.</td>
+                <td>Notary status set to done, stage released_tenant.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-07: 9-Checkpoint Move-In Clearance Gatekeeping</h3>
+    <div class="script-meta"><strong>Target Model:</strong> lease.contract | <strong>Department:</strong> PMO / Billing / Accounting</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>7.1</td>
+                <td>Click Create Move-In Settlement Invoice.</td>
+                <td>Itemized Move-In invoice created (account.move).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>7.2</td>
+                <td>Post and register payment on Move-In invoice.</td>
+                <td>Invoice marked paid.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>7.3</td>
+                <td>Click Validate Move-In Readiness (9 Checkpoints).</td>
+                <td>System validates 9 points (Reservation, Invoice, Deposit, Cards, Parking, Wi-Fi, Contract, Assessment, Inspection).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>7.4</td>
+                <td>Verify outcome upon successful validation.</td>
+                <td>move_in_cleared becomes True, stage updates to active, unit occupancy_status becomes occupied. Tenant document subfolders auto-created.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>2. PMO & Maintenance Workstream</h2>
+
+    <h3>UAT-SCRIPT-08: PMO Move-In Inspection & Utility Meter Baseline</h3>
+    <div class="script-meta"><strong>Target Model:</strong> pmo.inspection, pmo.utility.reading | <strong>Department:</strong> PMO / Maintenance</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>8.1</td>
+                <td>Navigate to PMO Operations > Move-In/Out Inspections -> Create.</td>
+                <td>Inspection form opens (Move-In Baseline).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>8.2</td>
+                <td>Fill unit condition ratings and key/access badge counts.</td>
+                <td>Inspection data saved.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>8.3</td>
+                <td>Navigate to PMO Operations > Electric & Water Readings -> Create.</td>
+                <td>Utility reading form opens. Auto-ref UTIL-#####.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>8.4</td>
+                <td>Enter electric (kWh) and water (cbm) readings. Click Verify Reading.</td>
+                <td>Status becomes verified. Unit latest_electric_reading and latest_water_reading updated.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-09: Unit Assessment & Turnover Task (11-Point Check)</h3>
+    <div class="script-meta"><strong>Target Model:</strong> unit.assessment.task | <strong>Department:</strong> PMO Admin / Housekeeping</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>9.1</td>
+                <td>Navigate to PMO Operations > Unit Assessments & Turnover -> Create.</td>
+                <td>Assessment task created.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>9.2</td>
+                <td>Execute 11-point physical checklist (Cleanliness, Damage, Lights, HVAC, Plumbing, Locks, Windows, Furniture, Photos, Admin Sign-off, Housekeeping Sign-off).</td>
+                <td>All 11 points checked.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>9.3</td>
+                <td>Click Pass & Mark Ready for Move-In.</td>
+                <td>Task stage set to ready_move_in. Unit status updated to available.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-10: Helpdesk Ticket to PMO Job Order & Payment Control</h3>
+    <div class="script-meta"><strong>Target Model:</strong> helpdesk.ticket, pmo.job.order | <strong>Department:</strong> Helpdesk / Maintenance / Accounting</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>10.1</td>
+                <td>Create Helpdesk Ticket. Click Convert to PMO Job Order.</td>
+                <td>Job Order created (JO-YYYY-#####).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>10.2</td>
+                <td>Set is_chargeable = True and enter Estimated Job Cost.</td>
+                <td>Costing recorded.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>10.3</td>
+                <td>Try clicking Schedule MST Maintenance while payment_verified is False.</td>
+                <td>System blocks scheduling with payment validation error.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>10.4</td>
+                <td>Check payment_verified = True (or GM Waiver) and click Schedule MST Maintenance.</td>
+                <td>MST scheduling allowed. Stage set to scheduled.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Accounting & Billing Workstream</h2>
+
+    <h3>UAT-SCRIPT-11: Recurring Monthly Billing Batch Generation</h3>
+    <div class="script-meta"><strong>Target Model:</strong> recurring.monthly.billing | <strong>Department:</strong> Accounting / Billing</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>11.1</td>
+                <td>Navigate to Leasing Finance > Monthly Billing & Collections -> Create (or run 1st-of-month cron).</td>
+                <td>Billing record created (BILL-YYYY-MM-#####). Charges populated from active lease.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>11.2</td>
+                <td>Click Generate Draft Invoice.</td>
+                <td>Draft customer invoice (account.move) created.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>11.3</td>
+                <td>Click Validate & Send Invoice.</td>
+                <td>Invoice posted, status set to sent, collection status set to due.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-12: Overdue Escalation Engine (3, 7, 15 Days)</h3>
+    <div class="script-meta"><strong>Target Model:</strong> recurring.monthly.billing | <strong>Department:</strong> Accounting / Finance / Legal</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>12.1</td>
+                <td>On an unpaid billing record past due date, click Run Overdue Escalation Engine.</td>
+                <td>Overdue days calculated.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>12.2</td>
+                <td>If overdue >= 3 days:</td>
+                <td>Escalation level set to level_1 (1st Payment Reminder).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>12.3</td>
+                <td>If overdue >= 7 days:</td>
+                <td>Escalation level set to level_2 (Manager Escalation).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>12.4</td>
+                <td>If overdue >= 15 days:</td>
+                <td>Escalation level set to level_3 (Legal & Executive Escalation).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-13: Move-Out Clearance & 8-Departmental Sign-Offs</h3>
+    <div class="script-meta"><strong>Target Model:</strong> move.out.clearance | <strong>Department:</strong> PMO / Billing / IT / Security / Legal / Finance</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>13.1</td>
+                <td>Navigate to PMO Operations > Move-Out Clearances -> Create.</td>
+                <td>Clearance ref created (MCLR-YYYY-#####).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>13.2</td>
+                <td>Select Lease Contract.</td>
+                <td>Tenant, unit, deposit, and unpaid balance auto-populate.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>13.3</td>
+                <td>Check 8 departmental clearances (Billing, Admin, Housekeeping, IT, Security, Parking, Legal, Finance).</td>
+                <td>Checkboxes toggled.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>13.4</td>
+                <td>Click Approve Finance SOA Clearance -> Grant Final Exit Clearance.</td>
+                <td>Exit clearance granted.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>13.5</td>
+                <td>Click Close Move-Out File.</td>
+                <td>Lease contract terminated. Unit status set to vacated.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-14: Security Deposit Refund & Bank Wire Settlement</h3>
+    <div class="script-meta"><strong>Target Model:</strong> security.deposit.refund | <strong>Department:</strong> Accounting / Finance</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>14.1</td>
+                <td>Navigate to Leasing Finance > Security Deposit Refunds -> Create.</td>
+                <td>Refund ref created (REFUND-YYYY-#####).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>14.2</td>
+                <td>Select Move-Out Clearance.</td>
+                <td>Original deposit, deductions, and net refundable amount populated.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>14.3</td>
+                <td>Enter Bank Name, Account Name, and Account Number. Click Submit Refund Application.</td>
+                <td>Bank credentials validated.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>14.4</td>
+                <td>Click Finance Approve Payout.</td>
+                <td>Finance approved. Misc Accounting Journal Entry clearing liability created.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>14.5</td>
+                <td>Attach proof of wire transfer and click Mark Refund Paid.</td>
+                <td>Payment status set to paid. Lease stage set to deposit_refund.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. Procurement, Fleet & Admin Workstream</h2>
+
+    <h3>UAT-SCRIPT-15: Purchase Requisition, 3-Supplier Canvass & PO Approval</h3>
+    <div class="script-meta"><strong>Target Model:</strong> purchase.order, procurement.approval | <strong>Department:</strong> Procurement / Management</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>15.1</td>
+                <td>Create Purchase Order (Purchase > Purchase Orders). Fill PR ref and justification.</td>
+                <td>PO created.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>15.2</td>
+                <td>Attach 3-Supplier Canvass Sheet and fill Supplier 1, 2, and 3 quotes.</td>
+                <td>Canvass details attached.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>15.3</td>
+                <td>Click Dept Head Approve PR and GM Approve PO.</td>
+                <td>Approvals recorded with user ID and timestamp.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>15.4</td>
+                <td>Click Confirm Order.</td>
+                <td>Confirm order succeeds. (Blocked if approvals missing).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-16: Automated Procurement 3-Way Match Checkpoint</h3>
+    <div class="script-meta"><strong>Target Model:</strong> purchase.order | <strong>Department:</strong> Procurement / Accounting</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>16.1</td>
+                <td>On confirmed PO, receive products and validate Goods Receipt (stock.picking state done).</td>
+                <td>goods_receipt_matched automatically becomes True.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>16.2</td>
+                <td>Create and post Vendor Bill (account.move state posted).</td>
+                <td>invoice_matched automatically becomes True.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>16.3</td>
+                <td>Verify 3-way match completion.</td>
+                <td>three_way_match_verified and payment_request_cleared automatically set to True.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-17: Office Supplies Requisition (OSR) & Auto-PR Trigger</h3>
+    <div class="script-meta"><strong>Target Model:</strong> office.supply.request | <strong>Department:</strong> Admin / Warehouse / Procurement</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>17.1</td>
+                <td>Navigate to Purchases > Office Supply Requisitions -> Create.</td>
+                <td>Requisition form created (SUPPLY-YYYY-#####).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>17.2</td>
+                <td>Add requested supply items and quantities. Click Dept Head Approve.</td>
+                <td>Status set to dept_approved.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>17.3</td>
+                <td>If stock is available, click Stock Available -> Release Supplies.</td>
+                <td>Status set to released.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>17.4</td>
+                <td>If out of stock, click Out of Stock - PR Required.</td>
+                <td>Status set to pr_raised. Auto PR ref generated (PR-OSR-SUPPLY-#####).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>UAT-SCRIPT-18: Vehicle Request & Driver Trip Log</h3>
+    <div class="script-meta"><strong>Target Model:</strong> fleet.trip.request | <strong>Department:</strong> Admin / Fleet Services / Accounting</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>18.1</td>
+                <td>Navigate to Fleet > Vehicle Trips & Fleet Logs -> Create.</td>
+                <td>Trip request created (TRIP-YYYY-#####).</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>18.2</td>
+                <td>Select Vehicle, Driver, Passenger, Destination, and Trip Category.</td>
+                <td>Details recorded.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>18.3</td>
+                <td>Enter Odometer Start and End mileage.</td>
+                <td>Total distance (km) computed automatically.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>18.4</td>
+                <td>Click Complete Trip -> Accounting Verify & Close.</td>
+                <td>Trip verified and closed. Billing rate & GSD AR ref logged.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5. Executive Dashboards & Analytics Workstream</h2>
+
+    <h3>UAT-SCRIPT-19: Executive Dashboard Graph & Pivot Views</h3>
+    <div class="script-meta"><strong>Target Models:</strong> lease.contract, recurring.monthly.billing, pmo.job.order, move.out.clearance | <strong>Department:</strong> Executive Management</div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 8%;">Step</th>
+                <th style="width: 37%;">Action</th>
+                <th style="width: 35%;">Expected Outcome</th>
+                <th style="width: 10%;">Result</th>
+                <th style="width: 10%;">Initials</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>19.1</td>
+                <td>Navigate to CRM > Lease Contracts Pipeline. Click Graph View and Pivot View icons.</td>
+                <td>Bar chart by contract stage and pivot rent matrix display cleanly.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>19.2</td>
+                <td>Navigate to Leasing Finance > Monthly Billing & Collections. Toggle Graph & Pivot views.</td>
+                <td>Collection status chart and billing cycle pivot table display.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>19.3</td>
+                <td>Navigate to PMO Operations > Job Orders & Maintenance. Toggle Graph & Pivot views.</td>
+                <td>Job order expense chart by category and maintenance pivot display.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>19.4</td>
+                <td>Navigate to PMO Operations > Move-Out Clearances. Toggle Graph & Pivot views.</td>
+                <td>Exit reason chart and deposit deduction pivot display.</td>
+                <td>[ ] Pass<br>[ ] Fail</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>6. Department Sign-Off Matrix</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">Department</th>
+                <th style="width: 25%;">Process Owner Name</th>
+                <th style="width: 25%;">Signature</th>
+                <th style="width: 25%;">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Leasing & Sales</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PMO & Admin</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Maintenance / MST</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Procurement & Inventory</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Accounting & Finance</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Executive Sponsor</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

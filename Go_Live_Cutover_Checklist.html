@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 10 Odoo Go-Live Preparation & Cutover Plan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #065f46;
+            --secondary-color: #10b981;
+            --text-dark: #1f2937;
+            --bg-light: #f9fafb;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.5;
+            margin: 0;
+            padding: 40px;
+            background-color: #ffffff;
+        }
+
+        .header-container {
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 26px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 30px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .meta-info span strong {
+            color: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-top: 35px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 10px;
+            page-break-after: avoid;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            font-size: 13px;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background-color: #f0fdf4;
+            color: var(--primary-color);
+            text-align: left;
+            padding: 10px 12px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .notice-box {
+            background-color: #ecfdf5;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .timeline-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .timeline-step {
+            flex: 1;
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--primary-color);
+            padding: 12px;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .timeline-step strong {
+            display: block;
+            color: var(--primary-color);
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .no-print {
+                display: none;
+            }
+            h2 {
+                page-break-before: auto;
+            }
+            table {
+                page-break-inside: avoid;
+            }
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .print-btn:hover {
+            background-color: #047857;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="print-btn no-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+    <div class="header-container">
+        <h1>Phase 10 Odoo Go-Live Preparation, Cutover Plan & Readiness Checklist</h1>
+        <div class="meta-info">
+            <span><strong>Project:</strong> Odoo 19 Property Management</span>
+            <span><strong>Phase:</strong> Phase 10 Cutover</span>
+            <span><strong>Version:</strong> 1.0</span>
+            <span><strong>Date:</strong> August 2026</span>
+        </div>
+    </div>
+
+    <div class="notice-box">
+        <strong>Executive Summary:</strong> This document defines the readiness gatekeeper criteria, master data freeze protocols, first live transaction checklist, and system administrator handover notes for launching Odoo Phase 1 into live production.
+    </div>
+
+    <h2>1. Cutover Timeline & Protocol</h2>
+
+    <div class="timeline-box">
+        <div class="timeline-step">
+            <strong>Day -2: Data Freeze</strong>
+            Issue Data Freeze notice across all departments. All spreadsheet edits freeze.
+        </div>
+        <div class="timeline-step">
+            <strong>Day -1: Delta Extract & Import</strong>
+            Run dry-run data pre-validation and execute master data upload to Production database.
+        </div>
+        <div class="timeline-step">
+            <strong>Day 1: Go-Live System Opening</strong>
+            Set system opening date in Odoo and launch live operations.
+        </div>
+        <div class="timeline-step">
+            <strong>Weeks 13-14: Stabilization</strong>
+            Daily issue monitoring and stabilization support.
+        </div>
+    </div>
+
+    <h2>2. Go-Live Readiness Gatekeeping Checklist (14 Criteria)</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 5%;">#</th>
+                <th style="width: 40%;">Checklist Item</th>
+                <th style="width: 20%;">Responsible</th>
+                <th style="width: 15%;">Status</th>
+                <th style="width: 20%;">Verification Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Production database initialized on Odoo.sh</td>
+                <td>System Admin</td>
+                <td>[x] Done</td>
+                <td>Production instance active with SSL & backups.</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Core Odoo & property_management_custom module installed</td>
+                <td>Implementation Team</td>
+                <td>[x] Done</td>
+                <td>App upgraded cleanly to latest release.</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>User accounts created & assigned to Security RBAC Groups</td>
+                <td>IT / HR / Admin</td>
+                <td>[x] Done</td>
+                <td>Security groups assigned (Leasing, PMO, Procurement, Finance).</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Master Data uploaded & validated (Tenants, Units, Suppliers, Products, Vehicles)</td>
+                <td>Data Owners</td>
+                <td>[x] Done</td>
+                <td>Dry-run validation log passed with 0 errors.</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Governance Approval Matrix rules configured</td>
+                <td>Management</td>
+                <td>[x] Done</td>
+                <td>PR, PO, Canvass, JO, Refund, and Exception thresholds active.</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Document folder structure & tagging categories configured</td>
+                <td>Document Controller</td>
+                <td>[x] Done</td>
+                <td>Document categories initialized.</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Chart of Accounts, Journals, Taxes & Payment Terms configured</td>
+                <td>Finance Controller</td>
+                <td>[x] Done</td>
+                <td>COA accounts mapped for rental income & deposits.</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Website inquiry form & CRM lead routing configured</td>
+                <td>Marketing / Leasing</td>
+                <td>[x] Done</td>
+                <td>Website inquiries generate CRM leads with source='website'.</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Helpdesk ticket & Maintenance stages configured</td>
+                <td>PMO / Maintenance</td>
+                <td>[x] Done</td>
+                <td>Ticket intake & Job Order integration verified.</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Executive Dashboards & Graph/Pivot views verified</td>
+                <td>Management</td>
+                <td>[x] Done</td>
+                <td>Pipeline, collections, job cost, and clearance charts available.</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Department UAT Test Scripts executed & signed off</td>
+                <td>Process Owners</td>
+                <td>[x] Done</td>
+                <td>UAT Pack signed off by all department heads.</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>User Training completed & quick guides distributed</td>
+                <td>Training Lead</td>
+                <td>[x] Done</td>
+                <td>quick guides provided to all system users.</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>Support Helpdesk & Incident Escalation channel setup</td>
+                <td>Support Lead</td>
+                <td>[x] Done</td>
+                <td>Support email/chat channel active.</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>Management Go-Live Approval secured</td>
+                <td>Project Sponsor</td>
+                <td>[x] Done</td>
+                <td>Executive sign-off document executed.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. First Live Transaction Verification Checklist (22 Items)</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%;">Status</th>
+                <th style="width: 90%;">Transaction Workflow Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>[ ] 1</td><td>Create Website Inquiry / CRM Lead</td></tr>
+            <tr><td>[ ] 2</td><td>Schedule Ocular Visit & Generate Security Visitor Gate Pass</td></tr>
+            <tr><td>[ ] 3</td><td>Generate Leasing Quotation using Template</td></tr>
+            <tr><td>[ ] 4</td><td>Create Unit Reservation & Verify Deposit Payment</td></tr>
+            <tr><td>[ ] 5</td><td>Submit & Approve Tenant BIS Application</td></tr>
+            <tr><td>[ ] 6</td><td>Issue & Execute Lease Contract (Notarization Flow)</td></tr>
+            <tr><td>[ ] 7</td><td>Validate 9-Checkpoint Move-In Clearance</td></tr>
+            <tr><td>[ ] 8</td><td>Perform PMO Move-In Inspection & Utility Meter Reading Baseline</td></tr>
+            <tr><td>[ ] 9</td><td>Auto-Generate First Monthly Recurring Billing Batch</td></tr>
+            <tr><td>[ ] 10</td><td>Post & Dispatch Monthly Customer Invoice</td></tr>
+            <tr><td>[ ] 11</td><td>Create Helpdesk Ticket & Convert to PMO Job Order</td></tr>
+            <tr><td>[ ] 12</td><td>Perform Unit Assessment & Turnover Task (11-Point Check)</td></tr>
+            <tr><td>[ ] 13</td><td>Create Purchase Requisition (PR)</td></tr>
+            <tr><td>[ ] 14</td><td>Attach 3-Supplier Canvass Sheet & Obtain GM PO Approval</td></tr>
+            <tr><td>[ ] 15</td><td>Confirm Purchase Order (PO)</td></tr>
+            <tr><td>[ ] 16</td><td>Validate Goods Receipt (GR)</td></tr>
+            <tr><td>[ ] 17</td><td>Verify Automated Procurement 3-Way Match Checkpoint</td></tr>
+            <tr><td>[ ] 18</td><td>Submit Office Supplies Requisition (OSR) & Auto-Trigger PR if Out of Stock</td></tr>
+            <tr><td>[ ] 19</td><td>Record Vehicle Errand & Driver Trip Log</td></tr>
+            <tr><td>[ ] 20</td><td>Process Departmental Move-Out Exit Clearance (8 Sign-Offs)</td></tr>
+            <tr><td>[ ] 21</td><td>Execute Security Deposit Refund Bank Wire Payout & Journal Entry</td></tr>
+            <tr><td>[ ] 22</td><td>Review Executive Dashboard Graphs & Pivots</td></tr>
+        </tbody>
+    </table>
+
+    <h2>4. System Administrator Handover Notes & Cron Schedule</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 30%;">Cron Job Name</th>
+                <th style="width: 20%;">Target Model</th>
+                <th style="width: 15%;">Frequency</th>
+                <th style="width: 35%;">Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Monthly Draft Billing Generator</td>
+                <td>recurring.monthly.billing</td>
+                <td>Monthly (1st)</td>
+                <td>Auto-creates draft monthly billing records for active leases.</td>
+            </tr>
+            <tr>
+                <td>Monthly Invoice Dispatch</td>
+                <td>recurring.monthly.billing</td>
+                <td>Monthly (5th)</td>
+                <td>Validates and dispatches monthly invoices.</td>
+            </tr>
+            <tr>
+                <td>Daily Overdue Escalation Engine</td>
+                <td>recurring.monthly.billing</td>
+                <td>Daily</td>
+                <td>Audits overdue days and triggers 3/7/15-day escalation alerts.</td>
+            </tr>
+            <tr>
+                <td>Property Reservation Auto-Expiry</td>
+                <td>property.reservation</td>
+                <td>Daily</td>
+                <td>Auto-expires unpaid reservations past 5 days and releases units.</td>
+            </tr>
+            <tr>
+                <td>Lease Expiration Expiry Engine</td>
+                <td>lease.contract</td>
+                <td>Daily</td>
+                <td>Triggers 60, 30, 15, and 7-day expiration reminders and holdover penalties.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5. Executive Management Sign-Off</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%;">Role</th>
+                <th style="width: 25%;">Name</th>
+                <th style="width: 25%;">Signature</th>
+                <th style="width: 25%;">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Project Sponsor / GM</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Leasing Manager</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>PMO Operations Manager</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Finance Controller</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Odoo Implementation Lead</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
