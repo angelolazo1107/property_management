@@ -91,6 +91,11 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'views/website_property_templates.xml',
         'views/menus.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'property_management_custom/static/src/css/website_style.css',
+        ],
+    },
     'installable': True,
     'application': False,
     'auto_install': False,
