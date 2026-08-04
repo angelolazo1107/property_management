@@ -9,7 +9,7 @@
                     <div class="container text-center py-4">
                         <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3" style="letter-spacing: 1.5px; font-size: 11px;">Exclusive Property Listings</span>
                         <h1 class="display-4 fw-extrabold mb-3 text-gold-gradient">Premium Commercial &amp; Residential Units</h1>
-                        <p class="lead text-muted mx-auto" style="max-width: 650px;">Explore luxury residential condo units and prime commercial spaces available for immediate lease.</p>
+                        <p class="lead text-muted mx-auto" style="max-width: 650px;">Explore luxury residential condo units, corporate office suites, and prime commercial spaces available for immediate lease.</p>
                     </div>
                 </div>
 
@@ -24,6 +24,7 @@
                                     <option value="available" t-att-selected="selected_occupancy == 'available'">Available for Lease</option>
                                     <option value="reserved" t-att-selected="selected_occupancy == 'reserved'">Currently Reserved</option>
                                     <option value="occupied" t-att-selected="selected_occupancy == 'occupied'">Occupied</option>
+                                    <option value="under_repair" t-att-selected="selected_occupancy == 'under_repair'">Under Repair / Maintenance</option>
                                 </select>
                             </div>
                             <div class="col-md-7 text-md-end align-self-end mt-3 mt-md-0">
@@ -47,13 +48,23 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="card property-glass-card h-100 overflow-hidden">
                                     <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center">
-                                        <h4 class="fw-bold mb-0 text-white" t-field="unit.name"/>
+                                        <div>
+                                            <h5 class="fw-bold mb-1 text-white" t-field="unit.name"/>
+                                            <span t-if="unit.property_type" class="badge bg-dark border border-secondary text-gold px-2 py-1 rounded-pill" style="font-size: 10px;" t-field="unit.property_type"/>
+                                        </div>
                                         <span t-if="unit.occupancy_status == 'available'" class="badge badge-available px-3 py-2 rounded-pill">Available</span>
                                         <span t-if="unit.occupancy_status == 'reserved'" class="badge badge-reserved px-3 py-2 rounded-pill">Reserved</span>
                                         <span t-if="unit.occupancy_status == 'occupied'" class="badge badge-occupied px-3 py-2 rounded-pill">Occupied</span>
                                         <span t-if="unit.occupancy_status not in ('available', 'reserved', 'occupied')" class="badge bg-info px-3 py-2 rounded-pill" t-field="unit.occupancy_status"/>
                                     </div>
                                     <div class="card-body px-4">
+                                        <t t-if="unit.property_address">
+                                            <div class="mb-3 text-muted small">
+                                                <i class="fa fa-map-marker text-gold me-1"></i>
+                                                <span t-esc="unit.property_address"/>
+                                            </div>
+                                        </t>
+
                                         <div class="row g-2 mb-3">
                                             <div class="col-6">
                                                 <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Floor Level</small>
@@ -64,6 +75,13 @@
                                                 <span class="fw-semibold text-white" t-esc="'%.2f sqm' % unit.area_sqm if unit.area_sqm else 'N/A'"/>
                                             </div>
                                         </div>
+
+                                        <t t-if="unit.description">
+                                            <div class="mb-3 p-2 rounded" style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);">
+                                                <small class="text-white-50 d-block text-truncate-3" style="font-size: 12px; line-height: 1.4;" t-esc="unit.description"/>
+                                            </div>
+                                        </t
+
                                         <div class="row g-2 mb-3">
                                             <div class="col-6">
                                                 <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Electric Meter ID</small>

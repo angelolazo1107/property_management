@@ -19,6 +19,18 @@ class ProductProductPropertyInherit(models.Model):
         ('blocked', 'Blocked / Out of Service'),
     ], string='Occupancy Status', default='available', tracking=True)
 
+    property_type = fields.Selection([
+        ('commercial', 'Commercial Retail'),
+        ('office', 'Office Suite'),
+        ('residential_studio', 'Residential Studio'),
+        ('residential_1br', 'Residential 1-Bedroom'),
+        ('residential_2br', 'Residential 2-Bedroom'),
+        ('residential_penthouse', 'Executive Penthouse'),
+        ('warehouse', 'Industrial Warehouse'),
+    ], string='Property Type', default='residential_studio', tracking=True)
+
+    property_address = fields.Char(string='Property Full Address', tracking=True)
+
     current_tenant_id = fields.Many2one('res.partner', string='Current Tenant', tracking=True)
     electricity_meter_no = fields.Char(string='Electricity Meter ID')
     water_meter_no = fields.Char(string='Water Meter ID')
