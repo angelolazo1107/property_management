@@ -80,7 +80,7 @@
                                             <div class="mb-3 p-2 rounded" style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);">
                                                 <small class="text-white-50 d-block text-truncate-3" style="font-size: 12px; line-height: 1.4;" t-esc="unit.description"/>
                                             </div>
-                                        </t
+                                        </t>
 
                                         <div class="row g-2 mb-3">
                                             <div class="col-6">
