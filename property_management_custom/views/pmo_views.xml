@@ -108,11 +108,36 @@
         </field>
     </record>
 
+    <!-- PMO Job Order Graph View -->
+    <record id="view_pmo_job_order_graph" model="ir.ui.view">
+        <field name="name">pmo.job.order.graph</field>
+        <field name="model">pmo.job.order</field>
+        <field name="arch" type="xml">
+            <graph string="PMO Job Orders Analysis" type="bar">
+                <field name="category" type="row"/>
+                <field name="job_cost" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- PMO Job Order Pivot View -->
+    <record id="view_pmo_job_order_pivot" model="ir.ui.view">
+        <field name="name">pmo.job.order.pivot</field>
+        <field name="model">pmo.job.order</field>
+        <field name="arch" type="xml">
+            <pivot string="PMO Job Orders Pivot Analysis">
+                <field name="category" type="row"/>
+                <field name="stage" type="col"/>
+                <field name="job_cost" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <!-- PMO Job Order Window Action -->
     <record id="action_pmo_job_order" model="ir.actions.act_window">
         <field name="name">PMO Job Orders</field>
         <field name="res_model">pmo.job.order</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,graph,pivot</field>
     </record>
 
     <!-- PMO Utility Reading Window Action -->

@@ -102,6 +102,32 @@ class SaleOrderPropertyInherit(models.Model):
                 subject="Acknowledgement Receipt Issued"
             )
 
+    def action_confirm(self):
+        res = super(SaleOrderPropertyInherit, self).action_confirm()
+        for order in self:
+            if order.target_unit_id:
+                order.target_unit_id.occupancy_status = 'reserved'
+                order.target_unit_id.current_tenant_id = order.partner_id
+
+                reservation = self.env['property.reservation'].search([
+                    ('tenant_id', '=', order.partner_id.id),
+                    ('unit_id', '=', order.target_unit_id.id),
+                ], limit=1)
+                if reservation:
+                    reservation.state = 'paid'
+                    reservation.payment_status = 'paid'
+                else:
+                    self.env['property.reservation'].create({
+                        'tenant_id': order.partner_id.id,
+                        'unit_id': order.target_unit_id.id,
+                        'reservation_amount': order.reservation_fee_amount or 5000.0,
+                        'payment_status': 'paid',
+                        'state': 'paid',
+                        'opportunity_id': order.opportunity_id.id if order.opportunity_id else False,
+                        'sale_order_id': order.id,
+                    })
+        return res
+
 
 class SaleOrderTemplatePropertyInherit(models.Model):
     _inherit = 'sale.order.template'

@@ -49,3 +49,8 @@ class PMOUtilityReading(models.Model):
     def action_verify_reading(self):
         for rec in self:
             rec.status = 'verified'
+            if rec.unit_id:
+                if rec.meter_type == 'electricity':
+                    rec.unit_id.latest_electric_reading = rec.current_reading
+                elif rec.meter_type == 'water':
+                    rec.unit_id.latest_water_reading = rec.current_reading

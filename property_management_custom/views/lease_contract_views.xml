@@ -253,11 +253,37 @@
         </field>
     </record>
 
+    <!-- Lease Contract Graph View -->
+    <record id="view_lease_contract_graph" model="ir.ui.view">
+        <field name="name">lease.contract.graph</field>
+        <field name="model">lease.contract</field>
+        <field name="arch" type="xml">
+            <graph string="Lease Contracts Analysis" type="bar">
+                <field name="stage" type="row"/>
+                <field name="monthly_rent" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Lease Contract Pivot View -->
+    <record id="view_lease_contract_pivot" model="ir.ui.view">
+        <field name="name">lease.contract.pivot</field>
+        <field name="model">lease.contract</field>
+        <field name="arch" type="xml">
+            <pivot string="Lease Contracts Pivot Analysis">
+                <field name="stage" type="row"/>
+                <field name="payment_due_date" type="col"/>
+                <field name="monthly_rent" type="measure"/>
+                <field name="security_deposit" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <!-- Lease Contract Action -->
     <record id="action_lease_contract" model="ir.actions.act_window">
         <field name="name">Lease Package Contracts</field>
         <field name="res_model">lease.contract</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,graph,pivot</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new Tenant Lease Contract!

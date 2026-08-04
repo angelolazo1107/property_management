@@ -104,11 +104,38 @@
         </field>
     </record>
 
+    <!-- Move-Out Clearance Graph View -->
+    <record id="view_move_out_clearance_graph" model="ir.ui.view">
+        <field name="name">move.out.clearance.graph</field>
+        <field name="model">move.out.clearance</field>
+        <field name="arch" type="xml">
+            <graph string="Move-Out Clearances Analysis" type="bar">
+                <field name="reason" type="row"/>
+                <field name="refundable_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Move-Out Clearance Pivot View -->
+    <record id="view_move_out_clearance_pivot" model="ir.ui.view">
+        <field name="name">move.out.clearance.pivot</field>
+        <field name="model">move.out.clearance</field>
+        <field name="arch" type="xml">
+            <pivot string="Move-Out Clearance Pivot Analysis">
+                <field name="reason" type="row"/>
+                <field name="clearance_status" type="col"/>
+                <field name="security_deposit" type="measure"/>
+                <field name="damage_charges" type="measure"/>
+                <field name="refundable_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <!-- Move-Out Clearance Action -->
     <record id="action_move_out_clearance" model="ir.actions.act_window">
         <field name="name">Move-Out Clearances &amp; Sign-Offs</field>
         <field name="res_model">move.out.clearance</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,graph,pivot</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Process a new Move-Out Clearance!

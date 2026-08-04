@@ -675,6 +675,14 @@ class LeaseContract(models.Model):
             rec.unit_id.occupancy_status = 'occupied'
             rec.unit_id.current_tenant_id = rec.tenant_id
 
+            # Initialize Tenant Document Subfolders
+            if hasattr(self.env['property.document.category'], 'create_tenant_subfolders'):
+                self.env['property.document.category'].create_tenant_subfolders(
+                    property_name=rec.unit_id.name or 'Property',
+                    unit_name=rec.unit_id.name or 'Unit',
+                    tenant_name=rec.tenant_id.name
+                )
+
             if rec.opportunity_id:
                 rec.opportunity_id.move_in_cleared = True
 

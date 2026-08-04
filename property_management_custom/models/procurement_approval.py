@@ -50,6 +50,21 @@ class PurchaseOrderInherit(models.Model):
             rec.gm_po_approved = True
             rec.gm_approver_id = self.env.user
 
+    @api.depends('picking_ids', 'picking_ids.state', 'invoice_ids', 'invoice_ids.state')
+    def _compute_three_way_match_status(self):
+        for rec in self:
+            has_done_picking = any(p.state == 'done' for p in rec.picking_ids) if rec.picking_ids else False
+            has_posted_invoice = any(inv.state == 'posted' for inv in rec.invoice_ids) if rec.invoice_ids else False
+
+            if has_done_picking:
+                rec.goods_receipt_matched = True
+            if has_posted_invoice:
+                rec.invoice_matched = True
+
+            if rec.goods_receipt_matched and rec.invoice_matched:
+                rec.three_way_match_verified = True
+                rec.payment_request_cleared = True
+
     def action_verify_three_way_match(self):
         for rec in self:
             if not (rec.goods_receipt_matched and rec.invoice_matched):

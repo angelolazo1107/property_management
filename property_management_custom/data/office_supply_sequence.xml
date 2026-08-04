@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Office Supply Request Sequence -->
+        <record id="seq_office_supply_request" model="ir.sequence">
+            <field name="name">Office Supply Request Sequence</field>
+            <field name="code">office.supply.request</field>
+            <field name="prefix">SUPPLY-%(year)s-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

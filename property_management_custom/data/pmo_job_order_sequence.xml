@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- PMO Job Order Sequence -->
+        <record id="seq_pmo_job_order" model="ir.sequence">
+            <field name="name">PMO Job Order Sequence</field>
+            <field name="code">pmo.job.order</field>
+            <field name="prefix">JO-%(year)s-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
