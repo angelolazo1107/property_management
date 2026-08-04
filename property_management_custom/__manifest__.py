@@ -88,6 +88,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'views/deposit_refund_views.xml',
         'views/helpdesk_ticket_views.xml',
         'views/reports.xml',
+        'views/website_property_templates.xml',
         'views/menus.xml',
     ],
     'installable': True,
