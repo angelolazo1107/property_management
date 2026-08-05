@@ -11,16 +11,41 @@
                 <div class="pm-hero-wrapper py-5">
                     <div class="pm-orb-mid"></div>
                     <div class="container text-center py-4 position-relative" style="z-index: 2;">
-                        <div class="pm-fade-in pm-fade-in-d1 mb-3">
+                        <!-- Brand Logo -->
+                        <div class="pm-fade-in pm-fade-in-d1 mb-3 d-flex justify-content-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 72" height="44" role="img" aria-label="Alon and Haraya Property Management">
+                                <g transform="translate(0, 8)">
+                                    <rect x="18" y="10" width="18" height="46" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                                    <rect x="21" y="14" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                    <rect x="28" y="14" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                    <rect x="21" y="22" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                    <rect x="28" y="22" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                    <rect x="21" y="30" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                    <rect x="28" y="30" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                    <rect x="5" y="22" width="13" height="34" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.7"/>
+                                    <rect x="8" y="26" width="4" height="3" fill="#f59e0b" opacity="0.5"/>
+                                    <rect x="8" y="33" width="4" height="3" fill="#f59e0b" opacity="0.5"/>
+                                    <line x1="0" y1="56" x2="54" y2="56" stroke="#f59e0b" stroke-width="1.5" opacity="0.6"/>
+                                    <line x1="27" y1="2" x2="27" y2="10" stroke="#f59e0b" stroke-width="1.5"/>
+                                    <circle cx="27" cy="2" r="2" fill="#f59e0b"/>
+                                </g>
+                                <text x="66" y="36" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="22" font-weight="800" fill="#f59e0b" letter-spacing="1">ALON</text>
+                                <text x="120" y="36" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="22" font-weight="300" fill="#94a3b8" letter-spacing="0">&amp;</text>
+                                <text x="136" y="36" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="22" font-weight="800" fill="#f59e0b" letter-spacing="1">HARAYA</text>
+                                <text x="66" y="52" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="9.5" font-weight="500" fill="#64748b" letter-spacing="3.5">PROPERTY MANAGEMENT</text>
+                                <line x1="66" y1="57" x2="226" y2="57" stroke="#f59e0b" stroke-width="1" opacity="0.35"/>
+                            </svg>
+                        </div>
+                        <div class="pm-fade-in pm-fade-in-d2 mb-3">
                             <span class="pm-live-badge">
                                 <span class="pm-live-dot"></span>
                                 Live Property Listings
                             </span>
                         </div>
-                        <h1 class="display-4 fw-bold mb-3 text-gold-gradient pm-heading-shadow pm-fade-in pm-fade-in-d2">
+                        <h1 class="display-4 fw-bold mb-3 text-gold-gradient pm-heading-shadow pm-fade-in pm-fade-in-d3">
                             Premium Commercial &amp; Residential Units
                         </h1>
-                        <p class="lead pm-fade-in pm-fade-in-d3 mx-auto" style="max-width: 620px; color: #94a3b8;">
+                        <p class="lead pm-fade-in pm-fade-in-d4 mx-auto" style="max-width: 620px; color: #94a3b8;">
                             Explore luxury residential condos, corporate office suites, and prime commercial spaces available for immediate lease.
                         </p>
                     </div>
@@ -472,10 +497,52 @@
                 <div class="pm-hero-wrapper" style="padding: 100px 0 80px;">
                     <div class="pm-orb-mid"></div>
                     <div class="container text-center position-relative" style="z-index: 2;">
-                        <div class="pm-fade-in pm-fade-in-d1 mb-4">
+
+                        <!-- Brand Logo -->
+                        <div class="pm-fade-in pm-fade-in-d1 mb-4 d-flex justify-content-center">
+                            <div class="pm-logo-wrap">
+                                <!-- SVG Logo: Alon &amp; Haraya -->
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 72" height="56" role="img" aria-label="Alon and Haraya Property Management">
+                                    <!-- Building Icon -->
+                                    <g transform="translate(0, 8)">
+                                        <!-- Main tower -->
+                                        <rect x="18" y="10" width="18" height="46" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                                        <!-- Windows main tower -->
+                                        <rect x="21" y="14" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <rect x="28" y="14" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <rect x="21" y="22" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <rect x="28" y="22" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <rect x="21" y="30" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <rect x="28" y="30" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <rect x="21" y="38" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <rect x="28" y="38" width="5" height="4" fill="#f59e0b" opacity="0.8"/>
+                                        <!-- Side wing -->
+                                        <rect x="5" y="22" width="13" height="34" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.7"/>
+                                        <rect x="8" y="26" width="4" height="3" fill="#f59e0b" opacity="0.5"/>
+                                        <rect x="8" y="33" width="4" height="3" fill="#f59e0b" opacity="0.5"/>
+                                        <rect x="8" y="40" width="4" height="3" fill="#f59e0b" opacity="0.5"/>
+                                        <!-- Ground line -->
+                                        <line x1="0" y1="56" x2="54" y2="56" stroke="#f59e0b" stroke-width="1.5" opacity="0.6"/>
+                                        <!-- Antenna/top accent -->
+                                        <line x1="27" y1="2" x2="27" y2="10" stroke="#f59e0b" stroke-width="1.5"/>
+                                        <circle cx="27" cy="2" r="2" fill="#f59e0b"/>
+                                    </g>
+                                    <!-- Wordmark -->
+                                    <text x="66" y="36" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="22" font-weight="800" fill="#f59e0b" letter-spacing="1">ALON</text>
+                                    <text x="120" y="36" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="22" font-weight="300" fill="#94a3b8" letter-spacing="0">&amp;</text>
+                                    <text x="136" y="36" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="22" font-weight="800" fill="#f59e0b" letter-spacing="1">HARAYA</text>
+                                    <!-- Tagline -->
+                                    <text x="66" y="52" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="9.5" font-weight="500" fill="#64748b" letter-spacing="3.5">PROPERTY MANAGEMENT</text>
+                                    <!-- Gold underline accent -->
+                                    <line x1="66" y1="57" x2="226" y2="57" stroke="#f59e0b" stroke-width="1" opacity="0.35"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="pm-fade-in pm-fade-in-d2 mb-4">
                             <span class="pm-live-badge">
                                 <span class="pm-live-dot"></span>
-                                Alon &amp; Haraya Property Management
+                                Premium Property &amp; Commercial Leasing
                             </span>
                         </div>
                         <h1 class="display-2 fw-bold text-gold-gradient pm-heading-shadow mb-4 pm-fade-in pm-fade-in-d2"

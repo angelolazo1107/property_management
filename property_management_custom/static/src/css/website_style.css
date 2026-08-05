@@ -1068,6 +1068,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --------------------------------------------------------------------------
+   Logo Wrapper
+   -------------------------------------------------------------------------- */
+.pm-logo-wrap {
+    display: inline-block;
+    filter: drop-shadow(0 0 18px rgba(245, 158, 11, 0.22));
+    transition: var(--transition-med);
+}
+
+.pm-logo-wrap:hover {
+    filter: drop-shadow(0 0 28px rgba(245, 158, 11, 0.40));
+    transform: scale(1.03);
+}
+
+.pm-logo-wrap svg text {
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --------------------------------------------------------------------------
    Responsive Adjustments
    -------------------------------------------------------------------------- */
 @media (max-width: 767px) {
