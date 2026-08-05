@@ -1,76 +1,444 @@
 /* ==========================================================================
-   Odoo Property Management - Luxury Dark & Gold Glassmorphism Theme
+   Odoo Property Management – Ultra-Premium Dark & Gold Theme v2.0
+   Alon & Haraya Property Management
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,700;12..96,800&display=swap');
+
+/* --------------------------------------------------------------------------
+   Design Tokens
+   -------------------------------------------------------------------------- */
 :root {
-    --bg-main: #0f172a;
-    --bg-surface: #1e293b;
-    --bg-card: rgba(30, 41, 59, 0.75);
-    --gold-primary: #f59e0b;
-    --gold-hover: #d97706;
-    --gold-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
-    --gold-glow: 0 0 20px rgba(245, 158, 11, 0.35);
-    --emerald-glow: 0 0 15px rgba(16, 185, 129, 0.4);
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
-    --border-glass: rgba(255, 255, 255, 0.12);
+    --bg-main:            #080f1e;
+    --bg-surface:         #0f1a2e;
+    --bg-card:            rgba(15, 26, 46, 0.72);
+    --bg-card-hover:      rgba(22, 36, 62, 0.88);
+
+    --gold-primary:       #f59e0b;
+    --gold-light:         #fbbf24;
+    --gold-dark:          #d97706;
+    --gold-deep:          #b45309;
+    --gold-gradient:      linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+    --gold-gradient-h:    linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+    --gold-glow:          0 0 24px rgba(245, 158, 11, 0.40);
+    --gold-glow-lg:       0 0 48px rgba(245, 158, 11, 0.28);
+
+    --emerald:            #10b981;
+    --emerald-light:      #34d399;
+    --emerald-glow:       0 0 18px rgba(16, 185, 129, 0.45);
+
+    --text-primary:       #f1f5f9;
+    --text-secondary:     #cbd5e1;
+    --text-muted:         #64748b;
+
+    --border-glass:       rgba(255, 255, 255, 0.10);
+    --border-glass-hover: rgba(245, 158, 11, 0.38);
+
+    --radius-card:        20px;
+    --radius-sm:          12px;
+    --radius-pill:        999px;
+
+    --transition-fast:    all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-med:     all 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow:    all 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --shadow-card:        0 4px 24px rgba(0, 0, 0, 0.45);
+    --shadow-card-hover:  0 24px 48px rgba(0, 0, 0, 0.65), var(--gold-glow);
+}
+
+/* --------------------------------------------------------------------------
+   Base & Typography
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 body {
     background-color: var(--bg-main) !important;
     color: var(--text-primary) !important;
     font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
-/* Glassmorphism Card Style */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* --------------------------------------------------------------------------
+   Background Orb Blobs (applied to hero wrappers)
+   -------------------------------------------------------------------------- */
+.pm-hero-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 0%, #1a2a45 0%, var(--bg-main) 65%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.pm-hero-wrapper::before,
+.pm-hero-wrapper::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    animation: orbDrift 18s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.pm-hero-wrapper::before {
+    width: 560px;
+    height: 560px;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.14) 0%, transparent 70%);
+    top: -180px;
+    left: -140px;
+    animation-delay: 0s;
+}
+
+.pm-hero-wrapper::after {
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.10) 0%, transparent 70%);
+    bottom: -160px;
+    right: -120px;
+    animation-delay: -7s;
+    animation-direction: alternate-reverse;
+}
+
+@keyframes orbDrift {
+    0%   { transform: translate(0, 0) scale(1); }
+    50%  { transform: translate(40px, 30px) scale(1.08); }
+    100% { transform: translate(-20px, 50px) scale(0.96); }
+}
+
+/* Third decorative orb inside the hero */
+.pm-orb-mid {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.09) 0%, transparent 70%);
+    filter: blur(70px);
+    top: 30%;
+    left: 55%;
+    animation: orbDrift 22s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Scroll Fade-In Animations
+   -------------------------------------------------------------------------- */
+.pm-fade-in {
+    opacity: 0;
+    transform: translateY(28px);
+    animation: pmFadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.pm-fade-in-d1 { animation-delay: 0.10s; }
+.pm-fade-in-d2 { animation-delay: 0.22s; }
+.pm-fade-in-d3 { animation-delay: 0.34s; }
+.pm-fade-in-d4 { animation-delay: 0.46s; }
+.pm-fade-in-d5 { animation-delay: 0.58s; }
+
+@keyframes pmFadeUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   Trust / Marquee Band
+   -------------------------------------------------------------------------- */
+.pm-trust-band {
+    width: 100%;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 10px 0;
+}
+
+.pm-trust-track {
+    display: flex;
+    gap: 48px;
+    width: max-content;
+    animation: marqueeScroll 28s linear infinite;
+}
+
+.pm-trust-track:hover {
+    animation-play-state: paused;
+}
+
+.pm-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.pm-trust-item .pm-trust-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold-primary);
+    opacity: 0.7;
+}
+
+@keyframes marqueeScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* --------------------------------------------------------------------------
+   Live Pulse Indicator
+   -------------------------------------------------------------------------- */
+.pm-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(52, 211, 153, 0.30);
+    border-radius: var(--radius-pill);
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--emerald-light);
+}
+
+.pm-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--emerald-light);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.pm-live-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: var(--emerald-light);
+    opacity: 0.4;
+    animation: livePulse 1.8s ease-out infinite;
+}
+
+@keyframes livePulse {
+    0%   { transform: scale(1); opacity: 0.4; }
+    70%  { transform: scale(2.2); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Glassmorphism Card — Enhanced
+   -------------------------------------------------------------------------- */
 .property-glass-card {
     background: var(--bg-card) !important;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
     border: 1px solid var(--border-glass) !important;
-    border-radius: 16px !important;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: var(--radius-card) !important;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-med);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Inner shimmer sweep on hover */
+.property-glass-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.055) 50%,
+        transparent 60%
+    );
+    transition: left 0.6s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.property-glass-card:hover::after {
+    left: 160%;
 }
 
 .property-glass-card:hover {
-    transform: translateY(-8px);
-    border-color: rgba(245, 158, 11, 0.4) !important;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), var(--gold-glow) !important;
+    transform: translateY(-10px);
+    border-color: var(--border-glass-hover) !important;
+    background: var(--bg-card-hover) !important;
+    box-shadow: var(--shadow-card-hover) !important;
 }
 
-/* Gold Gradient Buttons */
+/* --------------------------------------------------------------------------
+   Property Unit Card — Accent Top Border
+   -------------------------------------------------------------------------- */
+.pm-unit-card {
+    border-top: 3px solid transparent !important;
+}
+
+.pm-unit-card.pm-accent-gold {
+    border-top-color: var(--gold-primary) !important;
+}
+
+.pm-unit-card.pm-accent-emerald {
+    border-top-color: var(--emerald-light) !important;
+}
+
+.pm-unit-card.pm-accent-slate {
+    border-top-color: #475569 !important;
+}
+
+.pm-unit-card.pm-accent-blue {
+    border-top-color: #38bdf8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Property Card — Unit Type Icon Tile
+   -------------------------------------------------------------------------- */
+.pm-type-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    flex-shrink: 0;
+}
+
+.pm-type-icon i {
+    color: var(--gold-primary);
+    font-size: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   Property Card — Price Badge
+   -------------------------------------------------------------------------- */
+.pm-price-wrap {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+
+.pm-price-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Card CTA Button — Full-width on hover
+   -------------------------------------------------------------------------- */
+.pm-card-cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: var(--gold-primary);
+    border-radius: 10px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: var(--transition-fast);
+    text-decoration: none !important;
+    position: relative;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.pm-card-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold-gradient);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+}
+
+.pm-card-cta:hover {
+    color: #0f172a !important;
+    border-color: transparent;
+    box-shadow: var(--gold-glow);
+}
+
+.pm-card-cta:hover::before {
+    transform: scaleX(1);
+}
+
+/* --------------------------------------------------------------------------
+   Gold Gradient Buttons
+   -------------------------------------------------------------------------- */
 .btn-gold-gradient {
     background: var(--gold-gradient) !important;
-    color: #0f172a !important;
+    color: #080f1e !important;
     font-weight: 700 !important;
     border: none !important;
-    box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.39) !important;
-    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.38) !important;
+    transition: var(--transition-fast) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gold-gradient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.12);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.btn-gold-gradient:hover::after {
+    opacity: 1;
 }
 
 .btn-gold-gradient:hover {
-    background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%) !important;
+    background: var(--gold-gradient-h) !important;
     transform: translateY(-2px);
-    box-shadow: var(--gold-glow) !important;
+    box-shadow: var(--gold-glow-lg) !important;
     color: #ffffff !important;
 }
 
 .btn-outline-gold {
     background: transparent !important;
-    border: 2px solid var(--gold-primary) !important;
+    border: 1.5px solid var(--gold-primary) !important;
     color: var(--gold-primary) !important;
     font-weight: 600 !important;
-    transition: all 0.3s ease !important;
+    transition: var(--transition-fast) !important;
 }
 
 .btn-outline-gold:hover {
     background: var(--gold-gradient) !important;
-    color: #0f172a !important;
+    color: #080f1e !important;
     border-color: transparent !important;
     box-shadow: var(--gold-glow) !important;
+    transform: translateY(-2px);
 }
 
-/* Text Highlights */
+/* --------------------------------------------------------------------------
+   Text Utilities
+   -------------------------------------------------------------------------- */
 .text-gold {
     color: var(--gold-primary) !important;
 }
@@ -79,63 +447,635 @@ body {
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
 }
 
-/* Status Badges */
+.pm-heading-shadow {
+    filter: drop-shadow(0 2px 18px rgba(245, 158, 11, 0.18));
+}
+
+/* --------------------------------------------------------------------------
+   Status Badges — Enhanced
+   -------------------------------------------------------------------------- */
 .badge-available {
     background-color: rgba(16, 185, 129, 0.15) !important;
-    color: #34d399 !important;
-    border: 1px solid rgba(52, 211, 153, 0.3) !important;
-    box-shadow: var(--emerald-glow);
+    color: var(--emerald-light) !important;
+    border: 1px solid rgba(52, 211, 153, 0.32) !important;
+    box-shadow: 0 0 10px rgba(52, 211, 153, 0.2);
+    font-weight: 600;
 }
 
 .badge-reserved {
     background-color: rgba(245, 158, 11, 0.15) !important;
-    color: #fbbf24 !important;
-    border: 1px solid rgba(251, 191, 36, 0.3) !important;
-    box-shadow: var(--gold-glow);
+    color: var(--gold-light) !important;
+    border: 1px solid rgba(251, 191, 36, 0.32) !important;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.18);
+    font-weight: 600;
 }
 
 .badge-occupied {
-    background-color: rgba(100, 116, 139, 0.2) !important;
-    color: #cbd5e1 !important;
-    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    background-color: rgba(71, 85, 105, 0.25) !important;
+    color: #94a3b8 !important;
+    border: 1px solid rgba(100, 116, 139, 0.25) !important;
+    font-weight: 600;
 }
 
-/* Custom Form Controls */
+/* --------------------------------------------------------------------------
+   Stats / Metrics Bar — Enhanced
+   -------------------------------------------------------------------------- */
+.pm-stats-bar {
+    background: rgba(15, 26, 46, 0.85) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(245, 158, 11, 0.18) !important;
+    border-radius: var(--radius-card) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.pm-stat-item {
+    position: relative;
+    padding: 24px 16px;
+}
+
+.pm-stat-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    height: 60%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(245, 158, 11, 0.30), transparent);
+}
+
+.pm-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
+}
+
+.pm-stat-icon i {
+    color: var(--gold-primary);
+    font-size: 18px;
+}
+
+.pm-stat-number {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.pm-stat-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Feature Highlights Cards — Gold Accent Bar
+   -------------------------------------------------------------------------- */
+.pm-feature-card {
+    border-left: 3px solid var(--gold-primary) !important;
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: var(--radius-card) !important;
+    border: 1px solid var(--border-glass) !important;
+    transition: var(--transition-med);
+    position: relative;
+    overflow: hidden;
+}
+
+.pm-feature-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--gold-gradient);
+    border-radius: 3px 0 0 3px;
+}
+
+.pm-feature-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--border-glass-hover) !important;
+    box-shadow: var(--shadow-card-hover) !important;
+}
+
+.pm-feature-icon-tile {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.10) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+    transition: var(--transition-fast);
+}
+
+.pm-feature-card:hover .pm-feature-icon-tile {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(180, 83, 9, 0.18) 100%);
+    box-shadow: var(--gold-glow);
+    transform: scale(1.08) rotate(-3deg);
+}
+
+.pm-feature-icon-tile i {
+    color: var(--gold-primary);
+    font-size: 22px;
+}
+
+/* --------------------------------------------------------------------------
+   Form — Step Progress Indicator
+   -------------------------------------------------------------------------- */
+.pm-progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 32px;
+}
+
+.pm-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 160px;
+}
+
+.pm-step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: rgba(15, 26, 46, 0.8);
+    transition: var(--transition-fast);
+    position: relative;
+    z-index: 1;
+}
+
+.pm-step.active .pm-step-circle {
+    background: var(--gold-gradient);
+    border-color: transparent;
+    color: #080f1e;
+    box-shadow: var(--gold-glow);
+}
+
+.pm-step-label {
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 6px;
+    text-align: center;
+}
+
+.pm-step.active .pm-step-label {
+    color: var(--gold-primary);
+}
+
+.pm-step-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(245, 158, 11, 0.35), rgba(255, 255, 255, 0.08));
+    margin-top: -20px;
+    position: relative;
+    z-index: 0;
+    max-width: 80px;
+}
+
+/* --------------------------------------------------------------------------
+   Form — Enhanced Controls (Floating Label Style)
+   -------------------------------------------------------------------------- */
+.pm-form-group {
+    position: relative;
+}
+
+.pm-form-group .pm-input {
+    background: rgba(8, 15, 30, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    border-radius: 12px !important;
+    color: var(--text-primary) !important;
+    padding: 14px 16px !important;
+    font-size: 14px !important;
+    transition: var(--transition-fast) !important;
+    width: 100%;
+}
+
+.pm-form-group .pm-input::placeholder {
+    color: rgba(100, 116, 139, 0.7);
+}
+
+.pm-form-group .pm-input:focus {
+    border-color: var(--gold-primary) !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 0 20px rgba(245, 158, 11, 0.10) !important;
+    outline: none !important;
+    background: rgba(8, 15, 30, 0.85) !important;
+}
+
+/* Standard form controls inside glass cards */
 .property-glass-card input.form-control,
 .property-glass-card select.form-select,
 .property-glass-card textarea.form-control {
-    background-color: rgba(15, 23, 42, 0.6) !important;
-    border: 1px solid var(--border-glass) !important;
+    background-color: rgba(8, 15, 30, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
     color: var(--text-primary) !important;
-    border-radius: 10px !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    transition: var(--transition-fast) !important;
+}
+
+.property-glass-card input.form-control::placeholder,
+.property-glass-card textarea.form-control::placeholder {
+    color: rgba(100, 116, 139, 0.65);
 }
 
 .property-glass-card input.form-control:focus,
 .property-glass-card select.form-select:focus,
 .property-glass-card textarea.form-control:focus {
     border-color: var(--gold-primary) !important;
-    box-shadow: 0 0 0 0.25rem rgba(245, 158, 11, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 0 20px rgba(245, 158, 11, 0.10) !important;
+    background-color: rgba(8, 15, 30, 0.85) !important;
+    outline: none !important;
 }
 
 .property-glass-card label {
-    color: var(--text-muted) !important;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-
+    color: var(--text-secondary) !important;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
 }
 
-/* Form Check Cards */
-.form-check-card {
-    background: rgba(15, 23, 42, 0.4);
-    border: 1px solid var(--border-glass);
-    border-radius: 12px;
+/* --------------------------------------------------------------------------
+   Form Section Headers — Numbered Badge
+   -------------------------------------------------------------------------- */
+.pm-form-section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.18) !important;
+}
+
+.pm-section-num {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--gold-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    color: #080f1e;
+    flex-shrink: 0;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.30);
+}
+
+.pm-section-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gold-primary);
+    margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Form — Toggle Checkbox Cards
+   -------------------------------------------------------------------------- */
+.pm-toggle-card {
+    position: relative;
+    cursor: pointer;
+}
+
+.pm-toggle-card input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.pm-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(8, 15, 30, 0.5);
+    border: 1.5px solid rgba(255, 255, 255, 0.10);
+    border-radius: 14px;
     padding: 14px 18px;
-    transition: all 0.2s ease;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    user-select: none;
 }
 
-.form-check-card:hover {
-    border-color: rgba(245, 158, 11, 0.4);
-    background: rgba(30, 41, 59, 0.6);
+.pm-toggle-label:hover {
+    border-color: rgba(245, 158, 11, 0.35);
+    background: rgba(15, 26, 46, 0.7);
+}
+
+.pm-toggle-card input:checked + .pm-toggle-label {
+    border-color: var(--gold-primary);
+    background: rgba(245, 158, 11, 0.10);
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
+}
+
+.pm-toggle-check-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.pm-toggle-card input:checked + .pm-toggle-label .pm-toggle-check-icon {
+    background: var(--gold-gradient);
+    border-color: transparent;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+}
+
+.pm-toggle-check-icon i {
+    font-size: 11px;
+    color: #080f1e;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.pm-toggle-card input:checked + .pm-toggle-label .pm-toggle-check-icon i {
+    opacity: 1;
+}
+
+.pm-toggle-text {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.pm-toggle-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   CTA Banner — Decorative Background
+   -------------------------------------------------------------------------- */
+.pm-cta-banner {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(22, 36, 62, 0.95) 0%, rgba(8, 15, 30, 0.98) 100%) !important;
+    border: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+.pm-cta-banner::before {
+    content: '';
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%);
+    filter: blur(50px);
+    top: -100px;
+    right: -80px;
+    pointer-events: none;
+}
+
+.pm-cta-banner::after {
+    content: '';
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+    filter: blur(40px);
+    bottom: -80px;
+    left: -60px;
+    pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Thank You Page — Success Ring Animation
+   -------------------------------------------------------------------------- */
+.pm-success-ring {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pm-success-ring-inner {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.15);
+    border: 2px solid var(--emerald-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: successPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    position: relative;
+    z-index: 1;
+    box-shadow: var(--emerald-glow);
+}
+
+.pm-success-ring::before,
+.pm-success-ring::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(52, 211, 153, 0.35);
+    animation: successWave 2s ease-out infinite;
+}
+
+.pm-success-ring::after {
+    animation-delay: 0.7s;
+    border-color: rgba(52, 211, 153, 0.20);
+}
+
+@keyframes successPop {
+    0%   { transform: scale(0); opacity: 0; }
+    70%  { transform: scale(1.12); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes successWave {
+    0%   { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Starburst / confetti sparks */
+.pm-confetti-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.pm-spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold-primary);
+    animation: sparkFly 1s ease-out forwards;
+}
+
+.pm-spark:nth-child(1)  { animation-delay: 0.1s; top: 50%; left: 50%; --tx: -55px; --ty: -55px; }
+.pm-spark:nth-child(2)  { animation-delay: 0.15s; top: 50%; left: 50%; --tx: 55px; --ty: -55px; }
+.pm-spark:nth-child(3)  { animation-delay: 0.2s; top: 50%; left: 50%; --tx: -65px; --ty: 0px; }
+.pm-spark:nth-child(4)  { animation-delay: 0.25s; top: 50%; left: 50%; --tx: 65px; --ty: 0px; }
+.pm-spark:nth-child(5)  { animation-delay: 0.12s; top: 50%; left: 50%; --tx: -40px; --ty: 55px; background: var(--emerald-light); }
+.pm-spark:nth-child(6)  { animation-delay: 0.18s; top: 50%; left: 50%; --tx: 40px; --ty: 55px; background: var(--emerald-light); }
+.pm-spark:nth-child(7)  { animation-delay: 0.3s; top: 50%; left: 50%; --tx: 0px; --ty: -70px; width: 5px; height: 5px; }
+.pm-spark:nth-child(8)  { animation-delay: 0.22s; top: 50%; left: 50%; --tx: 0px; --ty: 70px; background: #38bdf8; width: 5px; height: 5px; }
+
+@keyframes sparkFly {
+    0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Thank You Reference Card
+   -------------------------------------------------------------------------- */
+.pm-ref-card {
+    background: rgba(8, 15, 30, 0.65);
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: left;
+}
+
+/* --------------------------------------------------------------------------
+   Filter Bar
+   -------------------------------------------------------------------------- */
+.pm-filter-bar {
+    background: rgba(15, 26, 46, 0.80) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(245, 158, 11, 0.15) !important;
+    border-radius: var(--radius-card) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Divider Lines
+   -------------------------------------------------------------------------- */
+.pm-divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08), transparent);
+    margin: 16px 0;
+}
+
+/* --------------------------------------------------------------------------
+   Misc Utilities
+   -------------------------------------------------------------------------- */
+.pm-section-eyebrow {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--gold-primary);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.pm-pill-dark {
+    background: rgba(15, 26, 46, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-pill);
+    padding: 4px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.pm-floor-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(56, 189, 248, 0.10);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #7dd3fc;
+}
+
+.pm-area-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(167, 139, 250, 0.10);
+    border: 1px solid rgba(167, 139, 250, 0.22);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #c4b5fd;
+}
+
+/* Empty state styling */
+.pm-empty-state {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.pm-empty-icon-wrap {
+    width: 96px;
+    height: 96px;
+    border-radius: 24px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+    .pm-hero-wrapper::before { width: 320px; height: 320px; }
+    .pm-hero-wrapper::after  { width: 240px; height: 240px; }
+    .pm-stat-item { padding: 16px 8px; }
+    .pm-stat-number { font-size: 1.6rem; }
+    .pm-progress-steps { gap: 0; }
+    .pm-step-label { font-size: 9px; }
+    .pm-trust-band { display: none; }
 }

@@ -1,25 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Property Catalog / Showcase Template (/properties) -->
+    <!-- ================================================================
+         Property Catalog / Showcase Template (/properties)
+         ================================================================ -->
     <template id="property_catalog_template" name="Property Units Showcase">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure oe_empty" style="background-color: #0f172a; min-height: 100vh;">
-                <!-- Luxury Hero Header -->
-                <div class="py-5 position-relative overflow-hidden" style="background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-                    <div class="container text-center py-4">
-                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3" style="letter-spacing: 1.5px; font-size: 11px;">Exclusive Property Listings</span>
-                        <h1 class="display-4 fw-extrabold mb-3 text-gold-gradient">Premium Commercial &amp; Residential Units</h1>
-                        <p class="lead text-muted mx-auto" style="max-width: 650px;">Explore luxury residential condo units, corporate office suites, and prime commercial spaces available for immediate lease.</p>
+            <div id="wrap" class="oe_structure oe_empty" style="background-color: #080f1e; min-height: 100vh;">
+
+                <!-- Hero Header -->
+                <div class="pm-hero-wrapper py-5">
+                    <div class="pm-orb-mid"></div>
+                    <div class="container text-center py-4 position-relative" style="z-index: 2;">
+                        <div class="pm-fade-in pm-fade-in-d1 mb-3">
+                            <span class="pm-live-badge">
+                                <span class="pm-live-dot"></span>
+                                Live Property Listings
+                            </span>
+                        </div>
+                        <h1 class="display-4 fw-bold mb-3 text-gold-gradient pm-heading-shadow pm-fade-in pm-fade-in-d2">
+                            Premium Commercial &amp; Residential Units
+                        </h1>
+                        <p class="lead pm-fade-in pm-fade-in-d3 mx-auto" style="max-width: 620px; color: #94a3b8;">
+                            Explore luxury residential condos, corporate office suites, and prime commercial spaces available for immediate lease.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Glassmorphism Filter Bar -->
+                <!-- Trust Marquee -->
+                <div class="pm-trust-band">
+                    <div class="pm-trust-track">
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Alon &amp; Haraya Property</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Digital Leasing Ready</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>24/7 PMO Support</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Odoo Powered</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Instant Billing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Transparent Leasing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Verified Properties</span>
+                        <!-- duplicate for seamless loop -->
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Alon &amp; Haraya Property</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Digital Leasing Ready</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>24/7 PMO Support</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Odoo Powered</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Instant Billing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Transparent Leasing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Verified Properties</span>
+                    </div>
+                </div>
+
                 <div class="container py-4">
-                    <div class="property-glass-card p-3 mb-5">
+                    <!-- Filter Bar -->
+                    <div class="pm-filter-bar p-3 mb-5 pm-fade-in pm-fade-in-d1">
                         <form method="get" action="/properties" class="row g-3 align-items-center">
                             <div class="col-md-5">
-                                <label class="form-label text-gold fw-semibold small text-uppercase mb-1">Filter Occupancy Status</label>
-                                <select name="occupancy_status" class="form-select" onchange="this.form.submit()">
+                                <label class="form-label text-gold fw-semibold small text-uppercase mb-1" style="font-size: 11px; letter-spacing: 1px;">
+                                    <i class="fa fa-filter me-1"></i> Filter Occupancy Status
+                                </label>
+                                <select name="occupancy_status" class="form-select" onchange="this.form.submit()"
+                                    style="background: rgba(8,15,30,0.7); border: 1px solid rgba(255,255,255,0.10); color: #f1f5f9; border-radius: 12px; padding: 11px 16px;">
                                     <option value="" t-att-selected="not selected_occupancy">All Units &amp; Spaces</option>
                                     <option value="available" t-att-selected="selected_occupancy == 'available'">Available for Lease</option>
                                     <option value="reserved" t-att-selected="selected_occupancy == 'reserved'">Currently Reserved</option>
@@ -28,7 +65,7 @@
                                 </select>
                             </div>
                             <div class="col-md-7 text-md-end align-self-end mt-3 mt-md-0">
-                                <a href="/property/inquiry" class="btn btn-gold-gradient px-4 py-2 rounded-pill">
+                                <a href="/property/inquiry" class="btn btn-gold-gradient px-4 py-2 rounded-pill fw-bold">
                                     <i class="fa fa-envelope me-2"></i> Submit General Inquiry
                                 </a>
                             </div>
@@ -38,68 +75,94 @@
                     <!-- Property Cards Grid -->
                     <div class="row g-4">
                         <t t-if="not units">
-                            <div class="col-12 text-center py-5">
-                                <i class="fa fa-building-o fa-4x text-gold opacity-50 mb-3"></i>
-                                <h4 class="text-muted">No property units match your current filter.</h4>
-                                <a href="/properties" class="btn btn-outline-gold mt-3 rounded-pill px-4">View All Units</a>
+                            <div class="col-12">
+                                <div class="pm-empty-state">
+                                    <div class="pm-empty-icon-wrap">
+                                        <i class="fa fa-building-o fa-2x text-gold"></i>
+                                    </div>
+                                    <h4 class="text-white fw-bold mb-2">No Units Found</h4>
+                                    <p class="text-muted mb-4">No property units match your current filter selection.</p>
+                                    <a href="/properties" class="btn btn-outline-gold rounded-pill px-4">View All Units</a>
+                                </div>
                             </div>
                         </t>
                         <t t-foreach="units" t-as="unit">
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card property-glass-card h-100 overflow-hidden">
-                                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="fw-bold mb-1 text-white" t-field="unit.name"/>
-                                            <span t-if="unit.property_type" class="badge bg-dark border border-secondary text-gold px-2 py-1 rounded-pill" style="font-size: 10px;" t-field="unit.property_type"/>
+                            <div class="col-md-6 col-lg-4 pm-fade-in" t-att-style="'animation-delay:' + str(unit_index * 0.08 + 0.1) + 's'">
+                                <div class="card property-glass-card pm-unit-card h-100 overflow-hidden"
+                                    t-att-class="'pm-accent-emerald' if unit.occupancy_status == 'available' else ('pm-accent-gold' if unit.occupancy_status == 'reserved' else ('pm-accent-slate' if unit.occupancy_status == 'occupied' else 'pm-accent-blue'))">
+
+                                    <!-- Card Header -->
+                                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="pm-type-icon">
+                                                    <i class="fa fa-building"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="fw-bold mb-1 text-white" style="font-size: 15px;" t-field="unit.name"/>
+                                                    <span t-if="unit.property_type" class="pm-pill-dark" t-field="unit.property_type"/>
+                                                </div>
+                                            </div>
+                                            <div class="ms-2 flex-shrink-0">
+                                                <span t-if="unit.occupancy_status == 'available'" class="badge badge-available px-3 py-2 rounded-pill">Available</span>
+                                                <span t-if="unit.occupancy_status == 'reserved'" class="badge badge-reserved px-3 py-2 rounded-pill">Reserved</span>
+                                                <span t-if="unit.occupancy_status == 'occupied'" class="badge badge-occupied px-3 py-2 rounded-pill">Occupied</span>
+                                                <span t-if="unit.occupancy_status not in ('available', 'reserved', 'occupied')"
+                                                    class="badge bg-info bg-opacity-25 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill" t-field="unit.occupancy_status"/>
+                                            </div>
                                         </div>
-                                        <span t-if="unit.occupancy_status == 'available'" class="badge badge-available px-3 py-2 rounded-pill">Available</span>
-                                        <span t-if="unit.occupancy_status == 'reserved'" class="badge badge-reserved px-3 py-2 rounded-pill">Reserved</span>
-                                        <span t-if="unit.occupancy_status == 'occupied'" class="badge badge-occupied px-3 py-2 rounded-pill">Occupied</span>
-                                        <span t-if="unit.occupancy_status not in ('available', 'reserved', 'occupied')" class="badge bg-info px-3 py-2 rounded-pill" t-field="unit.occupancy_status"/>
                                     </div>
-                                    <div class="card-body px-4">
+
+                                    <!-- Card Body -->
+                                    <div class="card-body px-4 pt-2 pb-0 d-flex flex-column">
                                         <t t-if="unit.property_address">
-                                            <div class="mb-3 text-muted small">
-                                                <i class="fa fa-map-marker text-gold me-1"></i>
-                                                <span t-esc="unit.property_address"/>
+                                            <div class="mb-3 d-flex align-items-center gap-2">
+                                                <i class="fa fa-map-marker text-gold" style="font-size: 12px;"></i>
+                                                <span class="small" style="color: #64748b; font-size: 12px;" t-esc="unit.property_address"/>
                                             </div>
                                         </t>
 
-                                        <div class="row g-2 mb-3">
-                                            <div class="col-6">
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Floor Level</small>
-                                                <span class="fw-semibold text-white" t-esc="unit.floor_level or 'Standard'"/>
-                                            </div>
-                                            <div class="col-6">
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Floor Area</small>
-                                                <span class="fw-semibold text-white" t-esc="'%.2f sqm' % unit.area_sqm if unit.area_sqm else 'N/A'"/>
-                                            </div>
+                                        <!-- Floor & Area Pills -->
+                                        <div class="d-flex gap-2 mb-3 flex-wrap">
+                                            <span class="pm-floor-pill">
+                                                <i class="fa fa-building" style="font-size: 9px;"></i>
+                                                <t t-esc="unit.floor_level or 'Standard'"/>
+                                            </span>
+                                            <span class="pm-area-pill">
+                                                <i class="fa fa-expand" style="font-size: 9px;"></i>
+                                                <t t-esc="'%.2f sqm' % unit.area_sqm if unit.area_sqm else 'N/A'"/>
+                                            </span>
                                         </div>
 
                                         <t t-if="unit.description">
-                                            <div class="mb-3 p-2 rounded" style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);">
-                                                <small class="text-white-50 d-block text-truncate-3" style="font-size: 12px; line-height: 1.4;" t-esc="unit.description"/>
+                                            <div class="mb-3 p-2 rounded-3" style="background: rgba(8, 15, 30, 0.55); border: 1px solid rgba(255,255,255,0.05);">
+                                                <small class="text-white-50" style="font-size: 12px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" t-esc="unit.description"/>
                                             </div>
                                         </t>
 
+                                        <!-- Meter IDs -->
                                         <div class="row g-2 mb-3">
                                             <div class="col-6">
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Electric Meter ID</small>
-                                                <span class="small text-white-50" t-esc="unit.electricity_meter_no or 'Unassigned'"/>
+                                                <small class="d-block" style="font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: #475569;">Electric Meter</small>
+                                                <span class="small fw-semibold" style="color: #64748b;" t-esc="unit.electricity_meter_no or '—'"/>
                                             </div>
                                             <div class="col-6">
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Water Meter ID</small>
-                                                <span class="small text-white-50" t-esc="unit.water_meter_no or 'Unassigned'"/>
+                                                <small class="d-block" style="font-size: 10px; letter-spacing: 0.8px; text-transform: uppercase; color: #475569;">Water Meter</small>
+                                                <span class="small fw-semibold" style="color: #64748b;" t-esc="unit.water_meter_no or '—'"/>
                                             </div>
                                         </div>
-                                        <hr style="border-color: rgba(255, 255, 255, 0.1);" class="my-3"/>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <div>
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Monthly Rent</small>
-                                                <span class="fs-4 fw-bold text-gold" t-field="unit.list_price" t-options="{'widget': 'monetary', 'display_currency': unit.currency_id}"/>
+
+                                        <div class="mt-auto">
+                                            <hr class="pm-divider"/>
+                                            <!-- Price + CTA -->
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="pm-price-wrap">
+                                                    <span class="pm-price-label">Monthly Rent</span>
+                                                    <span class="fs-5 fw-bold text-gold" t-field="unit.list_price" t-options="{'widget': 'monetary', 'display_currency': unit.currency_id}"/>
+                                                </div>
                                             </div>
-                                            <a t-attf-href="/property/inquiry?unit_id=#{unit.id}" class="btn btn-outline-gold btn-sm px-3 rounded-pill">
-                                                Inquire / Visit
+                                            <a t-attf-href="/property/inquiry?unit_id=#{unit.id}" class="pm-card-cta mb-4">
+                                                <i class="fa fa-calendar-check-o me-2"></i> Inquire / Book Visit
                                             </a>
                                         </div>
                                     </div>
@@ -112,46 +175,116 @@
         </t>
     </template>
 
-    <!-- Property Inquiry & Ocular Visit Form Template (/property/inquiry) -->
+    <!-- ================================================================
+         Property Inquiry &amp; Ocular Visit Form Template (/property/inquiry)
+         ================================================================ -->
     <template id="property_inquiry_form_template" name="Property Leasing Inquiry Form">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure oe_empty" style="background-color: #0f172a; min-height: 100vh;">
-                <div class="py-5 text-center" style="background: radial-gradient(circle at 50% 20%, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-                    <div class="container">
-                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3" style="letter-spacing: 1.5px; font-size: 11px;">Direct Tenant Concierge</span>
-                        <h1 class="display-4 fw-bold mb-2 text-gold-gradient">Leasing Inquiry &amp; Ocular Visit Booking</h1>
-                        <p class="lead text-muted mx-auto" style="max-width: 600px;">Submit your unit requirements or reserve a private ocular site visit with our leasing team.</p>
+            <div id="wrap" class="oe_structure oe_empty" style="background-color: #080f1e; min-height: 100vh;">
+
+                <!-- Hero Header -->
+                <div class="pm-hero-wrapper py-5">
+                    <div class="pm-orb-mid"></div>
+                    <div class="container text-center py-3 position-relative" style="z-index: 2;">
+                        <div class="pm-fade-in pm-fade-in-d1 mb-3">
+                            <span class="pm-live-badge">
+                                <span class="pm-live-dot"></span>
+                                Direct Tenant Concierge
+                            </span>
+                        </div>
+                        <h1 class="display-4 fw-bold mb-2 text-gold-gradient pm-heading-shadow pm-fade-in pm-fade-in-d2">
+                            Leasing Inquiry &amp; Ocular Visit Booking
+                        </h1>
+                        <p class="lead pm-fade-in pm-fade-in-d3 mx-auto" style="max-width: 600px; color: #94a3b8;">
+                            Submit your unit requirements or reserve a private ocular site visit with our leasing team.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Trust Marquee -->
+                <div class="pm-trust-band">
+                    <div class="pm-trust-track">
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Secure Form Submission</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Instant Inquiry Logging</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Dedicated Leasing Agent</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>24/7 PMO Support</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Zero Hassle Process</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Secure Form Submission</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Instant Inquiry Logging</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Dedicated Leasing Agent</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>24/7 PMO Support</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Zero Hassle Process</span>
                     </div>
                 </div>
 
                 <div class="container py-5">
                     <div class="row justify-content-center">
                         <div class="col-lg-8">
-                            <div class="property-glass-card p-4 p-md-5">
+
+                            <!-- Step Progress Indicator -->
+                            <div class="pm-progress-steps pm-fade-in pm-fade-in-d1 mb-4">
+                                <div class="pm-step active">
+                                    <div class="pm-step-circle">1</div>
+                                    <div class="pm-step-label">Contact</div>
+                                </div>
+                                <div class="pm-step-line"></div>
+                                <div class="pm-step active">
+                                    <div class="pm-step-circle">2</div>
+                                    <div class="pm-step-label">Unit Specs</div>
+                                </div>
+                                <div class="pm-step-line"></div>
+                                <div class="pm-step active">
+                                    <div class="pm-step-circle">3</div>
+                                    <div class="pm-step-label">Schedule</div>
+                                </div>
+                            </div>
+
+                            <div class="property-glass-card p-4 p-md-5 pm-fade-in pm-fade-in-d2">
                                 <form action="/property/inquiry/submit" method="post" class="s_website_form">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                                    <h4 class="fw-bold text-gold mb-4 border-bottom pb-2" style="border-color: rgba(245, 158, 11, 0.3) !important;">
-                                        <i class="fa fa-user me-2"></i> 1. Contact &amp; Personal Info
-                                    </h4>
-                                    <div class="row g-3 mb-4">
-                                        <div class="col-md-12">
-                                            <label class="form-label fw-semibold">Full Name / Corporate Tenant <span class="text-gold">*</span></label>
-                                            <input type="text" name="contact_name" class="form-control" required="required" placeholder="e.g. Juan Dela Cruz"/>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Email Address <span class="text-gold">*</span></label>
-                                            <input type="email" name="email_from" class="form-control" required="required" placeholder="juan@example.com"/>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label fw-semibold">Mobile / Phone Number <span class="text-gold">*</span></label>
-                                            <input type="tel" name="phone" class="form-control" required="required" placeholder="+63 917 123 4567"/>
+                                    <!-- Section 1: Contact Info -->
+                                    <div class="pm-form-section-header">
+                                        <div class="pm-section-num">1</div>
+                                        <div>
+                                            <p class="pm-section-title mb-0">Contact &amp; Personal Info</p>
+                                            <small style="color: #475569; font-size: 11px;">Your inquiry details — all marked * are required</small>
                                         </div>
                                     </div>
 
-                                    <h4 class="fw-bold text-gold mb-4 border-bottom pb-2" style="border-color: rgba(245, 158, 11, 0.3) !important;">
-                                        <i class="fa fa-building me-2"></i> 2. Property Unit Specifications
-                                    </h4>
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-semibold">
+                                                Full Name / Corporate Tenant <span class="text-gold">*</span>
+                                            </label>
+                                            <input type="text" name="contact_name" class="form-control" required="required"
+                                                placeholder="e.g. Juan Dela Cruz"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">
+                                                Email Address <span class="text-gold">*</span>
+                                            </label>
+                                            <input type="email" name="email_from" class="form-control" required="required"
+                                                placeholder="juan@example.com"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold">
+                                                Mobile / Phone Number <span class="text-gold">*</span>
+                                            </label>
+                                            <input type="tel" name="phone" class="form-control" required="required"
+                                                placeholder="+63 917 123 4567"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Section 2: Unit Specifications -->
+                                    <div class="pm-form-section-header">
+                                        <div class="pm-section-num">2</div>
+                                        <div>
+                                            <p class="pm-section-title mb-0">Property Unit Specifications</p>
+                                            <small style="color: #475569; font-size: 11px;">Tell us what you're looking for</small>
+                                        </div>
+                                    </div>
+
                                     <div class="row g-3 mb-4">
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Target Property Unit</label>
@@ -159,7 +292,7 @@
                                                 <option value="">Select a Property Unit (Optional)...</option>
                                                 <t t-foreach="units" t-as="u">
                                                     <option t-att-value="u.id" t-att-selected="selected_unit and selected_unit.id == u.id">
-                                                        <t t-esc="u.name"/> (<t t-esc="'%.2f sqm' % u.area_sqm if u.area_sqm else 'N/A'"/> - <t t-esc="u.occupancy_status"/>)
+                                                        <t t-esc="u.name"/> (<t t-esc="'%.2f sqm' % u.area_sqm if u.area_sqm else 'N/A'"/> – <t t-esc="u.occupancy_status"/>)
                                                     </option>
                                                 </t>
                                             </select>
@@ -170,48 +303,73 @@
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Preferred Monthly Budget (PHP)</label>
-                                            <input type="number" step="0.01" name="preferred_budget" class="form-control" placeholder="25000.00"/>
+                                            <input type="number" step="0.01" name="preferred_budget" class="form-control"
+                                                placeholder="25,000.00"/>
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Pet Registration Details</label>
-                                            <input type="text" name="pet_details" class="form-control" placeholder="e.g. 1 Small Shih Tzu Breed"/>
+                                            <input type="text" name="pet_details" class="form-control"
+                                                placeholder="e.g. 1 Small Shih Tzu"/>
+                                        </div>
+
+                                        <!-- Toggle Checkbox Cards -->
+                                        <div class="col-md-6">
+                                            <label class="pm-toggle-card d-block">
+                                                <input type="checkbox" name="parking_required" id="parking_required"/>
+                                                <div class="pm-toggle-label">
+                                                    <div class="pm-toggle-check-icon">
+                                                        <i class="fa fa-check"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="pm-toggle-text">Parking Slot Required</div>
+                                                        <div class="pm-toggle-sub">Dedicated covered slot</div>
+                                                    </div>
+                                                </div>
+                                            </label>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-check-card">
-                                                <div class="form-check">
-                                                    <input type="checkbox" name="parking_required" id="parking_required" class="form-check-input"/>
-                                                    <label for="parking_required" class="form-check-label text-white fw-semibold">Parking Slot Required</label>
+                                            <label class="pm-toggle-card d-block">
+                                                <input type="checkbox" name="wifi_required" id="wifi_required"/>
+                                                <div class="pm-toggle-label">
+                                                    <div class="pm-toggle-check-icon">
+                                                        <i class="fa fa-check"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="pm-toggle-text">High-Speed Wi-Fi Add-on</div>
+                                                        <div class="pm-toggle-sub">Fiber internet ready</div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-check-card">
-                                                <div class="form-check">
-                                                    <input type="checkbox" name="wifi_required" id="wifi_required" class="form-check-input"/>
-                                                    <label for="wifi_required" class="form-check-label text-white fw-semibold">High-Speed Wi-Fi Add-on</label>
-                                                </div>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
 
-                                    <h4 class="fw-bold text-gold mb-4 border-bottom pb-2" style="border-color: rgba(245, 158, 11, 0.3) !important;">
-                                        <i class="fa fa-calendar me-2"></i> 3. Schedule Private Ocular Visit
-                                    </h4>
+                                    <!-- Section 3: Schedule Visit -->
+                                    <div class="pm-form-section-header">
+                                        <div class="pm-section-num">3</div>
+                                        <div>
+                                            <p class="pm-section-title mb-0">Schedule Private Ocular Visit</p>
+                                            <small style="color: #475569; font-size: 11px;">Auto-generates a Security Visitor Gate Pass</small>
+                                        </div>
+                                    </div>
+
                                     <div class="row g-3 mb-4">
                                         <div class="col-md-12">
                                             <label class="form-label fw-semibold">Preferred Ocular Visit Date &amp; Time</label>
                                             <input type="datetime-local" name="ocular_visit_date" class="form-control"/>
-                                            <small class="text-muted mt-1 d-block">Selecting a visit time automatically creates a Security Visitor Gate Pass for site entry.</small>
+                                            <small class="mt-1 d-block" style="color: #475569; font-size: 11.5px;">
+                                                <i class="fa fa-info-circle me-1 text-gold"></i>
+                                                Selecting a visit time automatically creates a Security Visitor Gate Pass for site entry.
+                                            </small>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label fw-semibold">Additional Remarks / Message</label>
+                                            <textarea name="notes" class="form-control" rows="3"
+                                                placeholder="Tell us more about your business or lease term requirements..."></textarea>
                                         </div>
                                     </div>
 
-                                    <div class="mb-4">
-                                        <label class="form-label fw-semibold">Additional Remarks / Message</label>
-                                        <textarea name="notes" class="form-control" rows="3" placeholder="Tell us more about your business or lease term requirements..."></textarea>
-                                    </div>
-
-                                    <div class="text-end mt-4">
-                                        <button type="submit" class="btn btn-gold-gradient btn-lg px-5 rounded-pill">
+                                    <div class="text-end mt-2">
+                                        <button type="submit" class="btn btn-gold-gradient btn-lg px-5 rounded-pill fw-bold">
                                             <i class="fa fa-paper-plane me-2"></i> Submit Leasing Inquiry
                                         </button>
                                     </div>
@@ -224,32 +382,76 @@
         </t>
     </template>
 
-    <!-- Property Inquiry Thank You Template (/property/inquiry/thankyou) -->
+    <!-- ================================================================
+         Property Inquiry Thank You Template (/property/inquiry/thankyou)
+         ================================================================ -->
     <template id="property_inquiry_thankyou_template" name="Property Inquiry Confirmation">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure oe_empty" style="background-color: #0f172a; min-height: 100vh;">
-                <div class="container py-5 text-center">
-                    <div class="row justify-content-center py-5">
-                        <div class="col-md-8 col-lg-6">
-                            <div class="property-glass-card p-4 p-md-5 text-center">
-                                <div class="mb-4">
-                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.2); border: 2px solid #34d399;">
-                                        <i class="fa fa-check fa-3x text-success"></i>
+            <div id="wrap" class="oe_structure oe_empty" style="background-color: #080f1e; min-height: 100vh;">
+                <div class="pm-hero-wrapper py-5" style="min-height: 100vh; display: flex; align-items: center;">
+                    <div class="pm-orb-mid"></div>
+                    <div class="container py-5 text-center position-relative" style="z-index: 2;">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8 col-lg-6">
+                                <div class="property-glass-card p-4 p-md-5 text-center pm-fade-in">
+
+                                    <!-- Confetti Sparks + Success Ring -->
+                                    <div class="pm-confetti-wrap mb-4 d-inline-block">
+                                        <span class="pm-spark"></span>
+                                        <span class="pm-spark"></span>
+                                        <span class="pm-spark"></span>
+                                        <span class="pm-spark"></span>
+                                        <span class="pm-spark"></span>
+                                        <span class="pm-spark"></span>
+                                        <span class="pm-spark"></span>
+                                        <span class="pm-spark"></span>
+                                        <div class="pm-success-ring">
+                                            <div class="pm-success-ring-inner">
+                                                <i class="fa fa-check fa-2x" style="color: #34d399;"></i>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <h2 class="fw-bold text-gold-gradient mb-3">Leasing Inquiry Received!</h2>
-                                <p class="lead text-muted mb-4">
-                                    Thank you for your interest. Our leasing concierge team has logged your inquiry and will reach out to you shortly.
-                                </p>
-                                <t t-if="lead">
-                                    <div class="p-3 mb-4 rounded-3 text-start" style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-glass);">
-                                        <small class="text-muted d-block text-uppercase" style="font-size: 11px;">CRM Reference Lead</small>
-                                        <strong class="text-gold" t-esc="lead.name"/>
+
+                                    <h2 class="fw-bold text-gold-gradient mb-2 pm-fade-in pm-fade-in-d2" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                                        Leasing Inquiry Received!
+                                    </h2>
+                                    <p class="mb-4 pm-fade-in pm-fade-in-d3" style="color: #64748b; line-height: 1.7;">
+                                        Thank you for your interest. Our leasing concierge team has logged your inquiry and will reach out to you shortly to discuss your requirements.
+                                    </p>
+
+                                    <t t-if="lead">
+                                        <div class="pm-ref-card mb-4 pm-fade-in pm-fade-in-d3">
+                                            <small class="d-block mb-1" style="font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: #475569;">CRM Reference Lead</small>
+                                            <span class="fw-bold text-gold" t-esc="lead.name"/>
+                                        </div>
+                                    </t>
+
+                                    <!-- What Happens Next -->
+                                    <div class="p-3 rounded-3 mb-4 text-start pm-fade-in pm-fade-in-d4"
+                                        style="background: rgba(8,15,30,0.55); border: 1px solid rgba(255,255,255,0.07);">
+                                        <small class="d-block mb-2 fw-bold" style="color: #475569; font-size: 10px; letter-spacing: 1px; text-transform: uppercase;">What happens next</small>
+                                        <div class="d-flex gap-2 align-items-start mb-2">
+                                            <i class="fa fa-check-circle text-gold mt-1" style="font-size: 12px; flex-shrink: 0;"></i>
+                                            <small style="color: #94a3b8; font-size: 12px;">Our leasing team reviews your inquiry within 1 business day.</small>
+                                        </div>
+                                        <div class="d-flex gap-2 align-items-start mb-2">
+                                            <i class="fa fa-check-circle text-gold mt-1" style="font-size: 12px; flex-shrink: 0;"></i>
+                                            <small style="color: #94a3b8; font-size: 12px;">A dedicated leasing agent will call or email you to confirm details.</small>
+                                        </div>
+                                        <div class="d-flex gap-2 align-items-start">
+                                            <i class="fa fa-check-circle text-gold mt-1" style="font-size: 12px; flex-shrink: 0;"></i>
+                                            <small style="color: #94a3b8; font-size: 12px;">If you scheduled an ocular visit, a gate pass confirmation will be sent.</small>
+                                        </div>
                                     </div>
-                                </t>
-                                <div>
-                                    <a href="/properties" class="btn btn-gold-gradient px-4 rounded-pill me-2">Browse More Units</a>
-                                    <a href="/" class="btn btn-outline-gold px-4 rounded-pill">Return Home</a>
+
+                                    <div class="d-flex justify-content-center gap-3 flex-wrap pm-fade-in pm-fade-in-d5">
+                                        <a href="/properties" class="btn btn-gold-gradient px-4 rounded-pill fw-bold">
+                                            <i class="fa fa-building me-2"></i> Browse More Units
+                                        </a>
+                                        <a href="/" class="btn btn-outline-gold px-4 rounded-pill">
+                                            <i class="fa fa-home me-2"></i> Return Home
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -259,19 +461,35 @@
         </t>
     </template>
 
-    <!-- Property Management Main Homepage Template -->
+    <!-- ================================================================
+         Property Management Main Homepage Template
+         ================================================================ -->
     <template id="property_homepage_template" name="Property Management Homepage">
         <t t-call="website.layout">
-            <div id="wrap" class="oe_structure oe_empty" style="background-color: #0f172a; min-height: 100vh;">
-                <!-- Luxury Hero Banner -->
-                <div class="py-5 position-relative overflow-hidden" style="background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 100%); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-                    <div class="container py-5 text-center position-relative" style="z-index: 2;">
-                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3" style="letter-spacing: 2px; font-size: 11px;">Alon &amp; Haraya Property Management</span>
-                        <h1 class="display-3 fw-extrabold text-gold-gradient mb-4">Luxury Real Estate &amp; Premium Commercial Leasing</h1>
-                        <p class="lead text-white-50 mx-auto mb-5" style="max-width: 750px; font-weight: 300;">
+            <div id="wrap" class="oe_structure oe_empty" style="background-color: #080f1e; min-height: 100vh;">
+
+                <!-- Hero Banner -->
+                <div class="pm-hero-wrapper" style="padding: 100px 0 80px;">
+                    <div class="pm-orb-mid"></div>
+                    <div class="container text-center position-relative" style="z-index: 2;">
+                        <div class="pm-fade-in pm-fade-in-d1 mb-4">
+                            <span class="pm-live-badge">
+                                <span class="pm-live-dot"></span>
+                                Alon &amp; Haraya Property Management
+                            </span>
+                        </div>
+                        <h1 class="display-2 fw-bold text-gold-gradient pm-heading-shadow mb-4 pm-fade-in pm-fade-in-d2"
+                            style="font-family: 'Bricolage Grotesque', sans-serif; line-height: 1.1;">
+                            Luxury Real Estate<br/>
+                            <span style="font-size: 0.65em; font-weight: 300; background: none; -webkit-text-fill-color: #94a3b8; color: #94a3b8;">
+                                &amp; Premium Commercial Leasing
+                            </span>
+                        </h1>
+                        <p class="lead pm-fade-in pm-fade-in-d3 mx-auto mb-5"
+                            style="max-width: 700px; color: #64748b; font-weight: 300; line-height: 1.8;">
                             Discover high-end residential suites, corporate office spaces, and prime retail units designed for modern living and thriving businesses.
                         </p>
-                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap pm-fade-in pm-fade-in-d4">
                             <a href="/properties" class="btn btn-gold-gradient btn-lg px-5 py-3 rounded-pill fw-bold">
                                 <i class="fa fa-building me-2"></i> Browse Available Properties
                             </a>
@@ -282,84 +500,142 @@
                     </div>
                 </div>
 
-                <!-- Live Metrics Bar -->
+                <!-- Trust Marquee -->
+                <div class="pm-trust-band">
+                    <div class="pm-trust-track">
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Alon &amp; Haraya Property</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Digital Leasing Ready</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>24/7 PMO Support</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Odoo Powered</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Automated Monthly Billing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Transparent Leasing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Verified Properties</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Biometric Gate Pass</span>
+                        <!-- duplicate -->
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Alon &amp; Haraya Property</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Digital Leasing Ready</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>24/7 PMO Support</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Odoo Powered</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Automated Monthly Billing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Transparent Leasing</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Verified Properties</span>
+                        <span class="pm-trust-item"><span class="pm-trust-dot"></span>Biometric Gate Pass</span>
+                    </div>
+                </div>
+
+                <!-- Live Metrics / Stats Bar -->
                 <div class="container my-n4 position-relative" style="z-index: 3;">
-                    <div class="property-glass-card p-4">
-                        <div class="row g-3 text-center">
-                            <div class="col-6 col-md-3 border-end border-secondary">
-                                <h3 class="text-gold fw-bold mb-0">50+</h3>
-                                <small class="text-white-50 text-uppercase" style="font-size: 11px;">Managed Units</small>
+                    <div class="pm-stats-bar property-glass-card pm-fade-in pm-fade-in-d1">
+                        <div class="row g-0 text-center">
+                            <div class="col-6 col-md-3 pm-stat-item">
+                                <div class="pm-stat-icon">
+                                    <i class="fa fa-building"></i>
+                                </div>
+                                <div class="pm-stat-number">50+</div>
+                                <div class="pm-stat-label">Managed Units</div>
                             </div>
-                            <div class="col-6 col-md-3 border-end border-secondary">
-                                <h3 class="text-gold fw-bold mb-0">24/7</h3>
-                                <small class="text-white-50 text-uppercase" style="font-size: 11px;">PMO &amp; Security</small>
+                            <div class="col-6 col-md-3 pm-stat-item">
+                                <div class="pm-stat-icon">
+                                    <i class="fa fa-shield"></i>
+                                </div>
+                                <div class="pm-stat-number">24/7</div>
+                                <div class="pm-stat-label">PMO &amp; Security</div>
                             </div>
-                            <div class="col-6 col-md-3 border-end border-secondary">
-                                <h3 class="text-gold fw-bold mb-0">100%</h3>
-                                <small class="text-white-50 text-uppercase" style="font-size: 11px;">Digital Billing</small>
+                            <div class="col-6 col-md-3 pm-stat-item">
+                                <div class="pm-stat-icon">
+                                    <i class="fa fa-file-text-o"></i>
+                                </div>
+                                <div class="pm-stat-number">100%</div>
+                                <div class="pm-stat-label">Digital Billing</div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <h3 class="text-gold fw-bold mb-0">0%</h3>
-                                <small class="text-white-50 text-uppercase" style="font-size: 11px;">Hassle Leasing</small>
+                            <div class="col-6 col-md-3 pm-stat-item">
+                                <div class="pm-stat-icon">
+                                    <i class="fa fa-handshake-o"></i>
+                                </div>
+                                <div class="pm-stat-number">0%</div>
+                                <div class="pm-stat-label">Hassle Leasing</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Featured Units Showcase -->
-                <div class="container py-5 mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="container py-5 mt-5">
+                    <div class="d-flex justify-content-between align-items-end mb-4 pm-fade-in">
                         <div>
-                            <span class="text-gold text-uppercase fw-semibold small" style="letter-spacing: 1px;">Featured Units</span>
-                            <h2 class="text-white fw-bold mb-0">Available Spaces for Immediate Occupancy</h2>
+                            <span class="pm-section-eyebrow">Featured Units</span>
+                            <h2 class="text-white fw-bold mb-0" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                                Available Spaces for Immediate Occupancy
+                            </h2>
                         </div>
-                        <a href="/properties" class="btn btn-outline-gold rounded-pill px-4">View All Catalog <i class="fa fa-arrow-right ms-2"></i></a>
+                        <a href="/properties" class="btn btn-outline-gold rounded-pill px-4 d-none d-md-inline-block">
+                            View All Catalog <i class="fa fa-arrow-right ms-2"></i>
+                        </a>
                     </div>
 
                     <div class="row g-4">
                         <t t-if="not featured_units">
-                            <div class="col-12 text-center py-5">
-                                <i class="fa fa-building-o fa-4x text-gold opacity-50 mb-3"></i>
-                                <h4 class="text-muted">No property units currently marked as available.</h4>
-                                <a href="/properties" class="btn btn-outline-gold mt-3 rounded-pill px-4">Browse All Units</a>
+                            <div class="col-12">
+                                <div class="pm-empty-state">
+                                    <div class="pm-empty-icon-wrap">
+                                        <i class="fa fa-building-o fa-2x text-gold"></i>
+                                    </div>
+                                    <h4 class="text-white fw-bold mb-2">No Available Units Yet</h4>
+                                    <p class="text-muted mb-4">No property units are currently marked as available. Check back soon.</p>
+                                    <a href="/properties" class="btn btn-outline-gold rounded-pill px-4">Browse All Units</a>
+                                </div>
                             </div>
                         </t>
                         <t t-foreach="featured_units" t-as="unit">
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card property-glass-card h-100 overflow-hidden">
-                                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h5 class="fw-bold mb-1 text-white" t-field="unit.name"/>
-                                            <span t-if="unit.property_type" class="badge bg-dark border border-secondary text-gold px-2 py-1 rounded-pill" style="font-size: 10px;" t-field="unit.property_type"/>
+                            <div class="col-md-6 col-lg-4 pm-fade-in" t-att-style="'animation-delay:' + str(unit_index * 0.10 + 0.2) + 's'">
+                                <div class="card property-glass-card pm-unit-card pm-accent-emerald h-100 overflow-hidden">
+
+                                    <!-- Card Header -->
+                                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-2">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="pm-type-icon">
+                                                    <i class="fa fa-building"></i>
+                                                </div>
+                                                <div>
+                                                    <h5 class="fw-bold mb-1 text-white" style="font-size: 15px;" t-field="unit.name"/>
+                                                    <span t-if="unit.property_type" class="pm-pill-dark" t-field="unit.property_type"/>
+                                                </div>
+                                            </div>
+                                            <span class="badge badge-available px-3 py-2 rounded-pill flex-shrink-0">Available</span>
                                         </div>
-                                        <span class="badge badge-available px-3 py-2 rounded-pill">Available</span>
                                     </div>
-                                    <div class="card-body px-4">
+
+                                    <!-- Card Body -->
+                                    <div class="card-body px-4 pt-2 pb-0 d-flex flex-column">
                                         <t t-if="unit.property_address">
-                                            <div class="mb-3 text-muted small">
-                                                <i class="fa fa-map-marker text-gold me-1"></i>
-                                                <span t-esc="unit.property_address"/>
+                                            <div class="mb-3 d-flex align-items-center gap-2">
+                                                <i class="fa fa-map-marker text-gold" style="font-size: 12px;"></i>
+                                                <span class="small" style="color: #64748b; font-size: 12px;" t-esc="unit.property_address"/>
                                             </div>
                                         </t>
 
-                                        <div class="row g-2 mb-3">
-                                            <div class="col-6">
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Floor Level</small>
-                                                <span class="fw-semibold text-white" t-esc="unit.floor_level or 'Standard'"/>
-                                            </div>
-                                            <div class="col-6">
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Floor Area</small>
-                                                <span class="fw-semibold text-white" t-esc="'%.2f sqm' % unit.area_sqm if unit.area_sqm else 'N/A'"/>
-                                            </div>
+                                        <!-- Floor &amp; Area Pills -->
+                                        <div class="d-flex gap-2 mb-3 flex-wrap">
+                                            <span class="pm-floor-pill">
+                                                <i class="fa fa-building" style="font-size: 9px;"></i>
+                                                <t t-esc="unit.floor_level or 'Standard'"/>
+                                            </span>
+                                            <span class="pm-area-pill">
+                                                <i class="fa fa-expand" style="font-size: 9px;"></i>
+                                                <t t-esc="'%.2f sqm' % unit.area_sqm if unit.area_sqm else 'N/A'"/>
+                                            </span>
                                         </div>
 
-                                        <hr style="border-color: rgba(255, 255, 255, 0.1);" class="my-3"/>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <div>
-                                                <small class="text-muted d-block text-uppercase" style="font-size: 11px;">Monthly Rent</small>
-                                                <span class="fs-4 fw-bold text-gold" t-field="unit.list_price" t-options="{'widget': 'monetary', 'display_currency': unit.currency_id}"/>
+                                        <div class="mt-auto">
+                                            <hr class="pm-divider"/>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="pm-price-wrap">
+                                                    <span class="pm-price-label">Monthly Rent</span>
+                                                    <span class="fs-5 fw-bold text-gold" t-field="unit.list_price" t-options="{'widget': 'monetary', 'display_currency': unit.currency_id}"/>
+                                                </div>
                                             </div>
-                                            <a t-attf-href="/property/inquiry?unit_id=#{unit.id}" class="btn btn-outline-gold btn-sm px-3 rounded-pill">
+                                            <a t-attf-href="/property/inquiry?unit_id=#{unit.id}" class="pm-card-cta mb-4">
                                                 Inquire Now <i class="fa fa-chevron-right ms-1"></i>
                                             </a>
                                         </div>
@@ -368,36 +644,55 @@
                             </div>
                         </t>
                     </div>
+
+                    <!-- Mobile View All -->
+                    <div class="text-center mt-4 d-md-none pm-fade-in">
+                        <a href="/properties" class="btn btn-outline-gold rounded-pill px-4">
+                            View All Catalog <i class="fa fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Feature Highlights Cards -->
+                <!-- Feature Highlights -->
                 <div class="container py-5">
-                    <div class="row g-4 text-center">
-                        <div class="col-md-4">
-                            <div class="property-glass-card p-4 h-100">
-                                <div class="rounded-circle bg-dark border border-secondary d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
-                                    <i class="fa fa-home fa-2x text-gold"></i>
+                    <div class="text-center mb-5 pm-fade-in">
+                        <span class="pm-section-eyebrow">Why Choose Us</span>
+                        <h2 class="text-white fw-bold" style="font-family: 'Bricolage Grotesque', sans-serif;">
+                            Everything You Need, All in One Place
+                        </h2>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-md-4 pm-fade-in pm-fade-in-d1">
+                            <div class="pm-feature-card property-glass-card p-4 h-100">
+                                <div class="pm-feature-icon-tile">
+                                    <i class="fa fa-home"></i>
                                 </div>
-                                <h4 class="text-white fw-bold mb-2">Prime Locations</h4>
-                                <p class="text-muted small">Strategically located residential suites and commercial spaces with high accessibility and modern amenities.</p>
+                                <h4 class="text-white fw-bold mb-2" style="font-family: 'Bricolage Grotesque', sans-serif;">Prime Locations</h4>
+                                <p class="mb-0" style="color: #64748b; font-size: 14px; line-height: 1.7;">
+                                    Strategically located residential suites and commercial spaces with high accessibility, modern amenities, and premium finishes.
+                                </p>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="property-glass-card p-4 h-100">
-                                <div class="rounded-circle bg-dark border border-secondary d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
-                                    <i class="fa fa-shield fa-2x text-gold"></i>
+                        <div class="col-md-4 pm-fade-in pm-fade-in-d2">
+                            <div class="pm-feature-card property-glass-card p-4 h-100">
+                                <div class="pm-feature-icon-tile">
+                                    <i class="fa fa-shield"></i>
                                 </div>
-                                <h4 class="text-white fw-bold mb-2">24/7 PMO &amp; Security</h4>
-                                <p class="text-muted small">Dedicated Property Management Office, gate pass controls, biometrics, and round-the-clock maintenance support.</p>
+                                <h4 class="text-white fw-bold mb-2" style="font-family: 'Bricolage Grotesque', sans-serif;">24/7 PMO &amp; Security</h4>
+                                <p class="mb-0" style="color: #64748b; font-size: 14px; line-height: 1.7;">
+                                    Dedicated Property Management Office, gate pass controls, biometrics, and round-the-clock maintenance and security support.
+                                </p>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="property-glass-card p-4 h-100">
-                                <div class="rounded-circle bg-dark border border-secondary d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
-                                    <i class="fa fa-file-text-o fa-2x text-gold"></i>
+                        <div class="col-md-4 pm-fade-in pm-fade-in-d3">
+                            <div class="pm-feature-card property-glass-card p-4 h-100">
+                                <div class="pm-feature-icon-tile">
+                                    <i class="fa fa-file-text-o"></i>
                                 </div>
-                                <h4 class="text-white fw-bold mb-2">Seamless Leasing</h4>
-                                <p class="text-muted small">Streamlined digital reservations, instant inquiry tracking, automated monthly billing, and online lease management.</p>
+                                <h4 class="text-white fw-bold mb-2" style="font-family: 'Bricolage Grotesque', sans-serif;">Seamless Leasing</h4>
+                                <p class="mb-0" style="color: #64748b; font-size: 14px; line-height: 1.7;">
+                                    Streamlined digital reservations, instant inquiry tracking, automated monthly billing, and fully online lease management via Odoo.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -405,14 +700,25 @@
 
                 <!-- Call to Action Banner -->
                 <div class="container pb-5">
-                    <div class="property-glass-card p-5 text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%); border: 1px solid rgba(212, 175, 55, 0.3);">
-                        <h2 class="text-gold-gradient fw-bold mb-3">Looking for Your Next Home or Commercial Space?</h2>
-                        <p class="text-white-50 mb-4 mx-auto" style="max-width: 600px;">Schedule an ocular visit or send us your leasing requirements today. Our leasing team will get in touch with you immediately.</p>
-                        <a href="/property/inquiry" class="btn btn-gold-gradient btn-lg px-5 py-3 rounded-pill fw-bold">
-                            <i class="fa fa-calendar me-2"></i> Book an Ocular Visit
-                        </a>
+                    <div class="pm-cta-banner property-glass-card p-5 text-center position-relative overflow-hidden pm-fade-in">
+                        <span class="pm-section-eyebrow mb-2 d-block">Ready to Move In?</span>
+                        <h2 class="text-gold-gradient fw-bold mb-3" style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 2rem;">
+                            Looking for Your Next Home or Commercial Space?
+                        </h2>
+                        <p class="mb-4 mx-auto" style="max-width: 560px; color: #64748b; line-height: 1.7;">
+                            Schedule an ocular visit or send us your leasing requirements today. Our concierge leasing team will get in touch with you immediately.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/property/inquiry" class="btn btn-gold-gradient btn-lg px-5 py-3 rounded-pill fw-bold">
+                                <i class="fa fa-calendar me-2"></i> Book an Ocular Visit
+                            </a>
+                            <a href="/properties" class="btn btn-outline-gold btn-lg px-5 py-3 rounded-pill">
+                                <i class="fa fa-building me-2"></i> View All Units
+                            </a>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </t>
     </template>
