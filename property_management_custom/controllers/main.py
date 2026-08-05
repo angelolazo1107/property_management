@@ -5,6 +5,22 @@ from datetime import datetime
 
 class PropertyManagementWebsiteController(http.Controller):
 
+    @http.route('/', type='http', auth='public', website=True)
+    def index(self, **kw):
+        featured_units = request.env['product.product'].sudo().search([
+            ('is_property_unit', '=', True),
+            ('occupancy_status', '=', 'available')
+        ], limit=6, order='name asc')
+        if not featured_units:
+            featured_units = request.env['product.product'].sudo().search([
+                ('is_property_unit', '=', True)
+            ], limit=6, order='name asc')
+            
+        values = {
+            'featured_units': featured_units,
+        }
+        return request.render('property_management_custom.property_homepage_template', values)
+
     @http.route(['/properties', '/properties/page/<int:page>'], type='http', auth='public', website=True)
     def property_catalog(self, occupancy_status=None, **kw):
         domain = [('is_property_unit', '=', True)]
