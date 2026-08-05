@@ -7,7 +7,7 @@ class PropertyManagementWebsiteController(http.Controller):
 
     @http.route(['/properties', '/properties/page/<int:page>'], type='http', auth='public', website=True)
     def property_catalog(self, occupancy_status=None, **kw):
-        domain = [('is_property_unit', '=', True)]
+        domain = [('is_property_unit', '=', True), ('website_published', '=', True)]
         if occupancy_status:
             domain.append(('occupancy_status', '=', occupancy_status))
         
@@ -20,7 +20,7 @@ class PropertyManagementWebsiteController(http.Controller):
 
     @http.route(['/property/inquiry'], type='http', auth='public', website=True)
     def property_inquiry_form(self, unit_id=None, **kw):
-        units = request.env['product.product'].sudo().search([('is_property_unit', '=', True)], order='name asc')
+        units = request.env['product.product'].sudo().search([('is_property_unit', '=', True), ('website_published', '=', True)], order='name asc')
         selected_unit = False
         if unit_id:
             selected_unit = request.env['product.product'].sudo().browse(int(unit_id))

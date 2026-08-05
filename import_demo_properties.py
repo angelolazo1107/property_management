@@ -57,6 +57,7 @@ def import_demo_properties(uid, models):
             vals = {
                 'name': unit_name,
                 'is_property_unit': True,
+                'website_published': True,
                 'type': 'service',
                 'sale_ok': True,
                 'purchase_ok': False,
