@@ -1,81 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Root Top-Level Category (Creates the PROPERTY MANAGEMENT block header) -->
+        <!-- Module Category -->
         <record id="module_category_property_management" model="ir.module.category">
             <field name="name">Property Management</field>
             <field name="description">Security Roles for Odoo Property Management Operations</field>
-            <field name="sequence">25</field>
-        </record>
-
-        <!-- Sub-Category 1: Leasing & Sales -->
-        <record id="module_category_property_leasing" model="ir.module.category">
-            <field name="name">Leasing &amp; Sales</field>
-            <field name="parent_id" ref="module_category_property_management"/>
-            <field name="sequence">1</field>
-        </record>
-
-        <!-- Sub-Category 2: PMO Operations -->
-        <record id="module_category_property_pmo" model="ir.module.category">
-            <field name="name">PMO Operations</field>
-            <field name="parent_id" ref="module_category_property_management"/>
-            <field name="sequence">2</field>
-        </record>
-
-        <!-- Sub-Category 3: Leasing Finance -->
-        <record id="module_category_property_finance" model="ir.module.category">
-            <field name="name">Leasing Finance</field>
-            <field name="parent_id" ref="module_category_property_management"/>
-            <field name="sequence">3</field>
+            <field name="sequence">20</field>
         </record>
 
         <!-- Leasing & Sales User -->
         <record id="group_property_user" model="res.groups">
-            <field name="name">User</field>
-            <field name="category_id" ref="module_category_property_leasing"/>
+            <field name="name">Leasing User</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- Leasing & Sales Manager -->
         <record id="group_property_manager" model="res.groups">
-            <field name="name">Administrator</field>
-            <field name="category_id" ref="module_category_property_leasing"/>
+            <field name="name">Leasing Manager</field>
             <field name="implied_ids" eval="[(4, ref('group_property_user'))]"/>
         </record>
 
         <!-- PMO Operations User -->
         <record id="group_pmo_user" model="res.groups">
-            <field name="name">User</field>
-            <field name="category_id" ref="module_category_property_pmo"/>
+            <field name="name">PMO Operations User</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- PMO Operations Manager -->
         <record id="group_pmo_manager" model="res.groups">
-            <field name="name">Administrator</field>
-            <field name="category_id" ref="module_category_property_pmo"/>
+            <field name="name">PMO Operations Manager</field>
             <field name="implied_ids" eval="[(4, ref('group_pmo_user'))]"/>
         </record>
 
         <!-- Security Gate Guard -->
         <record id="group_security_guard" model="res.groups">
             <field name="name">Security Gate Guard</field>
-            <field name="category_id" ref="module_category_property_pmo"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
-        <!-- Leasing Finance / Accounting Controller User -->
-        <record id="group_property_finance_user" model="res.groups">
-            <field name="name">User</field>
-            <field name="category_id" ref="module_category_property_finance"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
-        </record>
-
-        <!-- Leasing Finance / Accounting Controller Manager -->
+        <!-- Leasing Finance Controller -->
         <record id="group_property_finance" model="res.groups">
-            <field name="name">Administrator</field>
-            <field name="category_id" ref="module_category_property_finance"/>
-            <field name="implied_ids" eval="[(4, ref('group_property_finance_user'))]"/>
+            <field name="name">Leasing Finance Controller</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- Imply manager roles for Settings Administrator -->
