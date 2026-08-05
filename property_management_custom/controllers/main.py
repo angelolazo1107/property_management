@@ -7,11 +7,15 @@ class PropertyManagementWebsiteController(http.Controller):
 
     @http.route(['/properties', '/properties/page/<int:page>'], type='http', auth='public', website=True)
     def property_catalog(self, occupancy_status=None, **kw):
-        domain = [('is_property_unit', '=', True), ('website_published', '=', True)]
+        domain = [('is_property_unit', '=', True)]
         if occupancy_status:
             domain.append(('occupancy_status', '=', occupancy_status))
         
-        units = request.env['product.product'].sudo().search(domain, order='name asc')
+        # Try finding published property units, fallback to all property units if not yet published
+        units = request.env['product.product'].sudo().search(domain + [('website_published', '=', True)], order='name asc')
+        if not units:
+            units = request.env['product.product'].sudo().search(domain, order='name asc')
+
         values = {
             'units': units,
             'selected_occupancy': occupancy_status or '',
@@ -20,7 +24,7 @@ class PropertyManagementWebsiteController(http.Controller):
 
     @http.route(['/property/inquiry'], type='http', auth='public', website=True)
     def property_inquiry_form(self, unit_id=None, **kw):
-        units = request.env['product.product'].sudo().search([('is_property_unit', '=', True), ('website_published', '=', True)], order='name asc')
+        units = request.env['product.product'].sudo().search([('is_property_unit', '=', True)], order='name asc')
         selected_unit = False
         if unit_id:
             selected_unit = request.env['product.product'].sudo().browse(int(unit_id))
