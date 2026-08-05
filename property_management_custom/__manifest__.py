@@ -18,7 +18,6 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
 - Adds unified Approval Matrix rules and Document Management folder structures.
     """,
     'author': 'Coretech Innovations & Solutions Inc.',
-    'website': 'https://alon-haraya-uat.odoo.com',
     'depends': [
         'base',
         'crm',
