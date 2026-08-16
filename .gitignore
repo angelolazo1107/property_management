@@ -9,3 +9,8 @@ __pycache__/
 .env
 .idea/
 .vscode/
+
+# Large PDF files (exceeding GitHub file size limits)
+form/Access Card form.pdf
+form/Move in form.pdf
+
