@@ -10,65 +10,77 @@
     <!-- ============================================================ -->
     <!-- 1. CRM / LEASING SALES APP (parent="crm.crm_menu_root")       -->
     <!-- ============================================================ -->
+    <!-- Category 1: Property Leasing -->
+    <menuitem id="menu_crm_property_leasing_cat"
+              name="Property Leasing"
+              parent="crm.crm_menu_root"
+              sequence="11"/>
+
     <menuitem id="menu_ocular_visits"
               name="Ocular Visit Coordination"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_property_leasing_cat"
               action="action_ocular_visit"
-              sequence="11"/>
+              sequence="1"/>
 
     <menuitem id="menu_property_leasing_quotations"
               name="Leasing Quotations"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_property_leasing_cat"
               action="sale.action_quotations_with_onboarding"
-              sequence="12"/>
+              sequence="2"/>
 
     <menuitem id="menu_property_reservations"
               name="Unit Reservations"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_property_leasing_cat"
               action="action_property_reservation"
-              sequence="13"/>
+              sequence="3"/>
 
     <menuitem id="menu_tenant_application_bis"
               name="Tenant BIS Applications"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_property_leasing_cat"
               action="action_tenant_application_bis"
-              sequence="14"/>
-
-    <menuitem id="menu_visitor_gate_passes"
-              name="Security Visitor Gate Passes"
-              parent="crm.crm_menu_root"
-              action="action_visitor_gate_pass"
-              sequence="15"/>
+              sequence="4"/>
 
     <menuitem id="menu_lease_contracts"
               name="Lease Contracts Pipeline"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_property_leasing_cat"
               action="action_lease_contract"
-              sequence="16"/>
+              sequence="5"/>
+
+    <!-- Category 2: Move-In & Gate Passes -->
+    <menuitem id="menu_crm_movein_gate_pass_cat"
+              name="Move-In &amp; Gate Passes"
+              parent="crm.crm_menu_root"
+              sequence="12"/>
 
     <menuitem id="menu_move_in_form_crm"
               name="Move-In Processing Forms"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_movein_gate_pass_cat"
               action="action_move_in_form"
-              sequence="17"/>
-
-    <menuitem id="menu_rental_registration_summary_crm"
-              name="Rental Registration Summaries"
-              parent="crm.crm_menu_root"
-              action="action_rental_registration_summary"
-              sequence="18"/>
+              sequence="1"/>
 
     <menuitem id="menu_move_in_gate_pass_crm"
               name="Move-In Gate Passes"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_movein_gate_pass_cat"
               action="action_move_in_gate_pass"
-              sequence="19"/>
+              sequence="2"/>
+
+    <menuitem id="menu_visitor_gate_passes"
+              name="Security Visitor Gate Passes"
+              parent="menu_crm_movein_gate_pass_cat"
+              action="action_visitor_gate_pass"
+              sequence="3"/>
+
+    <menuitem id="menu_rental_registration_summary_crm"
+              name="Rental Registration Summaries"
+              parent="menu_crm_movein_gate_pass_cat"
+              action="action_rental_registration_summary"
+              sequence="4"/>
 
     <menuitem id="menu_property_tenants"
               name="Tenants Master File"
-              parent="crm.crm_menu_root"
+              parent="menu_crm_movein_gate_pass_cat"
               action="action_property_tenant"
-              sequence="20"/>
+              sequence="5"/>
 
     <!-- ============================================================ -->
     <!-- 2. MAINTENANCE & PMO OPERATIONS (parent="maintenance.menu_m_request") -->
