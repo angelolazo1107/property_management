@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class CrmLeadInherit(models.Model):
     _inherit = 'crm.lead'
 
-    target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="[('is_property_unit', '=', True)]")
+    target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]")
     intended_move_in_date = fields.Date(string='Intended Move-In Date')
     preferred_budget = fields.Monetary(string='Preferred Rent Budget', currency_field='company_currency')
     

@@ -18,7 +18,7 @@ class OcularVisit(models.Model):
     
     building_name = fields.Char(string='Property / Building Name')
     floor_level = fields.Char(string='Floor Level')
-    unit_ids = fields.Many2many('product.product', string='Unit/s for Viewing', domain="[('is_property_unit', '=', True)]")
+    unit_ids = fields.Many2many('product.product', string='Unit/s for Viewing', domain="['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]")
     
     purpose = fields.Selection([
         ('ocular', 'Ocular Visit / Initial Tour'),
