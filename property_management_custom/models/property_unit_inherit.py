@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class ProductProductPropertyInherit(models.Model):
     _inherit = 'product.product'
 
-    is_property_unit = fields.Boolean(string='Is Property Unit / Commercial Space', default=False)
+    is_property_unit = fields.Boolean(string='Is Property Unit / Commercial Space', default=True)
     floor_level = fields.Char(string='Floor Level')
     area_sqm = fields.Float(string='Floor Area (sqm)', digits=(16, 2))
     
