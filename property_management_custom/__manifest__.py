@@ -24,6 +24,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'calendar',
         'sale_management',
         'account',
+        'account_accountant',
         'purchase',
         'stock',
         'maintenance',
