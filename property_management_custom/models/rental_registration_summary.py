@@ -116,11 +116,12 @@ class RentalRegistrationSummary(models.Model):
             self.lease_period = f"{self.lease_contract_id.date_start} to {self.lease_contract_id.date_end} ({self.lease_contract_id.contract_term_months} Months)"
             self.furniture_package = "Fully Furnished Package" if (self.lease_contract_id.furniture_rental_fee or 0.0) > 0 else "Standard Unit Package"
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('rental.registration.summary') or 'RREG-2026-00001'
-        return super(RentalRegistrationSummary, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('rental.registration.summary') or 'RREG-2026-00001'
+        return super(RentalRegistrationSummary, self).create(vals_list)
 
     def action_generate_summary(self):
         for rec in self:

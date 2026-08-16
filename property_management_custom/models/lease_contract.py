@@ -405,28 +405,29 @@ class LeaseContract(models.Model):
         for rec in self:
             rec.net_refund_amount = max(0.0, (rec.security_deposit or 0.0) - rec.total_deductions)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            year = fields.Date.context_today(self).strftime('%Y')
-            property_code = 'SAPPHIRE'
-            unit_code = '1001'
-            
-            if vals.get('unit_id'):
-                unit = self.env['product.product'].browse(vals['unit_id'])
-                if unit and unit.name:
-                    parts = [p.strip() for p in unit.name.replace('-', ' ').split() if p.strip()]
-                    if len(parts) >= 2:
-                        property_code = parts[0].upper()
-                        unit_code = parts[-1].upper()
-                    elif len(parts) == 1:
-                        unit_code = parts[0].upper()
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                year = fields.Date.context_today(self).strftime('%Y')
+                property_code = 'SAPPHIRE'
+                unit_code = '1001'
+                
+                if vals.get('unit_id'):
+                    unit = self.env['product.product'].browse(vals['unit_id'])
+                    if unit and unit.name:
+                        parts = [p.strip() for p in unit.name.replace('-', ' ').split() if p.strip()]
+                        if len(parts) >= 2:
+                            property_code = parts[0].upper()
+                            unit_code = parts[-1].upper()
+                        elif len(parts) == 1:
+                            unit_code = parts[0].upper()
 
-            seq_raw = self.env['ir.sequence'].next_by_code('lease.contract') or '0001'
-            seq_num = seq_raw.split('-')[-1] if '-' in seq_raw else seq_raw
-            vals['name'] = f"LEASE-{year}-{property_code}-{unit_code}-{seq_num}"
+                seq_raw = self.env['ir.sequence'].next_by_code('lease.contract') or '0001'
+                seq_num = seq_raw.split('-')[-1] if '-' in seq_raw else seq_raw
+                vals['name'] = f"LEASE-{year}-{property_code}-{unit_code}-{seq_num}"
 
-        return super(LeaseContract, self).create(vals)
+        return super(LeaseContract, self).create(vals_list)
 
     def action_submit_tenant_review(self):
         for rec in self:

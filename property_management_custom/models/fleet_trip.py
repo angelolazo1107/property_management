@@ -54,11 +54,12 @@ class FleetTripRequest(models.Model):
             else:
                 rec.total_km = 0
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('fleet.trip.request') or 'TRIP-0001'
-        return super(FleetTripRequest, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('fleet.trip.request') or 'TRIP-0001'
+        return super(FleetTripRequest, self).create(vals_list)
 
     def action_complete_trip(self):
         for rec in self:

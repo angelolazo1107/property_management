@@ -118,11 +118,12 @@ class ParkingApplication(models.Model):
             if missing:
                 raise UserError(f"Document Check Failed: Before submitting or approving the parking application, the following required items are missing: {', '.join(missing)}!")
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('parking.application') or 'PARK-2026-00001'
-        return super(ParkingApplication, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('parking.application') or 'PARK-2026-00001'
+        return super(ParkingApplication, self).create(vals_list)
 
     def action_submit(self):
         for rec in self:

@@ -31,11 +31,12 @@ class OfficeSupplyRequest(models.Model):
         ('pr_raised', 'Sent to Procurement (PR Created)'),
     ], string='Status', default='draft', tracking=True)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('office.supply.request') or 'SUPPLY-0001'
-        return super(OfficeSupplyRequest, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('office.supply.request') or 'SUPPLY-0001'
+        return super(OfficeSupplyRequest, self).create(vals_list)
 
     def action_dept_approve(self):
         for rec in self:

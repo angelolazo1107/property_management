@@ -154,11 +154,12 @@ class RecurringMonthlyBilling(models.Model):
             self.wifi_fee = self.lease_contract_id.wifi_fee
             self.other_recurring_charges = (self.lease_contract_id.pet_registration_fee or 0.0) + (self.lease_contract_id.other_charges or 0.0)
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('recurring.monthly.billing') or 'BILL-2026-08-00001'
-        return super(RecurringMonthlyBilling, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('recurring.monthly.billing') or 'BILL-2026-08-00001'
+        return super(RecurringMonthlyBilling, self).create(vals_list)
 
     def action_generate_invoice(self):
         for rec in self:

@@ -40,11 +40,12 @@ class PMOUtilityReading(models.Model):
         for rec in self:
             rec.total_amount = rec.consumption * rec.rate_per_unit
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('pmo.utility.reading') or 'UTIL-0001'
-        return super(PMOUtilityReading, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('pmo.utility.reading') or 'UTIL-0001'
+        return super(PMOUtilityReading, self).create(vals_list)
 
     def action_verify_reading(self):
         for rec in self:

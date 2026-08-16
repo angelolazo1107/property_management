@@ -140,11 +140,12 @@ class AgentCommission(models.Model):
             self.tenant_id = self.lease_contract_id.tenant_id
             self.unit_id = self.lease_contract_id.unit_id
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('agent.commission') or 'COMM-2026-00001'
-        return super(AgentCommission, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('agent.commission') or 'COMM-2026-00001'
+        return super(AgentCommission, self).create(vals_list)
 
     def action_submit(self):
         for rec in self:

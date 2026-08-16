@@ -75,11 +75,12 @@ class PropertyReservation(models.Model):
         elif self.reservation_amount_preset == '10000':
             self.reservation_amount = 10000.0
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('property.reservation') or 'RES-2026-00001'
-        return super(PropertyReservation, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('property.reservation') or 'RES-2026-00001'
+        return super(PropertyReservation, self).create(vals_list)
 
     @api.constrains('unit_id', 'state')
     def _check_unit_availability(self):

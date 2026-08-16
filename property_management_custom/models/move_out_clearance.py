@@ -141,11 +141,12 @@ class MoveOutClearance(models.Model):
             if hasattr(self.tenant_id, 'tenant_unpaid_balance'):
                 self.outstanding_balance = self.tenant_id.tenant_unpaid_balance
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('move.out.clearance') or 'MCLR-2026-00001'
-        return super(MoveOutClearance, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('move.out.clearance') or 'MCLR-2026-00001'
+        return super(MoveOutClearance, self).create(vals_list)
 
     def action_submit_inspection(self):
         for rec in self:

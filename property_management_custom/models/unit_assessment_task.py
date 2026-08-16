@@ -60,11 +60,12 @@ class UnitAssessmentTask(models.Model):
 
     notes = fields.Text(string='Inspection Findings & Assessment Notes')
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('unit.assessment.task') or 'ASSESS-2026-00001'
-        return super(UnitAssessmentTask, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('unit.assessment.task') or 'ASSESS-2026-00001'
+        return super(UnitAssessmentTask, self).create(vals_list)
 
     def action_assign_admin(self):
         for rec in self:

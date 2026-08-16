@@ -44,11 +44,12 @@ class PMOJobOrder(models.Model):
     work_description = fields.Text(string='Problem Description & Scope of Work')
     completion_photos = fields.Binary(string='Completion Photo Evidence')
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('pmo.job.order') or 'JO-0001'
-        return super(PMOJobOrder, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('pmo.job.order') or 'JO-0001'
+        return super(PMOJobOrder, self).create(vals_list)
 
     def action_approve_waiver(self):
         for rec in self:

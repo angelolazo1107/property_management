@@ -89,11 +89,12 @@ class TenantApplicationBis(models.Model):
             if rec.discounted_price and not rec.discount_remarks:
                 raise UserError("Discount Remarks are required whenever Discounted Price is enabled!")
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('tenant.application.bis') or 'BIS-2026-00001'
-        return super(TenantApplicationBis, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('tenant.application.bis') or 'BIS-2026-00001'
+        return super(TenantApplicationBis, self).create(vals_list)
 
     def action_submit_billing(self):
         for rec in self:

@@ -101,11 +101,12 @@ class MoveInForm(models.Model):
             self.security_deposit = self.lease_contract_id.security_deposit
             self.rental_amount = self.lease_contract_id.monthly_rent
 
-    @api.model
-    def create(self, vals):
-        if vals.get('name', 'New') == 'New':
-            vals['name'] = self.env['ir.sequence'].next_by_code('move.in.form') or 'MIF-2026-00001'
-        return super(MoveInForm, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code('move.in.form') or 'MIF-2026-00001'
+        return super(MoveInForm, self).create(vals_list)
 
     def action_submit(self):
         for rec in self:
