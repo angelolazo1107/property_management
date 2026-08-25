@@ -92,37 +92,28 @@ class PropertyBuilding(models.Model):
                 );
             """)
 
-            # 4. ORM Sync to guarantee commit
+            # 4. Direct Python Record Sync for 100% Reliability
             b_park = self.env['property.building'].search([('name', '=', 'Park Station')], limit=1)
-            if b_park:
-                self.env['product.product'].search([
-                    '|', '|',
-                    ('name', 'ilike', 'Office'),
-                    ('name', 'ilike', 'Bureau'),
-                    ('name', 'ilike', 'Park')
-                ]).sudo().write({'building_id': b_park.id, 'is_property_unit': True})
-
             b_bellevue = self.env['property.building'].search([('name', '=', 'Immeuble Bellevue')], limit=1)
-            if b_bellevue:
-                self.env['product.product'].search([
-                    '|', '|', '|',
-                    ('name', 'ilike', 'Uccle'),
-                    ('name', 'ilike', 'Bellevue'),
-                    ('name', 'ilike', 'Duplex'),
-                    ('name', 'ilike', 'Observatoire')
-                ]).sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
-
             b_ferme = self.env['property.building'].search([('name', '=', 'Ferme Saint-Jean')], limit=1)
-            if b_ferme:
-                self.env['product.product'].search([
-                    '|', '|', '|', '|', '|', '|',
-                    ('name', 'ilike', 'Apartment'),
-                    ('name', 'ilike', 'Appartement'),
-                    ('name', 'ilike', '26'),
-                    ('name', 'ilike', '27'),
-                    ('name', 'ilike', '28'),
-                    ('name', 'ilike', '29'),
-                    ('name', 'ilike', 'Ferme')
-                ]).sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
+
+            all_products = self.env['product.product'].sudo().search([])
+            for prod in all_products:
+                names_to_check = [
+                    prod.name or '',
+                    prod.product_tmpl_id.name or '',
+                    prod.display_name or ''
+                ]
+                full_text = ' '.join(names_to_check).lower()
+
+                if any(k in full_text for k in ['office', 'bureau']):
+                    if b_park:
+                        prod.sudo().write({'building_id': b_park.id, 'is_property_unit': True})
+                elif any(k in full_text for k in ['uccle', 'bellevue', 'duplex', 'observatoire']):
+                    if b_bellevue:
+                        prod.sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
+                elif any(k in full_text for k in ['apartment', 'appartement', 'ferme', '26', '27', '28', '29']):
+                    if b_ferme:
+                        prod.sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
         except Exception:
             pass
