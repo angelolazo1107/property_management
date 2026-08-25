@@ -9,6 +9,8 @@ class ProductProductPropertyInherit(models.Model):
     floor_level = fields.Char(string='Floor Level')
     area_sqm = fields.Float(string='Floor Area (sqm)', digits=(16, 2))
     
+    active_lease_ids = fields.One2many('lease.contract', 'unit_id', string='Lease Contracts')
+    
     occupancy_status = fields.Selection([
         ('available', 'Available'),
         ('reserved', 'Reserved'),
@@ -18,7 +20,37 @@ class ProductProductPropertyInherit(models.Model):
         ('under_cleaning', 'Under Cleaning'),
         ('maintenance', 'Under Maintenance'),
         ('blocked', 'Blocked / Out of Service'),
-    ], string='Occupancy Status', default='available', tracking=True)
+    ], string='Occupancy Status', compute='_compute_occupancy_status', store=True, readonly=False, tracking=True)
+
+    @api.depends('active_lease_ids.stage', 'active_lease_ids.date_start', 'active_lease_ids.date_end')
+    def _compute_occupancy_status(self):
+        today = fields.Date.today()
+        for rec in self:
+            if not rec.is_property_unit:
+                continue
+            active_contract = self.env['lease.contract'].search([
+                ('unit_id', '=', rec.id),
+                ('stage', 'in', ['active', 'for_renewal', 'renewal_offered', 'renewed', 'for_move_out', 'signed_tenant', 'notarized', 'released_tenant']),
+                ('date_start', '<=', today),
+                ('date_end', '>=', today),
+            ], order='date_end desc', limit=1)
+            
+            if active_contract:
+                rec.occupancy_status = 'occupied'
+                rec.current_tenant_id = active_contract.tenant_id.id
+            else:
+                active_res = self.env['property.reservation'].search([
+                    ('unit_id', '=', rec.id),
+                    ('state', 'in', ['draft', 'submitted', 'confirmed']),
+                ], limit=1)
+                if active_res:
+                    rec.occupancy_status = 'reserved'
+                    rec.current_tenant_id = active_res.partner_id.id
+                elif rec.occupancy_status in ('occupied', 'reserved'):
+                    rec.occupancy_status = 'available'
+                    rec.current_tenant_id = False
+                elif not rec.occupancy_status:
+                    rec.occupancy_status = 'available'
 
     property_type = fields.Selection([
         ('commercial', 'Commercial Retail'),
