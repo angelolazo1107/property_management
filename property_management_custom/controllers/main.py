@@ -41,12 +41,14 @@ class PropertyManagementWebsiteController(http.Controller):
     @http.route(['/property/inquiry'], type='http', auth='public', website=True)
     def property_inquiry_form(self, unit_id=None, **kw):
         units = request.env['product.product'].sudo().search([('is_property_unit', '=', True)], order='name asc')
+        buildings = request.env['property.building'].sudo().search([], order='name asc')
         selected_unit = False
         if unit_id:
             selected_unit = request.env['product.product'].sudo().browse(int(unit_id))
             
         values = {
             'units': units,
+            'buildings': buildings,
             'selected_unit': selected_unit,
         }
         return request.render('property_management_custom.property_inquiry_form_template', values)
@@ -56,6 +58,7 @@ class PropertyManagementWebsiteController(http.Controller):
         contact_name = post.get('contact_name')
         email_from = post.get('email_from')
         phone = post.get('phone')
+        building_id = int(post.get('building_id')) if post.get('building_id') else False
         unit_id = int(post.get('unit_id')) if post.get('unit_id') else False
         intended_move_in_date = post.get('intended_move_in_date') or False
         preferred_budget = float(post.get('preferred_budget')) if post.get('preferred_budget') else 0.0
@@ -82,6 +85,8 @@ class PropertyManagementWebsiteController(http.Controller):
             unit_rec = request.env['product.product'].sudo().browse(unit_id)
             if unit_rec:
                 unit_name = unit_rec.name
+                if not building_id and unit_rec.building_id:
+                    building_id = unit_rec.building_id.id
 
         lead_vals = {
             'name': f"Website Inquiry: {contact_name} - Unit: {unit_name}",
@@ -89,6 +94,7 @@ class PropertyManagementWebsiteController(http.Controller):
             'partner_id': partner.id if partner else False,
             'email_from': email_from,
             'phone': phone,
+            'building_id': building_id,
             'target_unit_id': unit_id,
             'intended_move_in_date': intended_move_in_date,
             'preferred_budget': preferred_budget,

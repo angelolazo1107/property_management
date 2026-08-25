@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="building_alon_tower_1" model="property.building">
+            <field name="name">Alon Tower 1 - Residential &amp; Commercial</field>
+            <field name="code">ALT-01</field>
+            <field name="address">101 Alon Boulevard, Corporate District, Metro Manila</field>
+            <field name="total_floors">35</field>
+        </record>
+
+        <record id="building_haraya_residences" model="property.building">
+            <field name="name">Haraya Executive Residences</field>
+            <field name="code">HER-02</field>
+            <field name="address">205 Haraya Avenue, Luxury Park, Metro Manila</field>
+            <field name="total_floors">42</field>
+        </record>
+
+        <record id="building_aura_commercial" model="property.building">
+            <field name="name">Aura Commercial &amp; Retail Strip</field>
+            <field name="code">ACR-03</field>
+            <field name="address">55 Aura Promenade, Business District, Metro Manila</field>
+            <field name="total_floors">10</field>
+        </record>
+    </data>
+</odoo>

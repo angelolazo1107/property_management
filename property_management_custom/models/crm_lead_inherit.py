@@ -4,6 +4,7 @@ from odoo import models, fields, api
 class CrmLeadInherit(models.Model):
     _inherit = 'crm.lead'
 
+    building_id = fields.Many2one('property.building', string='Building / Property Complex', tracking=True)
     target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]")
     intended_move_in_date = fields.Date(string='Intended Move-In Date')
     preferred_budget = fields.Monetary(string='Preferred Rent Budget', currency_field='company_currency')
@@ -12,6 +13,16 @@ class CrmLeadInherit(models.Model):
     wifi_required = fields.Boolean(string='Wi-Fi Connection Requirement')
     pet_details = fields.Char(string='Pet Details / Registration')
     broker_id = fields.Many2one('res.partner', string='Assigned Broker / Agent')
+
+    @api.onchange('building_id')
+    def _onchange_building_id(self):
+        if self.building_id and self.target_unit_id and self.target_unit_id.building_id != self.building_id:
+            self.target_unit_id = False
+
+    @api.onchange('target_unit_id')
+    def _onchange_target_unit_id(self):
+        if self.target_unit_id and self.target_unit_id.building_id:
+            self.building_id = self.target_unit_id.building_id.id
     
     # Stage 2 Ocular Visit Integration
     ocular_visit_ids = fields.One2many('ocular.visit', 'lead_id', string='Ocular Visit Records')
@@ -92,17 +103,33 @@ class CrmLeadInherit(models.Model):
         if stage_bis:
             self.stage_id = stage_bis.id
 
+        # If no target unit is selected yet, open a new BIS form so the user can select the unit
+        if not self.target_unit_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'New Tenant Application / BIS',
+                'res_model': 'tenant.application.bis',
+                'view_mode': 'form',
+                'target': 'current',
+                'context': {
+                    'default_tenant_id': self.partner_id.id if self.partner_id else False,
+                    'default_opportunity_id': self.id,
+                    'default_move_in_date': self.intended_move_in_date,
+                    'default_with_agent': True if self.broker_id else False,
+                    'default_agent_id': self.broker_id.id if self.broker_id else False,
+                }
+            }
+
         bis_vals = {
             'tenant_id': self.partner_id.id,
-            'unit_id': self.target_unit_id.id if self.target_unit_id else False,
+            'unit_id': self.target_unit_id.id,
             'opportunity_id': self.id,
             'move_in_date': self.intended_move_in_date,
             'with_agent': True if self.broker_id else False,
             'agent_id': self.broker_id.id if self.broker_id else False,
         }
         bis = self.env['tenant.application.bis'].create(bis_vals)
-        if self.target_unit_id:
-            bis._onchange_unit_id()
+        bis._onchange_unit_id()
 
         return {
             'type': 'ir.actions.act_window',

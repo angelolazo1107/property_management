@@ -324,16 +324,46 @@
 
                                     <div class="row g-3 mb-4">
                                         <div class="col-md-6">
+                                            <label class="form-label fw-semibold">Building / Property Complex</label>
+                                            <select name="building_id" id="building_select" class="form-select" onchange="filterUnitsByBuilding()">
+                                                <option value="">Select Building / Complex (Optional)...</option>
+                                                <t t-foreach="buildings" t-as="b">
+                                                    <option t-att-value="b.id" t-att-selected="selected_unit and selected_unit.building_id and selected_unit.building_id.id == b.id">
+                                                        <t t-esc="b.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
                                             <label class="form-label fw-semibold">Target Property Unit</label>
-                                            <select name="unit_id" class="form-select">
+                                            <select name="unit_id" id="unit_select" class="form-select">
                                                 <option value="">Select a Property Unit (Optional)...</option>
                                                 <t t-foreach="units" t-as="u">
-                                                    <option t-att-value="u.id" t-att-selected="selected_unit and selected_unit.id == u.id">
+                                                    <option t-att-value="u.id"
+                                                            t-att-data-building-id="u.building_id.id if u.building_id else ''"
+                                                            t-att-selected="selected_unit and selected_unit.id == u.id">
                                                         <t t-esc="u.name"/> (<t t-esc="'%.2f sqm' % u.area_sqm if u.area_sqm else 'N/A'"/> – <t t-esc="u.occupancy_status"/>)
                                                     </option>
                                                 </t>
                                             </select>
                                         </div>
+                                        <script>
+                                            function filterUnitsByBuilding() {
+                                                var bSelect = document.getElementById('building_select');
+                                                var uSelect = document.getElementById('unit_select');
+                                                if (!bSelect || !uSelect) return;
+                                                var selectedBuildingId = bSelect.value;
+                                                var options = uSelect.options;
+                                                for (var i = 1; i &lt; options.length; i++) {
+                                                    var optBuildingId = options[i].getAttribute('data-building-id');
+                                                    if (!selectedBuildingId || !optBuildingId || optBuildingId === selectedBuildingId) {
+                                                        options[i].style.display = '';
+                                                    } else {
+                                                        options[i].style.display = 'none';
+                                                    }
+                                                }
+                                            }
+                                        </script>
                                         <div class="col-md-6">
                                             <label class="form-label fw-semibold">Target Move-In Date</label>
                                             <input type="date" name="intended_move_in_date" class="form-control"/>

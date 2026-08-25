@@ -61,6 +61,8 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'data/fleet_trip_sequence.xml',
         'data/property_reservation_sequence.xml',
         'data/tenant_bis_sequence.xml',
+        'data/property_building_data.xml',
+        'views/property_building_views.xml',
         'views/tenant_views.xml',
         'views/ocular_visit_views.xml',
         'views/visitor_gate_pass_views.xml',

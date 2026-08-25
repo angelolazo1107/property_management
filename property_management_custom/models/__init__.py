@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from . import property_building
 from . import property_unit_inherit
 from . import crm_lead_inherit
 from . import ocular_visit

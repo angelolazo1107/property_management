@@ -16,6 +16,12 @@
               parent="crm.crm_menu_root"
               sequence="11"/>
 
+    <menuitem id="menu_property_buildings"
+              name="Buildings &amp; Complexes"
+              parent="menu_crm_property_leasing_cat"
+              action="action_property_building"
+              sequence="0"/>
+
     <menuitem id="menu_ocular_visits"
               name="Ocular Visit Coordination"
               parent="menu_crm_property_leasing_cat"
