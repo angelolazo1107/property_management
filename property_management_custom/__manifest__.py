@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Property Management Extensions for Odoo Apps',
-    'version': '19.0.1.0.2',
+    'version': '19.0.1.0.5',
     'category': 'Customizations',
     'summary': 'Customizations for Properties, CRM, Sales, Purchase, Maintenance, Helpdesk, Fleet, Approvals & Accounting',
     'description': """
@@ -23,6 +23,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'crm',
         'calendar',
         'sale_management',
+        'sale_crm',
         'account',
         'account_accountant',
         'purchase',
@@ -63,6 +64,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'data/tenant_bis_sequence.xml',
         'data/property_building_data.xml',
         'views/property_building_views.xml',
+        'views/property_unit_views.xml',
         'views/tenant_views.xml',
         'views/ocular_visit_views.xml',
         'views/visitor_gate_pass_views.xml',

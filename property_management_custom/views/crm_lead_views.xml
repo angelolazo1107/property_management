@@ -15,6 +15,9 @@
                 <button name="action_verify_reservation_payment" string="Verify Reservation Fee (Accounting)" type="object" class="btn-primary" invisible="reservation_verified"/>
                 <button name="action_verify_move_in_clearance" string="Grant Move-In Clearance" type="object" class="btn-success" invisible="move_in_cleared"/>
             </xpath>
+            <xpath expr="//button[@name='action_sale_quotations_new']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_view_ocular_visits" type="object" class="oe_stat_button" icon="fa-calendar-check-o">
                     <field name="ocular_visit_count" widget="statinfo" string="Ocular Visits"/>
@@ -34,7 +37,8 @@
                     <group>
                         <group string="Unit &amp; Tenant Requirements">
                             <field name="building_id" placeholder="Select Building / Complex..."/>
-                            <field name="target_unit_id" domain="[('is_property_unit', '=', True)] + ([('building_id', '=', building_id)] if building_id else [])" placeholder="Select Unit..."/>
+                            <field name="target_unit_id" domain="[('is_property_unit', '=', True)]" placeholder="Select Unit..."/>
+                            <field name="target_unit_occupancy" widget="badge" decoration-success="target_unit_occupancy == 'available'" decoration-warning="target_unit_occupancy == 'reserved'" decoration-danger="target_unit_occupancy == 'occupied'" invisible="not target_unit_id"/>
                             <field name="intended_move_in_date"/>
                             <field name="preferred_budget"/>
                             <field name="parking_required"/>

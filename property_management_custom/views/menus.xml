@@ -22,11 +22,17 @@
               action="action_property_building"
               sequence="0"/>
 
+    <menuitem id="menu_property_units_custom"
+              name="Property Units &amp; Spaces"
+              parent="menu_crm_property_leasing_cat"
+              action="action_property_units_all"
+              sequence="1"/>
+
     <menuitem id="menu_ocular_visits"
               name="Ocular Visit Coordination"
               parent="menu_crm_property_leasing_cat"
               action="action_ocular_visit"
-              sequence="1"/>
+              sequence="2"/>
 
     <menuitem id="menu_property_leasing_quotations"
               name="Leasing Quotations"

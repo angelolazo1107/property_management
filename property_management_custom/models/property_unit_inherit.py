@@ -38,6 +38,35 @@ class ProductProductPropertyInherit(models.Model):
     latest_electric_reading = fields.Float(string='Latest Electric Reading (kWh)')
     latest_water_reading = fields.Float(string='Latest Water Reading (cbm)')
 
+    @api.depends('name', 'default_code', 'is_property_unit', 'occupancy_status', 'floor_level', 'building_id')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        status_dict = {
+            'available': 'Available',
+            'reserved': 'Reserved',
+            'occupied': 'Occupied',
+            'vacated': 'Vacated',
+            'under_repair': 'Under Repair',
+            'under_cleaning': 'Under Cleaning',
+            'maintenance': 'Maintenance',
+            'blocked': 'Blocked',
+        }
+        for rec in self:
+            if rec.is_property_unit:
+                status_label = status_dict.get(rec.occupancy_status, 'Available')
+                details = []
+                if rec.floor_level:
+                    details.append(rec.floor_level)
+                if status_label:
+                    details.append(f"[{status_label.upper()}]")
+                if rec.list_price:
+                    details.append(f"₱{rec.list_price:,.2f}")
+                
+                if details:
+                    rec.display_name = f"{rec.name} — {' · '.join(details)}"
+                else:
+                    rec.display_name = rec.name
+
 
 class ResCompanyCurrencyFix(models.Model):
     _inherit = 'res.company'

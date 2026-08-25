@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Property Unit Product Form View Extension -->
+    <record id="view_product_product_form_property_inherit" model="ir.ui.view">
+        <field name="name">product.product.form.property.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Property &amp; Unit Details" name="property_unit_details">
+                    <group>
+                        <group string="Property Assignment">
+                            <field name="is_property_unit"/>
+                            <field name="building_id" placeholder="Select Building / Complex..."/>
+                            <field name="floor_level" placeholder="e.g. Floor 14"/>
+                            <field name="area_sqm"/>
+                            <field name="property_type"/>
+                            <field name="occupancy_status" widget="badge"/>
+                        </group>
+                        <group string="Location &amp; Utilities">
+                            <field name="property_address" placeholder="Full address..."/>
+                            <field name="current_tenant_id"/>
+                            <field name="electricity_meter_no"/>
+                            <field name="water_meter_no"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Property Unit Product List View -->
+    <record id="view_property_unit_product_list" model="ir.ui.view">
+        <field name="name">property.unit.product.list</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <list string="Property Units &amp; Spaces">
+                <field name="name"/>
+                <field name="building_id"/>
+                <field name="floor_level"/>
+                <field name="area_sqm"/>
+                <field name="property_type"/>
+                <field name="list_price" string="Monthly Rent"/>
+                <field name="occupancy_status" widget="badge"/>
+                <field name="current_tenant_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Property Units Window Action -->
+    <record id="action_property_units_all" model="ir.actions.act_window">
+        <field name="name">Property Units</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="domain">[('is_property_unit', '=', True)]</field>
+        <field name="context">{'default_is_property_unit': True, 'default_type': 'service', 'default_sale_ok': True}</field>
+        <field name="view_id" ref="view_property_unit_product_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Property Unit!
+            </p>
+            <p>
+                Add residential suites, office spaces, or commercial slots and link them to buildings.
+            </p>
+        </field>
+    </record>
+</odoo>

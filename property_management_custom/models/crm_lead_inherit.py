@@ -6,6 +6,7 @@ class CrmLeadInherit(models.Model):
 
     building_id = fields.Many2one('property.building', string='Building / Property Complex', tracking=True)
     target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]")
+    target_unit_occupancy = fields.Selection(related='target_unit_id.occupancy_status', string='Unit Occupancy Status', readonly=True)
     intended_move_in_date = fields.Date(string='Intended Move-In Date')
     preferred_budget = fields.Monetary(string='Preferred Rent Budget', currency_field='company_currency')
     
@@ -18,6 +19,9 @@ class CrmLeadInherit(models.Model):
     def _onchange_building_id(self):
         if self.building_id and self.target_unit_id and self.target_unit_id.building_id != self.building_id:
             self.target_unit_id = False
+        if self.building_id:
+            return {'domain': {'target_unit_id': [('is_property_unit', '=', True), ('building_id', '=', self.building_id.id)]}}
+        return {'domain': {'target_unit_id': [('is_property_unit', '=', True)]}}
 
     @api.onchange('target_unit_id')
     def _onchange_target_unit_id(self):
