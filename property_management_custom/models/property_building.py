@@ -50,7 +50,7 @@ class PropertyBuilding(models.Model):
                 WHERE NOT EXISTS (SELECT 1 FROM property_building WHERE name = 'Ferme Saint-Jean');
             """)
 
-            # 3. Direct SQL Linkage of Properties to Buildings
+            # 3. Direct SQL Linkage of Properties to Buildings (with JSONB text casting)
             self.env.cr.execute("""
                 UPDATE product_product 
                 SET building_id = (SELECT id FROM property_building WHERE name = 'Park Station' LIMIT 1),
@@ -58,7 +58,7 @@ class PropertyBuilding(models.Model):
                 WHERE id IN (
                     SELECT pp.id FROM product_product pp 
                     JOIN product_template pt ON pp.product_tmpl_id = pt.id 
-                    WHERE pt.name ILIKE '%Office%' OR pt.name ILIKE '%Park Station%'
+                    WHERE pt.name::text ILIKE '%Office%' OR pt.name::text ILIKE '%Park Station%'
                 );
 
                 UPDATE product_product 
@@ -67,7 +67,7 @@ class PropertyBuilding(models.Model):
                 WHERE id IN (
                     SELECT pp.id FROM product_product pp 
                     JOIN product_template pt ON pp.product_tmpl_id = pt.id 
-                    WHERE pt.name ILIKE '%Uccle%' OR pt.name ILIKE '%Bellevue%'
+                    WHERE pt.name::text ILIKE '%Uccle%' OR pt.name::text ILIKE '%Bellevue%'
                 );
 
                 UPDATE product_product 
@@ -76,8 +76,21 @@ class PropertyBuilding(models.Model):
                 WHERE id IN (
                     SELECT pp.id FROM product_product pp 
                     JOIN product_template pt ON pp.product_tmpl_id = pt.id 
-                    WHERE pt.name ILIKE '%Apartment%' OR pt.name ILIKE '%Ferme%'
+                    WHERE pt.name::text ILIKE '%Apartment%' OR pt.name::text ILIKE '%Ferme%'
                 );
             """)
+
+            # 4. ORM Sync to guarantee commit
+            b_park = self.env['property.building'].search([('name', '=', 'Park Station')], limit=1)
+            if b_park:
+                self.env['product.product'].search([('name', 'ilike', 'Office')]).sudo().write({'building_id': b_park.id, 'is_property_unit': True})
+
+            b_bellevue = self.env['property.building'].search([('name', '=', 'Immeuble Bellevue')], limit=1)
+            if b_bellevue:
+                self.env['product.product'].search([('name', 'ilike', 'Uccle')]).sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
+
+            b_ferme = self.env['property.building'].search([('name', '=', 'Ferme Saint-Jean')], limit=1)
+            if b_ferme:
+                self.env['product.product'].search([('name', 'ilike', 'Apartment')]).sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
         except Exception:
             pass
