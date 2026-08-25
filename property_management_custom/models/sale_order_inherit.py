@@ -6,9 +6,9 @@ class SaleOrderPropertyInherit(models.Model):
     _inherit = 'sale.order'
 
     target_unit_id = fields.Many2one(
-        'product.product', 
+        'account.analytic.account', 
         string='Target Property Unit', 
-        domain="[('is_property_unit', '=', True)]", 
+        domain="[('x_is_property', '=', True)]", 
         tracking=True
     )
     intended_move_in_date = fields.Date(string='Intended Move-In Date')

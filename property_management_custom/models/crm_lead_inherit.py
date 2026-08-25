@@ -5,7 +5,7 @@ class CrmLeadInherit(models.Model):
     _inherit = 'crm.lead'
 
     building_id = fields.Many2one('x_buildings', string='Building / Property Complex', tracking=True)
-    target_property_id = fields.Many2one(
+    target_unit_id = fields.Many2one(
         'account.analytic.account',
         string='Target Unit / Property',
         domain="[('x_is_property', '=', True), ('x_property_building_id', '=', building_id)]",
@@ -23,12 +23,12 @@ class CrmLeadInherit(models.Model):
     pet_details = fields.Char(string='Pet Details / Registration')
     broker_id = fields.Many2one('res.partner', string='Assigned Broker / Agent')
 
-    @api.depends('target_property_id', 'target_property_id.x_rental_contract_id')
+    @api.depends('target_unit_id', 'target_unit_id.x_rental_contract_id')
     def _compute_unit_status(self):
         for rec in self:
-            if rec.target_property_id and rec.target_property_id.x_rental_contract_id:
+            if rec.target_unit_id and rec.target_unit_id.x_rental_contract_id:
                 rec.target_unit_occupancy = 'occupied'
-            elif rec.target_property_id:
+            elif rec.target_unit_id:
                 rec.target_unit_occupancy = 'available'
             else:
                 rec.target_unit_occupancy = False
@@ -36,18 +36,18 @@ class CrmLeadInherit(models.Model):
     @api.onchange('building_id')
     def _onchange_building_id(self):
         if self.building_id:
-            if self.target_property_id and self.target_property_id.x_property_building_id != self.building_id:
-                self.target_property_id = False
-            return {'domain': {'target_property_id': [
+            if self.target_unit_id and self.target_unit_id.x_property_building_id != self.building_id:
+                self.target_unit_id = False
+            return {'domain': {'target_unit_id': [
                 ('x_is_property', '=', True),
                 ('x_property_building_id', '=', self.building_id.id)
             ]}}
-        return {'domain': {'target_property_id': [('x_is_property', '=', True)]}}
+        return {'domain': {'target_unit_id': [('x_is_property', '=', True)]}}
 
-    @api.onchange('target_property_id')
-    def _onchange_target_property_id(self):
-        if self.target_property_id and self.target_property_id.x_property_building_id:
-            self.building_id = self.target_property_id.x_property_building_id.id
+    @api.onchange('target_unit_id')
+    def _onchange_target_unit_id(self):
+        if self.target_unit_id and self.target_unit_id.x_property_building_id:
+            self.building_id = self.target_unit_id.x_property_building_id.id
 
     # Stage 2 Ocular Visit Integration
     ocular_visit_ids = fields.One2many('ocular.visit', 'lead_id', string='Ocular Visit Records')

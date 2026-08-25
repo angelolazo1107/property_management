@@ -2,4 +2,4 @@
 from odoo import models, fields
 
 class PropertyBuilding(models.Model):
-    _inherit = 'property.building'
+    _inherit = 'x_buildings'
