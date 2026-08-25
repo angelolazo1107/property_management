@@ -8,7 +8,7 @@ class CrmLeadInherit(models.Model):
     target_unit_id = fields.Many2one(
         'account.analytic.account',
         string='Target Unit / Property',
-        domain="[('x_is_property', '=', True), ('x_property_building_id', '=', building_id)]",
+        domain="building_id and [('x_is_property', '=', True), ('x_property_building_id', '=', building_id)] or [('x_is_property', '=', True)]",
         tracking=True
     )
     target_unit_occupancy = fields.Selection([
