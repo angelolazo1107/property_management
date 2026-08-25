@@ -5,7 +5,7 @@ class CrmLeadInherit(models.Model):
     _inherit = 'crm.lead'
 
     building_id = fields.Many2one('property.building', string='Building / Property Complex', tracking=True)
-    target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]")
+    target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="[('building_id', '=', building_id)]")
     target_unit_occupancy = fields.Selection(related='target_unit_id.occupancy_status', string='Unit Occupancy Status', readonly=True)
     intended_move_in_date = fields.Date(string='Intended Move-In Date')
     preferred_budget = fields.Monetary(string='Preferred Rent Budget', currency_field='company_currency')
@@ -22,23 +22,28 @@ class CrmLeadInherit(models.Model):
                 ('building_id', '=', self.building_id.id)
             ])
             if count == 0:
-                all_units = self.env['product.product'].search([
+                unassigned = self.env['product.product'].search([
+                    ('building_id', '=', False),
                     '|', ('is_property_unit', '=', True), ('sale_ok', '=', True)
-                ], order='id asc')
-                all_buildings = self.env['property.building'].search([], order='id asc')
-                if all_buildings and all_units:
-                    b_count = len(all_buildings)
-                    for idx, u in enumerate(all_units):
-                        b = all_buildings[idx % b_count]
-                        u.sudo().write({'building_id': b.id, 'is_property_unit': True})
+                ])
+                if unassigned:
+                    for u in unassigned:
+                        u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
+                else:
+                    all_units = self.env['product.product'].search([
+                        '|', ('is_property_unit', '=', True), ('sale_ok', '=', True)
+                    ], order='id asc')
+                    all_buildings = self.env['property.building'].search([], order='id asc')
+                    if all_buildings and all_units:
+                        b_count = len(all_buildings)
+                        for idx, u in enumerate(all_units):
+                            b = all_buildings[idx % b_count]
+                            u.sudo().write({'building_id': b.id, 'is_property_unit': True})
 
             if self.target_unit_id and self.target_unit_id.building_id and self.target_unit_id.building_id != self.building_id:
                 self.target_unit_id = False
 
-            return {'domain': {'target_unit_id': [
-                '|', ('is_property_unit', '=', True), ('sale_ok', '=', True),
-                ('building_id', '=', self.building_id.id)
-            ]}}
+            return {'domain': {'target_unit_id': [('building_id', '=', self.building_id.id)]}}
         return {'domain': {'target_unit_id': ['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]}}
 
     @api.onchange('target_unit_id')
@@ -123,7 +128,7 @@ class CrmLeadInherit(models.Model):
             partner_vals = {
                 'name': self.contact_name or self.partner_name or self.name,
                 'email': self.email_from,
-                'phone': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False),
+                'phone': self.phone or getattr(self, 'mobile', False) or getattr(self.partner_id, 'mobile', False),
                 'is_company': False if self.contact_name else True,
             }
             partner = self.env['res.partner'].create(partner_vals)
@@ -212,7 +217,7 @@ class CrmLeadInherit(models.Model):
             partner_vals = {
                 'name': self.contact_name or self.partner_name or self.name,
                 'email': self.email_from,
-                'phone': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False),
+                'phone': self.phone or getattr(self, 'mobile', False) or getattr(self.partner_id, 'mobile', False),
                 'is_company': False if self.contact_name else True,
             }
             partner = self.env['res.partner'].create(partner_vals)
@@ -268,7 +273,7 @@ class CrmLeadInherit(models.Model):
         action['context'] = {
             'default_lead_id': self.id,
             'default_visitor_name': self.contact_name or self.partner_name or self.name,
-            'default_contact_number': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False),
+            'default_contact_number': self.phone or getattr(self, 'mobile', False) or getattr(self.partner_id, 'mobile', False),
             'default_agent_id': self.user_id.id if self.user_id else self.env.uid,
         }
         return action
@@ -291,7 +296,7 @@ class CrmLeadInherit(models.Model):
             'context': {
                 'default_lead_id': self.id,
                 'default_visitor_name': self.contact_name or self.partner_name or self.name,
-                'default_contact_number': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False) or '',
+                'default_contact_number': self.phone or getattr(self, 'mobile', False) or getattr(self.partner_id, 'mobile', False) or '',
                 'default_agent_id': self.user_id.id if self.user_id else self.env.uid,
                 'default_unit_ids': [(6, 0, [self.target_unit_id.id])] if self.target_unit_id else [],
                 'default_visit_datetime': self.ocular_visit_date or fields.Datetime.now(),

@@ -38,7 +38,7 @@
                     <group>
                         <group string="Unit &amp; Tenant Requirements">
                             <field name="building_id" placeholder="Select Building / Complex..."/>
-                            <field name="target_unit_id" domain="['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]" placeholder="Select Unit..."/>
+                            <field name="target_unit_id" domain="[('building_id', '=', building_id)]" placeholder="Select Unit..."/>
                             <field name="target_unit_occupancy" widget="badge" decoration-success="target_unit_occupancy == 'available'" decoration-warning="target_unit_occupancy == 'reserved'" decoration-danger="target_unit_occupancy == 'occupied'" invisible="not target_unit_id"/>
                             <field name="intended_move_in_date"/>
                             <field name="preferred_budget"/>

@@ -67,8 +67,15 @@ class TenantApplicationBis(models.Model):
     def _compute_contact_info(self):
         for rec in self:
             if rec.tenant_id:
-                parts = [p for p in [rec.tenant_id.phone, rec.tenant_id.mobile, rec.tenant_id.email] if p]
-                rec.contact_info = " | ".join(parts)
+                parts = []
+                if rec.tenant_id.phone:
+                    parts.append(rec.tenant_id.phone)
+                mobile = getattr(rec.tenant_id, 'mobile', False)
+                if mobile and mobile != rec.tenant_id.phone:
+                    parts.append(mobile)
+                if rec.tenant_id.email:
+                    parts.append(rec.tenant_id.email)
+                rec.contact_info = " | ".join(parts) if parts else False
             else:
                 rec.contact_info = False
 
