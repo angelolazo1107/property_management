@@ -118,11 +118,3 @@ class ResCompanyCurrencyFix(models.Model):
             return super(ResCompanyCurrencyFix, self).write(vals_copy)
         return super(ResCompanyCurrencyFix, self).write(vals)
 
-
-class AccountAnalyticAccountPropertyInherit(models.Model):
-    _inherit = 'account.analytic.account'
-
-    x_is_property = fields.Boolean(string='Is Property', default=False)
-    x_property_building_id = fields.Many2one('x_buildings', string='Building')
-    x_rental_contract_id = fields.Many2one('sale.order', string='Rental Contract')
-
