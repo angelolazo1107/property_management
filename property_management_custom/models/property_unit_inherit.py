@@ -52,14 +52,14 @@ class ProductProductPropertyInherit(models.Model):
             'blocked': 'Blocked',
         }
         for rec in self:
-            if rec.is_property_unit:
+            if rec.is_property_unit or rec.occupancy_status:
                 status_label = status_dict.get(rec.occupancy_status, 'Available')
                 details = []
                 if rec.floor_level:
                     details.append(rec.floor_level)
                 if status_label:
                     details.append(f"[{status_label.upper()}]")
-                if rec.list_price:
+                if rec.list_price and rec.list_price > 0:
                     details.append(f"₱{rec.list_price:,.2f}")
                 
                 if details:

@@ -17,16 +17,38 @@ class CrmLeadInherit(models.Model):
 
     @api.onchange('building_id')
     def _onchange_building_id(self):
-        if self.building_id and self.target_unit_id and self.target_unit_id.building_id != self.building_id:
+        if self.building_id and self.target_unit_id and self.target_unit_id.building_id and self.target_unit_id.building_id != self.building_id:
             self.target_unit_id = False
         if self.building_id:
-            return {'domain': {'target_unit_id': [('is_property_unit', '=', True), ('building_id', '=', self.building_id.id)]}}
-        return {'domain': {'target_unit_id': [('is_property_unit', '=', True)]}}
+            units_in_b = self.env['product.product'].search([
+                ('building_id', '=', self.building_id.id)
+            ], limit=1)
+            if not units_in_b:
+                unassigned = self.env['product.product'].search([
+                    '|', ('is_property_unit', '=', True), ('sale_ok', '=', True)
+                ])
+                for u in unassigned:
+                    if not u.building_id:
+                        u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
+
+            return {'domain': {'target_unit_id': [
+                '|', ('is_property_unit', '=', True), ('sale_ok', '=', True),
+                ('building_id', '=', self.building_id.id)
+            ]}}
+        return {'domain': {'target_unit_id': ['|', ('is_property_unit', '=', True), ('sale_ok', '=', True)]}}
 
     @api.onchange('target_unit_id')
     def _onchange_target_unit_id(self):
-        if self.target_unit_id and self.target_unit_id.building_id:
-            self.building_id = self.target_unit_id.building_id.id
+        if self.target_unit_id:
+            if self.target_unit_id.building_id:
+                self.building_id = self.target_unit_id.building_id.id
+            elif self.building_id and not self.target_unit_id.building_id:
+                self.target_unit_id.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
+            if hasattr(self, 'property_id'):
+                try:
+                    self.property_id = self.target_unit_id.id
+                except Exception:
+                    pass
     
     # Stage 2 Ocular Visit Integration
     ocular_visit_ids = fields.One2many('ocular.visit', 'lead_id', string='Ocular Visit Records')
