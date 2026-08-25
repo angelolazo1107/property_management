@@ -5,12 +5,12 @@ class CrmLeadInherit(models.Model):
     _inherit = 'crm.lead'
 
     building_id = fields.Many2one('property.building', string='Building / Property Complex', tracking=True)
-    target_unit_id = fields.Many2one('property.property', string='Target Unit / Property', domain="[('building_id', '=', building_id)]", tracking=True)
+    target_property_id = fields.Many2one('property.property', string='Target Unit / Property', domain="[('building_id', '=', building_id)]", tracking=True)
     target_unit_occupancy = fields.Selection([
         ('normal', 'Available'),
         ('booked', 'Reserved'),
         ('rented', 'Occupied'),
-    ], related='target_unit_id.state', string='Unit Status', readonly=True)
+    ], related='target_property_id.state', string='Unit Status', readonly=True)
     intended_move_in_date = fields.Date(string='Intended Move-In Date')
     preferred_budget = fields.Monetary(string='Preferred Rent Budget', currency_field='company_currency')
 
@@ -22,16 +22,15 @@ class CrmLeadInherit(models.Model):
     @api.onchange('building_id')
     def _onchange_building_id(self):
         if self.building_id:
-            if self.target_unit_id and self.target_unit_id.building_id != self.building_id:
-                self.target_unit_id = False
-            return {'domain': {'target_unit_id': [('building_id', '=', self.building_id.id)]}}
-        return {'domain': {'target_unit_id': []}}
+            if self.target_property_id and self.target_property_id.building_id != self.building_id:
+                self.target_property_id = False
+            return {'domain': {'target_property_id': [('building_id', '=', self.building_id.id)]}}
+        return {'domain': {'target_property_id': []}}
 
-    @api.onchange('target_unit_id')
-    def _onchange_target_unit_id(self):
-        if self.target_unit_id and self.target_unit_id.building_id:
-            self.building_id = self.target_unit_id.building_id.id
-
+    @api.onchange('target_property_id')
+    def _onchange_target_property_id(self):
+        if self.target_property_id and self.target_property_id.building_id:
+            self.building_id = self.target_property_id.building_id.id
 
     # Stage 2 Ocular Visit Integration
     ocular_visit_ids = fields.One2many('ocular.visit', 'lead_id', string='Ocular Visit Records')
