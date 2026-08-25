@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Extend Enterprise Property Building form with our extra fields -->
-    <record id="view_property_building_form_inherit" model="ir.ui.view">
-        <field name="name">property.building.form.custom</field>
-        <field name="model">property.building</field>
-        <field name="inherit_id" ref="property.property_building_form_view"/>
-        <field name="priority">99</field>
-        <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <group string="Additional Details">
-                    <field name="code" placeholder="e.g. PST-01"/>
-                    <field name="total_floors"/>
-                </group>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Action for Building menu (uses native Enterprise action) -->
+    <!-- Action to open the Enterprise Buildings list/form -->
     <record id="action_property_building" model="ir.actions.act_window">
         <field name="name">Buildings</field>
         <field name="res_model">property.building</field>
