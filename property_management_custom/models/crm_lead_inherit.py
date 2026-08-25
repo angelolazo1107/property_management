@@ -76,15 +76,21 @@ class CrmLeadInherit(models.Model):
 
     def action_create_bis(self):
         self.ensure_one()
+        if not self.user_id:
+            self.user_id = self.env.uid
         if not self.partner_id:
             partner_vals = {
                 'name': self.contact_name or self.partner_name or self.name,
                 'email': self.email_from,
-                'phone': self.phone or self.mobile,
+                'phone': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False),
                 'is_company': False if self.contact_name else True,
             }
             partner = self.env['res.partner'].create(partner_vals)
             self.partner_id = partner.id
+
+        stage_bis = self.env.ref('property_management_custom.stage_reservation_bis', raise_if_not_found=False)
+        if stage_bis:
+            self.stage_id = stage_bis.id
 
         bis_vals = {
             'tenant_id': self.partner_id.id,
@@ -142,16 +148,23 @@ class CrmLeadInherit(models.Model):
 
     def action_create_quotation(self):
         self.ensure_one()
+        if not self.user_id:
+            self.user_id = self.env.uid
         if not self.partner_id:
             # Auto-create or require partner
             partner_vals = {
                 'name': self.contact_name or self.partner_name or self.name,
                 'email': self.email_from,
-                'phone': self.phone or self.mobile,
+                'phone': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False),
                 'is_company': False if self.contact_name else True,
             }
             partner = self.env['res.partner'].create(partner_vals)
             self.partner_id = partner.id
+
+        # Update stage to Quotation / Proposal
+        stage_quotation = self.env.ref('property_management_custom.stage_quotation_proposal', raise_if_not_found=False)
+        if stage_quotation:
+            self.stage_id = stage_quotation.id
 
         # Determine best quotation template based on requirements
         template_xml_id = 'property_management_custom.template_bare_unit_rental'
@@ -167,6 +180,7 @@ class CrmLeadInherit(models.Model):
         so_vals = {
             'partner_id': self.partner_id.id,
             'opportunity_id': self.id,
+            'user_id': self.user_id.id if self.user_id else self.env.uid,
             'target_unit_id': self.target_unit_id.id if self.target_unit_id else False,
             'intended_move_in_date': self.intended_move_in_date,
             'sale_order_template_id': template.id if template else False,
@@ -197,18 +211,42 @@ class CrmLeadInherit(models.Model):
         action['context'] = {
             'default_lead_id': self.id,
             'default_visitor_name': self.contact_name or self.partner_name or self.name,
-            'default_contact_number': self.phone or self.mobile,
+            'default_contact_number': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False),
             'default_agent_id': self.user_id.id if self.user_id else self.env.uid,
         }
         return action
 
     def action_schedule_ocular(self):
-        for rec in self:
-            rec.ocular_status = 'scheduled'
+        self.ensure_one()
+        if not self.user_id:
+            self.user_id = self.env.uid
+        self.ocular_status = 'scheduled'
+        stage_ocular = self.env.ref('property_management_custom.stage_ocular_visit', raise_if_not_found=False)
+        if stage_ocular:
+            self.stage_id = stage_ocular.id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Schedule Ocular Visit',
+            'res_model': 'ocular.visit',
+            'view_mode': 'form',
+            'target': 'current',
+            'context': {
+                'default_lead_id': self.id,
+                'default_visitor_name': self.contact_name or self.partner_name or self.name,
+                'default_contact_number': self.phone or getattr(self, 'mobile', False) or (self.partner_id.mobile if self.partner_id else False) or '',
+                'default_agent_id': self.user_id.id if self.user_id else self.env.uid,
+                'default_unit_ids': [(6, 0, [self.target_unit_id.id])] if self.target_unit_id else [],
+                'default_visit_datetime': self.ocular_visit_date or fields.Datetime.now(),
+            }
+        }
 
     def action_complete_ocular(self):
         for rec in self:
             rec.ocular_status = 'completed'
+            stage_quotation = self.env.ref('property_management_custom.stage_quotation_proposal', raise_if_not_found=False)
+            if stage_quotation:
+                rec.stage_id = stage_quotation.id
 
     def action_verify_bis(self):
         for rec in self:

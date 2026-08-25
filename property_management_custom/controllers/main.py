@@ -105,19 +105,30 @@ class PropertyManagementWebsiteController(http.Controller):
         if ocular_date_str:
             try:
                 ocular_datetime = datetime.strptime(ocular_date_str, '%Y-%m-%dT%H:%M')
+                unit_ids = [(6, 0, [unit_id])] if unit_id else []
+                stage_ocular = request.env.ref('property_management_custom.stage_ocular_visit', raise_if_not_found=False)
+                
+                # Get admin or current user for default agent
+                admin_user = request.env.ref('base.user_admin', raise_if_not_found=False)
+                agent_id = lead.user_id.id if lead.user_id else (admin_user.id if admin_user else request.env.uid)
+
                 request.env['ocular.visit'].sudo().create({
                     'lead_id': lead.id,
                     'visitor_name': contact_name,
                     'contact_number': phone,
-                    'unit_id': unit_id,
-                    'visit_schedule': ocular_datetime,
-                    'security_gate_notified': True,
+                    'unit_ids': unit_ids,
+                    'visit_datetime': ocular_datetime,
+                    'agent_id': agent_id,
+                    'security_status': 'draft',
                     'status': 'scheduled',
                 })
-                lead.sudo().write({
+                write_vals = {
                     'ocular_status': 'scheduled',
                     'ocular_visit_date': ocular_datetime,
-                })
+                }
+                if stage_ocular:
+                    write_vals['stage_id'] = stage_ocular.id
+                lead.sudo().write(write_vals)
             except Exception:
                 pass
 
