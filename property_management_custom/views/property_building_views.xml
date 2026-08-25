@@ -60,7 +60,7 @@
     </record>
 
     <!-- Property Building Action -->
-    <record id="action_property_building" model="ir.ui.actions.act_window">
+    <record id="action_property_building" model="ir.actions.act_window">
         <field name="name">Buildings &amp; Complexes</field>
         <field name="res_model">property.building</field>
         <field name="view_mode">list,form</field>
