@@ -65,15 +65,35 @@ class CrmLeadInherit(models.Model):
                 })
 
             # 3. Sync units to these exact buildings
-            offices = self.env['product.product'].search([('name', 'ilike', 'Office')])
+            offices = self.env['product.product'].search([
+                '|', '|',
+                ('name', 'ilike', 'Office'),
+                ('name', 'ilike', 'Bureau'),
+                ('name', 'ilike', 'Park')
+            ])
             if offices and b_park:
                 offices.sudo().write({'building_id': b_park.id, 'is_property_unit': True})
 
-            uccle = self.env['product.product'].search([('name', 'ilike', 'Uccle')])
+            uccle = self.env['product.product'].search([
+                '|', '|', '|',
+                ('name', 'ilike', 'Uccle'),
+                ('name', 'ilike', 'Bellevue'),
+                ('name', 'ilike', 'Duplex'),
+                ('name', 'ilike', 'Observatoire')
+            ])
             if uccle and b_bellevue:
                 uccle.sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
 
-            apartments = self.env['product.product'].search([('name', 'ilike', 'Apartment')])
+            apartments = self.env['product.product'].search([
+                '|', '|', '|', '|', '|', '|',
+                ('name', 'ilike', 'Apartment'),
+                ('name', 'ilike', 'Appartement'),
+                ('name', 'ilike', '26'),
+                ('name', 'ilike', '27'),
+                ('name', 'ilike', '28'),
+                ('name', 'ilike', '29'),
+                ('name', 'ilike', 'Ferme')
+            ])
             if apartments and b_ferme:
                 apartments.sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
         except Exception:
@@ -86,19 +106,33 @@ class CrmLeadInherit(models.Model):
             b_name = (self.building_id.name or '').lower()
             if 'park' in b_name or 'station' in b_name:
                 office_units = self.env['product.product'].search([
-                    ('name', 'ilike', 'Office')
+                    '|', '|',
+                    ('name', 'ilike', 'Office'),
+                    ('name', 'ilike', 'Bureau'),
+                    ('name', 'ilike', 'Park')
                 ])
                 for u in office_units:
                     u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
             elif 'bellevue' in b_name or 'immeuble' in b_name:
                 uccle_units = self.env['product.product'].search([
-                    ('name', 'ilike', 'Uccle')
+                    '|', '|', '|',
+                    ('name', 'ilike', 'Uccle'),
+                    ('name', 'ilike', 'Bellevue'),
+                    ('name', 'ilike', 'Duplex'),
+                    ('name', 'ilike', 'Observatoire')
                 ])
                 for u in uccle_units:
                     u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
             elif 'ferme' in b_name or 'jean' in b_name:
                 apt_units = self.env['product.product'].search([
-                    ('name', 'ilike', 'Apartment')
+                    '|', '|', '|', '|', '|', '|',
+                    ('name', 'ilike', 'Apartment'),
+                    ('name', 'ilike', 'Appartement'),
+                    ('name', 'ilike', '26'),
+                    ('name', 'ilike', '27'),
+                    ('name', 'ilike', '28'),
+                    ('name', 'ilike', '29'),
+                    ('name', 'ilike', 'Ferme')
                 ])
                 for u in apt_units:
                     u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})

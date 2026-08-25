@@ -58,7 +58,9 @@ class PropertyBuilding(models.Model):
                 WHERE id IN (
                     SELECT pp.id FROM product_product pp 
                     JOIN product_template pt ON pp.product_tmpl_id = pt.id 
-                    WHERE pt.name::text ILIKE '%Office%' OR pt.name::text ILIKE '%Park Station%'
+                    WHERE pt.name::text ILIKE '%Office%' 
+                       OR pt.name::text ILIKE '%Bureau%'
+                       OR pt.name::text ILIKE '%Park%'
                 );
 
                 UPDATE product_product 
@@ -67,7 +69,10 @@ class PropertyBuilding(models.Model):
                 WHERE id IN (
                     SELECT pp.id FROM product_product pp 
                     JOIN product_template pt ON pp.product_tmpl_id = pt.id 
-                    WHERE pt.name::text ILIKE '%Uccle%' OR pt.name::text ILIKE '%Bellevue%'
+                    WHERE pt.name::text ILIKE '%Uccle%' 
+                       OR pt.name::text ILIKE '%Bellevue%'
+                       OR pt.name::text ILIKE '%Duplex%'
+                       OR pt.name::text ILIKE '%Observatoire%'
                 );
 
                 UPDATE product_product 
@@ -76,21 +81,48 @@ class PropertyBuilding(models.Model):
                 WHERE id IN (
                     SELECT pp.id FROM product_product pp 
                     JOIN product_template pt ON pp.product_tmpl_id = pt.id 
-                    WHERE pt.name::text ILIKE '%Apartment%' OR pt.name::text ILIKE '%Ferme%'
+                    WHERE pt.name::text ILIKE '%Apartment%' 
+                       OR pt.name::text ILIKE '%Appartement%'
+                       OR pt.name::text ILIKE '%26%'
+                       OR pt.name::text ILIKE '%27%'
+                       OR pt.name::text ILIKE '%28%'
+                       OR pt.name::text ILIKE '%29%'
+                       OR pt.name::text ILIKE '%Ferme%'
+                       OR pt.name::text ILIKE '%Saint-Jean%'
                 );
             """)
 
             # 4. ORM Sync to guarantee commit
             b_park = self.env['property.building'].search([('name', '=', 'Park Station')], limit=1)
             if b_park:
-                self.env['product.product'].search([('name', 'ilike', 'Office')]).sudo().write({'building_id': b_park.id, 'is_property_unit': True})
+                self.env['product.product'].search([
+                    '|', '|',
+                    ('name', 'ilike', 'Office'),
+                    ('name', 'ilike', 'Bureau'),
+                    ('name', 'ilike', 'Park')
+                ]).sudo().write({'building_id': b_park.id, 'is_property_unit': True})
 
             b_bellevue = self.env['property.building'].search([('name', '=', 'Immeuble Bellevue')], limit=1)
             if b_bellevue:
-                self.env['product.product'].search([('name', 'ilike', 'Uccle')]).sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
+                self.env['product.product'].search([
+                    '|', '|', '|',
+                    ('name', 'ilike', 'Uccle'),
+                    ('name', 'ilike', 'Bellevue'),
+                    ('name', 'ilike', 'Duplex'),
+                    ('name', 'ilike', 'Observatoire')
+                ]).sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
 
             b_ferme = self.env['property.building'].search([('name', '=', 'Ferme Saint-Jean')], limit=1)
             if b_ferme:
-                self.env['product.product'].search([('name', 'ilike', 'Apartment')]).sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
+                self.env['product.product'].search([
+                    '|', '|', '|', '|', '|', '|',
+                    ('name', 'ilike', 'Apartment'),
+                    ('name', 'ilike', 'Appartement'),
+                    ('name', 'ilike', '26'),
+                    ('name', 'ilike', '27'),
+                    ('name', 'ilike', '28'),
+                    ('name', 'ilike', '29'),
+                    ('name', 'ilike', 'Ferme')
+                ]).sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
         except Exception:
             pass
