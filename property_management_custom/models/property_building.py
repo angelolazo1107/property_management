@@ -20,19 +20,3 @@ class PropertyBuilding(models.Model):
     def _compute_unit_count(self):
         for rec in self:
             rec.unit_count = len(rec.unit_ids)
-
-    def init(self):
-        super().init()
-        try:
-            # Auto-assign any unassigned property units to existing buildings
-            buildings = self.env['property.building'].search([], order='id asc')
-            if buildings:
-                unassigned = self.env['product.product'].search([
-                    ('is_property_unit', '=', True),
-                    ('building_id', '=', False)
-                ], order='id asc')
-                b_count = len(buildings)
-                for idx, unit in enumerate(unassigned):
-                    unit.building_id = buildings[idx % b_count].id
-        except Exception:
-            pass
