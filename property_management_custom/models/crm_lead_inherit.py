@@ -5,110 +5,34 @@ class CrmLeadInherit(models.Model):
     _inherit = 'crm.lead'
 
     building_id = fields.Many2one('property.building', string='Building / Property Complex', tracking=True)
-    target_unit_id = fields.Many2one('product.product', string='Target Unit / Property', domain="[('building_id', '=', building_id)]")
-    target_unit_occupancy = fields.Selection(related='target_unit_id.occupancy_status', string='Unit Occupancy Status', readonly=True)
+    target_unit_id = fields.Many2one('property.property', string='Target Unit / Property', domain="[('building_id', '=', building_id)]", tracking=True)
+    target_unit_occupancy = fields.Selection([
+        ('normal', 'Available'),
+        ('booked', 'Reserved'),
+        ('rented', 'Occupied'),
+    ], related='target_unit_id.state', string='Unit Status', readonly=True)
     intended_move_in_date = fields.Date(string='Intended Move-In Date')
     preferred_budget = fields.Monetary(string='Preferred Rent Budget', currency_field='company_currency')
-    
+
     parking_required = fields.Boolean(string='Parking Requirement')
     wifi_required = fields.Boolean(string='Wi-Fi Connection Requirement')
     pet_details = fields.Char(string='Pet Details / Registration')
     broker_id = fields.Many2one('res.partner', string='Assigned Broker / Agent')
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super(CrmLeadInherit, self).default_get(fields_list)
-        self._ensure_official_enterprise_buildings()
-        return res
-
-    @api.model
-    def _ensure_official_enterprise_buildings(self):
-        """Clean up dummy buildings and create/sync official Enterprise buildings"""
-        try:
-            # 1. Delete dummy buildings
-            dummy_buildings = self.env['property.building'].search([
-                ('name', 'in', [
-                    'Alon Tower 1 - Residential & Commercial',
-                    'Haraya Executive Residences',
-                    'Aura Commercial & Retail Strip'
-                ])
-            ])
-            if dummy_buildings:
-                dummy_buildings.unlink()
-
-            # 2. Ensure official Enterprise buildings exist
-            b_park = self.env['property.building'].search([('name', '=', 'Park Station')], limit=1)
-            if not b_park:
-                b_park = self.env['property.building'].create({
-                    'name': 'Park Station',
-                    'code': 'PST-01',
-                    'address': 'Rue de Bruxelles 119, 1083 Louise',
-                    'total_floors': 12,
-                })
-
-            b_bellevue = self.env['property.building'].search([('name', '=', 'Immeuble Bellevue')], limit=1)
-            if not b_bellevue:
-                b_bellevue = self.env['property.building'].create({
-                    'name': 'Immeuble Bellevue',
-                    'code': 'IBV-02',
-                    'address': 'Avenue du Chateau 123, 1400 Uccle',
-                    'total_floors': 8,
-                })
-
-            b_ferme = self.env['property.building'].search([('name', '=', 'Ferme Saint-Jean')], limit=1)
-            if not b_ferme:
-                b_ferme = self.env['property.building'].create({
-                    'name': 'Ferme Saint-Jean',
-                    'code': 'FSJ-03',
-                    'address': 'Rue de Neupré 108, 8934 Osivies',
-                    'total_floors': 5,
-                })
-
-            # 3. Direct Python Record Sync for 100% Reliability
-            all_products = self.env['product.product'].sudo().search([])
-            for prod in all_products:
-                names_to_check = [
-                    prod.name or '',
-                    prod.product_tmpl_id.name or '',
-                    prod.display_name or ''
-                ]
-                full_text = ' '.join(names_to_check).lower()
-
-                if any(k in full_text for k in ['office', 'bureau']):
-                    if b_park:
-                        prod.sudo().write({'building_id': b_park.id, 'is_property_unit': True})
-                elif any(k in full_text for k in ['uccle', 'bellevue', 'duplex', 'observatoire']):
-                    if b_bellevue:
-                        prod.sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
-                elif any(k in full_text for k in ['apartment', 'appartement', 'ferme', '26', '27', '28', '29']):
-                    if b_ferme:
-                        prod.sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
-        except Exception:
-            pass
-
     @api.onchange('building_id')
     def _onchange_building_id(self):
-        self._ensure_official_enterprise_buildings()
         if self.building_id:
-            if self.target_unit_id and self.target_unit_id.building_id and self.target_unit_id.building_id != self.building_id:
+            if self.target_unit_id and self.target_unit_id.building_id != self.building_id:
                 self.target_unit_id = False
-
             return {'domain': {'target_unit_id': [('building_id', '=', self.building_id.id)]}}
-        return {'domain': {'target_unit_id': [('is_property_unit', '=', True)]}}
+        return {'domain': {'target_unit_id': []}}
 
     @api.onchange('target_unit_id')
     def _onchange_target_unit_id(self):
-        if self.target_unit_id:
-            if self.target_unit_id.building_id:
-                self.building_id = self.target_unit_id.building_id.id
-            elif self.building_id:
-                self.target_unit_id.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
-            if hasattr(self, 'property_id'):
-                try:
-                    self.property_id = self.target_unit_id.id
-                except Exception:
-                    pass
-    
+        if self.target_unit_id and self.target_unit_id.building_id:
+            self.building_id = self.target_unit_id.building_id.id
+
+
     # Stage 2 Ocular Visit Integration
     ocular_visit_ids = fields.One2many('ocular.visit', 'lead_id', string='Ocular Visit Records')
     ocular_visit_count = fields.Integer(string='Ocular Visits Count', compute='_compute_ocular_visit_count')
