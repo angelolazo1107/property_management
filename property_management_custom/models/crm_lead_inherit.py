@@ -17,19 +17,23 @@ class CrmLeadInherit(models.Model):
 
     @api.onchange('building_id')
     def _onchange_building_id(self):
-        if self.building_id and self.target_unit_id and self.target_unit_id.building_id and self.target_unit_id.building_id != self.building_id:
-            self.target_unit_id = False
         if self.building_id:
-            units_in_b = self.env['product.product'].search([
+            count = self.env['product.product'].search_count([
                 ('building_id', '=', self.building_id.id)
-            ], limit=1)
-            if not units_in_b:
-                unassigned = self.env['product.product'].search([
+            ])
+            if count == 0:
+                all_units = self.env['product.product'].search([
                     '|', ('is_property_unit', '=', True), ('sale_ok', '=', True)
-                ])
-                for u in unassigned:
-                    if not u.building_id:
-                        u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
+                ], order='id asc')
+                all_buildings = self.env['property.building'].search([], order='id asc')
+                if all_buildings and all_units:
+                    b_count = len(all_buildings)
+                    for idx, u in enumerate(all_units):
+                        b = all_buildings[idx % b_count]
+                        u.sudo().write({'building_id': b.id, 'is_property_unit': True})
+
+            if self.target_unit_id and self.target_unit_id.building_id and self.target_unit_id.building_id != self.building_id:
+                self.target_unit_id = False
 
             return {'domain': {'target_unit_id': [
                 '|', ('is_property_unit', '=', True), ('sale_ok', '=', True),
@@ -42,7 +46,7 @@ class CrmLeadInherit(models.Model):
         if self.target_unit_id:
             if self.target_unit_id.building_id:
                 self.building_id = self.target_unit_id.building_id.id
-            elif self.building_id and not self.target_unit_id.building_id:
+            elif self.building_id:
                 self.target_unit_id.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
             if hasattr(self, 'property_id'):
                 try:
