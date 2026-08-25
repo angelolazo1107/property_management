@@ -24,5 +24,6 @@
 "access_recurring_monthly_billing_user","recurring.monthly.billing.user","model_recurring_monthly_billing","base.group_user",1,1,1,1
 "access_move_out_clearance_user","move.out.clearance.user","model_move_out_clearance","base.group_user",1,1,1,1
 "access_security_deposit_refund_user","security.deposit.refund.user","model_security_deposit_refund","base.group_user",1,1,1,1
+"access_x_buildings_user","x.buildings.user","model_x_buildings","base.group_user",1,1,1,1
 
 
