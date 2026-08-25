@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Property Management Extensions for Odoo Apps',
-    'version': '19.0.1.0.21',
+    'version': '19.0.1.0.22',
     'category': 'Customizations',
     'summary': 'Customizations for Properties, CRM, Sales, Purchase, Maintenance, Helpdesk, Fleet, Approvals & Accounting',
     'description': """
@@ -35,6 +35,7 @@ Integrates with standard Odoo Enterprise Properties App & core modules:
         'website',
         'website_crm',
         'mail',
+        'property',
     ],
     'data': [
         'security/property_management_security.xml',
