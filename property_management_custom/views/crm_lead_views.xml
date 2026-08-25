@@ -39,7 +39,7 @@
                         <group string="Unit &amp; Tenant Requirements">
                             <field name="building_id" placeholder="Select Building / Property Complex..."/>
                             <field name="intended_move_in_date" placeholder="Select Move-In Date first..."/>
-                            <field name="target_unit_id" domain="[('x_is_property', '=', True), ('x_property_building_id', '=', building_id)]" placeholder="Select Target Unit..." readonly="not intended_move_in_date"/>
+                            <field name="target_unit_id" domain="[('x_is_property', '=', True)]" placeholder="Select Target Unit..." readonly="not intended_move_in_date"/>
                             <field name="target_unit_occupancy" widget="badge"
                                 decoration-success="target_unit_occupancy == 'available'"
                                 decoration-danger="target_unit_occupancy == 'occupied'"

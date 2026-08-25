@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Property Management Extensions for Odoo Apps',
-    'version': '19.0.1.0.29',
+    'version': '19.0.1.0.30',
     'category': 'Customizations',
     'summary': 'Customizations for Properties, CRM, Sales, Purchase, Maintenance, Helpdesk, Fleet, Approvals & Accounting',
     'description': """

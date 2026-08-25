@@ -10,9 +10,9 @@ class LeaseContract(models.Model):
     name = fields.Char(string='Lease Number', required=True, copy=False, readonly=True, default='New')
     tenant_id = fields.Many2one('res.partner', string='Tenant Name', required=True, tracking=True)
     unit_id = fields.Many2one(
-        'product.product', 
+        'account.analytic.account', 
         string='Assigned Property Unit', 
-        domain="[('is_property_unit', '=', True)]", 
+        domain="[('x_is_property', '=', True)]", 
         required=True, 
         tracking=True
     )
