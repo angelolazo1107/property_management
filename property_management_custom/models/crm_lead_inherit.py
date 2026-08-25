@@ -18,27 +18,36 @@ class CrmLeadInherit(models.Model):
     @api.onchange('building_id')
     def _onchange_building_id(self):
         if self.building_id:
-            count = self.env['product.product'].search_count([
-                ('building_id', '=', self.building_id.id)
-            ])
-            if count == 0:
-                unassigned = self.env['product.product'].search([
-                    ('building_id', '=', False),
-                    '|', ('is_property_unit', '=', True), ('sale_ok', '=', True)
+            b_name = (self.building_id.name or '').lower()
+            if 'park' in b_name or 'station' in b_name:
+                office_units = self.env['product.product'].search([
+                    ('name', 'ilike', 'Office')
                 ])
-                if unassigned:
+                for u in office_units:
+                    u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
+            elif 'bellevue' in b_name or 'immeuble' in b_name:
+                uccle_units = self.env['product.product'].search([
+                    ('name', 'ilike', 'Uccle')
+                ])
+                for u in uccle_units:
+                    u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
+            elif 'ferme' in b_name or 'jean' in b_name:
+                apt_units = self.env['product.product'].search([
+                    ('name', 'ilike', 'Apartment')
+                ])
+                for u in apt_units:
+                    u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
+            else:
+                count = self.env['product.product'].search_count([
+                    ('building_id', '=', self.building_id.id)
+                ])
+                if count == 0:
+                    unassigned = self.env['product.product'].search([
+                        ('building_id', '=', False),
+                        '|', ('is_property_unit', '=', True), ('sale_ok', '=', True)
+                    ])
                     for u in unassigned:
                         u.sudo().write({'building_id': self.building_id.id, 'is_property_unit': True})
-                else:
-                    all_units = self.env['product.product'].search([
-                        '|', ('is_property_unit', '=', True), ('sale_ok', '=', True)
-                    ], order='id asc')
-                    all_buildings = self.env['property.building'].search([], order='id asc')
-                    if all_buildings and all_units:
-                        b_count = len(all_buildings)
-                        for idx, u in enumerate(all_units):
-                            b = all_buildings[idx % b_count]
-                            u.sudo().write({'building_id': b.id, 'is_property_unit': True})
 
             if self.target_unit_id and self.target_unit_id.building_id and self.target_unit_id.building_id != self.building_id:
                 self.target_unit_id = False
