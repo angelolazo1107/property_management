@@ -15,8 +15,73 @@ class CrmLeadInherit(models.Model):
     pet_details = fields.Char(string='Pet Details / Registration')
     broker_id = fields.Many2one('res.partner', string='Assigned Broker / Agent')
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super(CrmLeadInherit, self).default_get(fields_list)
+        self._ensure_official_enterprise_buildings()
+        return res
+
+    @api.model
+    def _ensure_official_enterprise_buildings(self):
+        """Clean up dummy buildings and create/sync official Enterprise buildings"""
+        try:
+            # 1. Delete dummy buildings
+            dummy_buildings = self.env['property.building'].search([
+                ('name', 'in', [
+                    'Alon Tower 1 - Residential & Commercial',
+                    'Haraya Executive Residences',
+                    'Aura Commercial & Retail Strip'
+                ])
+            ])
+            if dummy_buildings:
+                dummy_buildings.unlink()
+
+            # 2. Ensure official Enterprise buildings exist
+            b_park = self.env['property.building'].search([('name', '=', 'Park Station')], limit=1)
+            if not b_park:
+                b_park = self.env['property.building'].create({
+                    'name': 'Park Station',
+                    'code': 'PST-01',
+                    'address': 'Rue de Bruxelles 119, 1083 Louise',
+                    'total_floors': 12,
+                })
+
+            b_bellevue = self.env['property.building'].search([('name', '=', 'Immeuble Bellevue')], limit=1)
+            if not b_bellevue:
+                b_bellevue = self.env['property.building'].create({
+                    'name': 'Immeuble Bellevue',
+                    'code': 'IBV-02',
+                    'address': 'Avenue du Chateau 123, 1400 Uccle',
+                    'total_floors': 8,
+                })
+
+            b_ferme = self.env['property.building'].search([('name', '=', 'Ferme Saint-Jean')], limit=1)
+            if not b_ferme:
+                b_ferme = self.env['property.building'].create({
+                    'name': 'Ferme Saint-Jean',
+                    'code': 'FSJ-03',
+                    'address': 'Rue de Neupré 108, 8934 Osivies',
+                    'total_floors': 5,
+                })
+
+            # 3. Sync units to these exact buildings
+            offices = self.env['product.product'].search([('name', 'ilike', 'Office')])
+            if offices and b_park:
+                offices.sudo().write({'building_id': b_park.id, 'is_property_unit': True})
+
+            uccle = self.env['product.product'].search([('name', 'ilike', 'Uccle')])
+            if uccle and b_bellevue:
+                uccle.sudo().write({'building_id': b_bellevue.id, 'is_property_unit': True})
+
+            apartments = self.env['product.product'].search([('name', 'ilike', 'Apartment')])
+            if apartments and b_ferme:
+                apartments.sudo().write({'building_id': b_ferme.id, 'is_property_unit': True})
+        except Exception:
+            pass
+
     @api.onchange('building_id')
     def _onchange_building_id(self):
+        self._ensure_official_enterprise_buildings()
         if self.building_id:
             b_name = (self.building_id.name or '').lower()
             if 'park' in b_name or 'station' in b_name:
